@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block head %}
+{{ super() }}
+
+<title>
+    {% block title %}{% if title %}{{ title }} - {% endif %}Le jeu de L-orgue{% endblock %}
+</title>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+{% endblock %}
+
+
+{% block styles %}
+{{ super() }}
+<link rel="shortcut icon" href="{{url_for('static', filename='images/tennis_ball.ico')}}">
+<link rel="stylesheet" href="https://bootswatch.com/cosmo/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block body %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% endblock %}
