@@ -2,13 +2,22 @@
 
 {% block content %}
 
-<form action="{{url_for('login')}}" class="form-horizontal" method="POST">
+<form action="{{url_for('signup')}}" class="form-horizontal" method="POST">
     {{ form.hidden_tag() }}
     <div class="heading">
-        <h1 class="form-heading">Connexion</h1>
+        <h1 class="form-heading">Inscription</h1>
     </div>
 
     <div class="well">
+        <div class="form-group {% if form.email.errors %} has-error {% endif %}">
+            {{form.email.label(class="col-sm-3")}}
+            <div class="col-sm-6">
+                {{ form.email(class="form-control") }}
+            </div>
+            <p class="col-sm-3 help-block">
+                {{ form.email.errors[0] }}
+        </div>
+
         <div class="form-group {% if form.username.errors %} has-error {% endif %}">
             {{form.username.label(class="col-sm-3")}}
             <div class="col-sm-6">
@@ -27,18 +36,7 @@
                 {{ form.password.errors[0] }}
         </div>
 
-        <div class="form-group">
-            <div class="col-sm-3">
-                {{ form.remember_me.label }}
-            </div>
-            <div class="col-sm-6">
-                {{ form.remember_me }}
-            </div>
-            <p class="col-sm-3 help-block">
-                {{ form.remember_me.errors[0] }}
-        </div>
-
-        <button class="btn btn-success" id="submitbtn" type="submit">Se connecter</button>
+        <button class="btn btn-success" id="submitbtn" type="submit">S'inscrire</button>
     </div>
 </form>
 

@@ -1,23 +1,87 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect
-from app import app
-from .forms import LoginForm
+from flask import render_template, redirect, request, session, flash, url_for
+from flask_login import login_user, logout_user, login_required, current_user
+from app import app, db, bcrypt
+from .forms import LoginForm, SignupForm
+from .models import User
+from .texts import INCORRECT_CREDENTIALS, ACCOUNT_CREATED, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
 
 
 @app.route("/")
 @app.route("/index")
+@login_required
 def index():
-    return render_template("index.html",
-                           title = "Accueil")
+    title = "Accueil"
+    return render_template("index.html", title = title)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/signup", methods = ["GET", "POST"])
+def signup():
+    title = "Inscription"
+    form = SignupForm(request.form)
+
+    if form.validate_on_submit():
+        user_exist = User.query.filter_by(username = form.username.data).first()
+        email_exist = User.query.filter_by(email = form.email.data).first()
+        if user_exist:
+            form.username.errors.append(USERNAME_ALREADY_TAKEN)
+        if email_exist:
+            form.email.errors.append(EMAIL_ALREADY_TAKEN)
+        if user_exist or email_exist:
+            return render_template("signup.html", form = form, title = title)
+        else:
+            user = User(username = form.username.data,
+                        email = form.email.data,
+                        password = form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash(ACCOUNT_CREATED)
+            session.pop("signed", None)
+            session.pop("username", None)
+            logout_user()
+            return redirect(url_for("login"))
+    else:
+        return render_template("signup.html", form = form, title = title)
+
+
+@app.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        return redirect("/index")
+    title = "Connexion"
 
-    return render_template('login.html',
-                           title = "Connexion",
-                           form = form)
+    # Redirect user to homepage if they are already authenticated
+    if current_user is not None and current_user.is_authenticated:
+        return redirect(url_for("index"))
+
+    # If form was submitted via a POST request
+    if form.validate_on_submit():
+        user = User.query.filter_by(username = form.username.data).first()
+
+        # If the credentials are incorrect, render the login page with an error message
+        if user is None:
+            form.username.errors.append(INCORRECT_CREDENTIALS)
+            form.password.errors.append("")
+            return render_template("login.html", form = form, title = title)
+
+        is_password_correct = bcrypt.check_password_hash(user.password, form.password.data)
+        if not is_password_correct:
+            form.username.errors.append(INCORRECT_CREDENTIALS)
+            form.password.errors.append("")
+            return render_template("login.html", form = form, title = title)
+
+        # Otherwise log the user in
+        login_user(user, remember = form.remember_me.data)
+        session["signed"] = True
+        session["username"] = user.username
+
+        # Redirect the user to the page he initially wanted to access
+        if session.get("next"):
+            next_page = session.get("next")
+            session.pop("next")
+            return redirect(next_page)
+        else:
+            return redirect(url_for("index"))
+
+    session["next"] = request.args.get("next")
+    return render_template("login.html", form = LoginForm(), title = title)
