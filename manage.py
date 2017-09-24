@@ -10,4 +10,5 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
+    app.debug = True
     manager.run()

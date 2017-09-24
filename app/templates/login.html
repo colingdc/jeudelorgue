@@ -2,44 +2,64 @@
 
 {% block content %}
 
-<form action="{{url_for('login')}}" class="form-horizontal" method="POST">
-    {{ form.hidden_tag() }}
-    <div class="heading">
-        <h1 class="form-heading">Connexion</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Connexion</strong></h3>
+                </div>
+
+                <form action="{{ url_for('login') }}" class="form-horizontal" method="POST">
+                    {{ form.hidden_tag() }}
+
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2">
+
+                                <div class="form-group {% if form.username.errors %} has-error {% endif %}">
+                                    {{form.username.label()}}
+                                    <div>
+                                        {{form.username(placeholder="Pseudo", class="form-control")}}
+                                    </div>
+                                    <p class="help-block">
+                                        {{ form.username.errors[0] }}
+                                </div>
+
+                                <div class="form-group {% if form.password.errors %} has-error {% endif %}">
+                                    {{form.password.label()}}
+                                    <div>
+                                        {{ form.password(placeholder="Min. 6 Characters", class="form-control") }}
+                                    </div>
+                                    <p class="help-block">
+                                        {{ form.password.errors[0] }}
+                                </div>
+
+                                <div class="form-group {% if form.remember_me .errors %} has-error {% endif %}">
+                                    <div class="checkbox">
+                                        <label>{{ form.remember_me }} {{ form.remember_me.label}}</label>
+                                    </div>
+                                    <p class="help-block">
+                                        {{ form.remember_me.errors[0] }}
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-success" type="submit">Se connecter</button>
+                                    <span class="pull-right">
+                                        Pas encore inscrit ?
+                                        <a href="{{ url_for('signup') }}">Créer un compte</a>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="well">
-        <div class="form-group {% if form.username.errors %} has-error {% endif %}">
-            {{form.username.label(class="col-sm-3")}}
-            <div class="col-sm-6">
-                {{form.username(class="form-control")}}
-            </div>
-            <p class="col-sm-3 help-block">
-                {{ form.username.errors[0] }}
-        </div>
-
-        <div class="form-group {% if form.password.errors %} has-error {% endif %}">
-            {{form.password.label(class="col-sm-3")}}
-            <div class="col-sm-6">
-                {{ form.password(placeholder="Min. 6 caractères", class="form-control") }}
-            </div>
-            <p class="col-sm-3 help-block">
-                {{ form.password.errors[0] }}
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-3">
-                {{ form.remember_me.label }}
-            </div>
-            <div class="col-sm-6">
-                {{ form.remember_me }}
-            </div>
-            <p class="col-sm-3 help-block">
-                {{ form.remember_me.errors[0] }}
-        </div>
-
-        <button class="btn btn-success" id="submitbtn" type="submit">Se connecter</button>
-    </div>
-</form>
 
 {% endblock %}

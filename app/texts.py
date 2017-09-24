@@ -10,7 +10,7 @@ VALIDATION = "Valider"
 
 INCORRECT_CREDENTIALS = "Le nom d'utilisateur ou le mot de passe est incorrect"
 
-ACCOUNT_CREATED = u"Votre compte a bien été créé !"
+ACCOUNT_CREATED = u"Votre compte a bien été créé ! Vous pouvez désormais vous connecter"
+LOGIN_SUCCESSFUL = u"Vous êtes à présent connecté"
 USERNAME_ALREADY_TAKEN = u"Ce pseudo est déjà utilisé"
 EMAIL_ALREADY_TAKEN = u"Cette adresse email est déjà utilisée"
-

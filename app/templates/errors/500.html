@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Oups...</strong></h3>
+                </div>
+
+                <div class="panel-body">
+                    <p>
+                        Une erreur est survenue.
+                        Revenir à <a href="{{ url_for('index') }}">l'accueil</a> ?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

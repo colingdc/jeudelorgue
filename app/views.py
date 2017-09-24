@@ -5,12 +5,12 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, bcrypt
 from .forms import LoginForm, SignupForm
 from .models import User
-from .texts import INCORRECT_CREDENTIALS, ACCOUNT_CREATED, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
+from .texts import ACCOUNT_CREATED, LOGIN_SUCCESSFUL
+from .texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
 
 
 @app.route("/")
 @app.route("/index")
-@login_required
 def index():
     title = "Accueil"
     return render_template("index.html", title = title)
@@ -74,6 +74,7 @@ def login():
         login_user(user, remember = form.remember_me.data)
         session["signed"] = True
         session["username"] = user.username
+        flash(LOGIN_SUCCESSFUL)
 
         # Redirect the user to the page he initially wanted to access
         if session.get("next"):
@@ -84,4 +85,13 @@ def login():
             return redirect(url_for("index"))
 
     session["next"] = request.args.get("next")
-    return render_template("login.html", form = LoginForm(), title = title)
+    return render_template("login.html", form = form, title = title)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    session.pop("signed", None)
+    session.pop("username", None)
+    logout_user()
+    return redirect(url_for("index"))
