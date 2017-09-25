@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, flash, url_for
+from flask import Blueprint, render_template, redirect, request, session, flash, url_for
 from flask_login import login_user, logout_user, login_required, current_user
-from app import app, db, bcrypt
-from .forms import LoginForm, SignupForm
+from .models import db, bcrypt
 from .models import User
+from .forms import LoginForm, SignupForm
 from .texts import ACCOUNT_CREATED, LOGIN_SUCCESSFUL
 from .texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
 
 
-@app.route("/")
-@app.route("/index")
+bp = Blueprint("main", __name__)
+
+
+@bp.route("/")
+@bp.route("/index")
 def index():
     title = "Accueil"
     return render_template("index.html", title = title)
 
 
-@app.route("/signup", methods = ["GET", "POST"])
+@bp.route("/signup", methods = ["GET", "POST"])
 def signup():
     title = "Inscription"
     form = SignupForm(request.form)
@@ -40,19 +43,19 @@ def signup():
             session.pop("signed", None)
             session.pop("username", None)
             logout_user()
-            return redirect(url_for("login"))
+            return redirect(url_for("main.login"))
     else:
         return render_template("signup.html", form = form, title = title)
 
 
-@app.route("/login", methods = ["GET", "POST"])
+@bp.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm()
     title = "Connexion"
 
     # Redirect user to homepage if they are already authenticated
     if current_user is not None and current_user.is_authenticated:
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
 
     # If form was submitted via a POST request
     if form.validate_on_submit():
@@ -82,16 +85,16 @@ def login():
             session.pop("next")
             return redirect(next_page)
         else:
-            return redirect(url_for("index"))
+            return redirect(url_for("main.index"))
 
     session["next"] = request.args.get("next")
     return render_template("login.html", form = form, title = title)
 
 
-@app.route("/logout")
+@bp.route("/logout")
 @login_required
 def logout():
     session.pop("signed", None)
     session.pop("username", None)
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("main.index"))

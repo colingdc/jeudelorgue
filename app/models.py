@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from app import db, bcrypt
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 import datetime
+
+db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 
 class User(db.Model):
