@@ -13,10 +13,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="{{ url_for('static', filename='js/bootstrap_theme.js') }}"></script>
-
 {% endblock %}
 
 
@@ -24,10 +20,9 @@
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='images/tennis_ball.ico') }}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<!--<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css">-->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -85,5 +80,11 @@
         {% block content %}{% endblock %}
     </div>
 </div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='js/bootstrap_theme.js') }}"></script>
+{% block extrajs %}{% endblock %}
 
 {% endblock %}
