@@ -1,0 +1,8 @@
+<h3>Bonjour {{ user.username }},</h3>
+
+<p>Bienvenue sur le Jeu de L-orgue !</p>
+<p>Afin de confirmer votre compte, merci de cliquer sur le lien suivant :</p>
+<button><a href="{{ url_for('auth.confirm', token=token, _external=True) }}">Valider mon email</a></button>
+<br>
+
+<em>L'équipe du Jeu de L-orgue</em>

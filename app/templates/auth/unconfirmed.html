@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div class="well">
+        <h1>
+            Bonjour {{ current_user.username }} !
+        </h1>
+        <h3>Vous n'avez pas encore confirmé votre email.</h3>
+        <p>
+            Avant de pouvoir accéder à ce site vous devez confirmer votre email.
+            Vérifiez votre boîte mail, vous avez dû recevoir un email contenant un lien de confirmation.
+        </p>
+        <p>
+            Vous n'avez pas reçu l'email ou le lien de confirmation a expiré ?
+            <a href="{{ url_for('auth.resend_confirmation') }}">Générez-en un nouveau ici</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

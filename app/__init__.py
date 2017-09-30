@@ -4,7 +4,7 @@ import logging
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, session, g, request
+from flask import Flask, session, g, request, redirect, url_for
 from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
@@ -48,6 +48,9 @@ def create_app(config_name):
         app.permanent_session_lifetime = timedelta(minutes = 60)
         session.modified = True
         g.user = current_user
+
+        if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
+            return redirect(url_for('auth.unconfirmed'))
 
     @app.after_request
     def after_request(response):

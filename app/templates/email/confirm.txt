@@ -1,0 +1,6 @@
+Bonjour {{ user.username }},
+Bienvenue sur le Jeu de L-orgue !
+Afin de confirmer votre compte, merci de cliquer sur le lien suivant :
+{{ url_for('auth.confirm', token=token, _external=True) }}
+
+L'équipe du Jeu de L-orgue
