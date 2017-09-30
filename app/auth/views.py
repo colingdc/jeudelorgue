@@ -84,7 +84,6 @@ def login():
 
 
 @auth.route("/logout")
-@login_required
 def logout():
     session.pop("signed", None)
     session.pop("username", None)

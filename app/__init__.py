@@ -9,14 +9,16 @@ from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 
 from config import config
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 bootstrap = Bootstrap()
+mail = Mail()
 login_manager = LoginManager()
-login_manager.login_view = "main.login"
+login_manager.login_view = "auth.login"
 login_manager.login_message_category = "danger"
 
 
@@ -27,6 +29,7 @@ def create_app(config_name):
     db.init_app(app)
     bootstrap.init_app(app)
     login_manager.init_app(app)
+    mail.init_app(app)
 
     from .models import User
 
