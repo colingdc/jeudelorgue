@@ -11,7 +11,7 @@
                     <h3 class="panel-title"><strong>Connexion</strong></h3>
                 </div>
 
-                <form action="{{ url_for('main.login') }}" class="form-horizontal" method="POST">
+                <form action="{{ url_for('auth.login') }}" class="form-horizontal" method="POST">
                     {{ form.hidden_tag() }}
 
                     <div class="panel-body">
@@ -48,7 +48,7 @@
                                     <button class="btn btn-success" type="submit">Se connecter</button>
                                     <span class="pull-right">
                                         Pas encore inscrit ?
-                                        <a href="{{ url_for('main.signup') }}">Créer un compte</a>
+                                        <a href="{{ url_for('auth.signup') }}">Créer un compte</a>
                                     </span>
                                 </div>
 

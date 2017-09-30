@@ -1,25 +1,34 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, session, g, render_template, request
+import logging
+from datetime import timedelta
+from logging.handlers import RotatingFileHandler
+
+from flask import Flask, session, g, request
+from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
-import logging
-from logging.handlers import RotatingFileHandler
-from datetime import timedelta
+from flask_sqlalchemy import SQLAlchemy
+
+from config import config
+
+db = SQLAlchemy()
+bcrypt = Bcrypt()
+bootstrap = Bootstrap()
+login_manager = LoginManager()
+login_manager.login_view = "main.login"
+login_manager.login_message_category = "danger"
 
 
-def create_app(config):
+def create_app(config_name):
     app = Flask(__name__)
-    app.config.from_object(config)
+    app.config.from_object(config.get(config_name, "default"))
 
-    from .models import db, User
     db.init_app(app)
+    bootstrap.init_app(app)
+    login_manager.init_app(app)
 
-    Bootstrap(app)
-    login_manager = LoginManager(app)
-
-    login_manager.login_view = "main.login"
-    login_manager.login_message_category = "danger"
+    from .models import User
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -43,23 +52,10 @@ def create_app(config):
             app.logger.info(request.full_path)
         return response
 
-    @app.errorhandler(403)
-    def forbidden_page(error):
-        app.logger.error(error)
-        return render_template("errors/403.html"), 403
-
-    @app.errorhandler(404)
-    def page_not_found(error):
-        app.logger.error(error)
-        return render_template("errors/404.html"), 404
-
-    @app.errorhandler(500)
-    def server_error_page(error):
-        app.logger.error(error)
-        return render_template("errors/500.html"), 500
-
-    from .views import bp as main_blueprint
+    from .main import main as main_blueprint
+    from .auth import auth as auth_blueprint
 
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(auth_blueprint)
 
     return app

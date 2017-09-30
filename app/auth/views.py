@@ -1,25 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, redirect, request, session, flash, url_for
+from flask import render_template, redirect, request, session, flash, url_for
 from flask_login import login_user, logout_user, login_required, current_user
-from .models import db, bcrypt
-from .models import User
+
+from . import auth
 from .forms import LoginForm, SignupForm
-from .texts import ACCOUNT_CREATED, LOGIN_SUCCESSFUL
-from .texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
+from ..models import User
+from ..models import db, bcrypt
+from ..texts import ACCOUNT_CREATED, LOGIN_SUCCESSFUL
+from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
 
 
-bp = Blueprint("main", __name__)
-
-
-@bp.route("/")
-@bp.route("/index")
-def index():
-    title = "Accueil"
-    return render_template("index.html", title = title)
-
-
-@bp.route("/signup", methods = ["GET", "POST"])
+@auth.route("/signup", methods = ["GET", "POST"])
 def signup():
     title = "Inscription"
     form = SignupForm(request.form)
@@ -32,7 +24,7 @@ def signup():
         if email_exist:
             form.email.errors.append(EMAIL_ALREADY_TAKEN)
         if user_exist or email_exist:
-            return render_template("signup.html", form = form, title = title)
+            return render_template("auth/signup.html", form = form, title = title)
         else:
             user = User(username = form.username.data,
                         email = form.email.data,
@@ -43,12 +35,12 @@ def signup():
             session.pop("signed", None)
             session.pop("username", None)
             logout_user()
-            return redirect(url_for("main.login"))
+            return redirect(url_for("auth.login"))
     else:
-        return render_template("signup.html", form = form, title = title)
+        return render_template("auth/signup.html", form = form, title = title)
 
 
-@bp.route("/login", methods = ["GET", "POST"])
+@auth.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm()
     title = "Connexion"
@@ -65,13 +57,13 @@ def login():
         if user is None:
             form.username.errors.append(INCORRECT_CREDENTIALS)
             form.password.errors.append("")
-            return render_template("login.html", form = form, title = title)
+            return render_template("auth/login.html", form = form, title = title)
 
         is_password_correct = bcrypt.check_password_hash(user.password, form.password.data)
         if not is_password_correct:
             form.username.errors.append(INCORRECT_CREDENTIALS)
             form.password.errors.append("")
-            return render_template("login.html", form = form, title = title)
+            return render_template("auth/login.html", form = form, title = title)
 
         # Otherwise log the user in
         login_user(user, remember = form.remember_me.data)
@@ -88,10 +80,10 @@ def login():
             return redirect(url_for("main.index"))
 
     session["next"] = request.args.get("next")
-    return render_template("login.html", form = form, title = title)
+    return render_template("auth/login.html", form = form, title = title)
 
 
-@bp.route("/logout")
+@auth.route("/logout")
 @login_required
 def logout():
     session.pop("signed", None)
