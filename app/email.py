@@ -16,7 +16,7 @@ def send_email(to, subject, template, **kwargs):
 
     # Redirect all messages outside production to admin email account
     if not current_app.config.get("PRODUCTION"):
-        to = current_app.get("ADMIN_JDL")
+        to = current_app.config.get("ADMIN_JDL")
 
     msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + ' ' + subject,
                   sender = app.config['MAIL_SENDER'], recipients = [to])

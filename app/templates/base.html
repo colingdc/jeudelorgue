@@ -59,11 +59,22 @@
                     </a>
                 </li>
                 {% if current_user.is_authenticated %}
-                <li>
-                    <a href="/logout">
-                        <span class="fa fa-sign-out" aria-hidden="true"></span>
-                        Déconnexion
-                    </a>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mon compte <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ url_for('auth.change_password') }}">
+                                <span class="fa fa-pencil" aria-hidden="true"></span>
+                                Modification du mot de passe
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('auth.logout') }}">
+                                <span class="fa fa-sign-out" aria-hidden="true"></span>
+                                Déconnexion
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 {% else %}
                 <li>

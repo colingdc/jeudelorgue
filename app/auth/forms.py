@@ -2,7 +2,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, EqualTo
 from ..texts import MISSING_FIELD
 from ..texts import MISSING_EMAIL_ADDRESS, INVALID_EMAIL_ADDRESS
 from ..texts import INVALID_PASSWORD
@@ -13,7 +13,7 @@ class SignupForm(FlaskForm):
     email = StringField('Email', validators = [DataRequired(INVALID_EMAIL_ADDRESS),
                                                Email(message = MISSING_EMAIL_ADDRESS)])
     password = PasswordField('Mot de passe', validators = [DataRequired(message = MISSING_FIELD),
-                                                           Length(min = 6, message = INVALID_PASSWORD)])
+                                                           Length(min = 8, message = INVALID_PASSWORD)])
     username = StringField("Pseudo", validators = [DataRequired(message = MISSING_FIELD)])
     submit = SubmitField(VALIDATION)
 
@@ -23,3 +23,15 @@ class LoginForm(FlaskForm):
     password = PasswordField("Mot de passe", validators = [DataRequired(message = MISSING_FIELD)])
     remember_me = BooleanField("Se souvenir de moi", default = False)
     submit = SubmitField(VALIDATION)
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField("Mot de passe actuel", validators = [DataRequired()])
+    password = PasswordField("Nouveau mot de passe",
+                             validators = [DataRequired(message = MISSING_FIELD),
+                                           Length(min = 8, message = INVALID_PASSWORD),
+                                           EqualTo('password2',
+                                                   message = "Les mots de passe entrés sont différents")])
+    password2 = PasswordField("Confirmer le nouveau mot de passe", validators = [DataRequired()])
+    submit = SubmitField(VALIDATION)
+

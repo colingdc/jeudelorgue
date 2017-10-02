@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, session, flash, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 
 from . import auth
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, ChangePasswordForm
 from ..models import User
 from ..models import db, bcrypt
 from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
@@ -123,3 +123,18 @@ def resend_confirmation():
                'email/confirm', user = current_user, token = token)
     flash(CONFIRMATION_MAIL_RESENT)
     return redirect(url_for('main.index'))
+
+
+@auth.route("/change-password", methods = ["GET", "POST"])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = bcrypt.generate_password_hash(form.password.data)
+            db.session.add(current_user)
+            flash("Votre mot de passe a été mis à jour")
+            return redirect(url_for("main.index"))
+        else:
+            flash("Mot de passe incorrect")
+    return render_template("auth/change_password.html", form = form)
