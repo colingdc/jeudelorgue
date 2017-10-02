@@ -93,7 +93,7 @@ def logout():
     session.pop("signed", None)
     session.pop("username", None)
     logout_user()
-    return redirect(url_for("main.index"))
+    return redirect(url_for("main.landing"))
 
 
 @auth.route('/unconfirmed')
@@ -123,4 +123,3 @@ def resend_confirmation():
                'email/confirm', user = current_user, token = token)
     flash(CONFIRMATION_MAIL_RESENT)
     return redirect(url_for('main.index'))
-

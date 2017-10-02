@@ -31,17 +31,20 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    PRODUCTION = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL')
 
 
 class TestingConfig(Config):
     TESTING = True
+    PRODUCTION = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL')
     WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    PRODUCTION = True
 
     @classmethod
     def init_app(cls, app):
