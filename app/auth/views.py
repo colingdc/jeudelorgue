@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, session, flash, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 
 from . import auth
-from .forms import LoginForm, SignupForm, ChangePasswordForm
+from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
 from ..models import User
 from ..models import db, bcrypt
 from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
@@ -35,7 +35,7 @@ def signup():
             db.session.commit()
             token = user.generate_confirmation_token()
             send_email(user.email, "Confirmation de votre adresse mail",
-                       'email/confirm', user = user, token = token)
+                       "email/confirm", user = user, token = token)
             flash(CONFIRMATION_MAIL_SENT)
             session.pop("signed", None)
             session.pop("username", None)
@@ -96,33 +96,33 @@ def logout():
     return redirect(url_for("main.landing"))
 
 
-@auth.route('/unconfirmed')
+@auth.route("/unconfirmed")
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
-        return redirect('main.index')
-    return render_template('auth/unconfirmed.html')
+        return redirect("main.index")
+    return render_template("auth/unconfirmed.html")
 
 
 @auth.route("/confirm/<token>")
 @login_required
 def confirm(token):
     if current_user.confirmed:
-        return redirect(url_for('main.index'))
+        return redirect(url_for("main.index"))
     if current_user.confirm(token):
         flash(ACCOUNT_CONFIRMED)
     else:
         flash(INVALID_CONFIRMATION_TOKEN)
-    return redirect(url_for('main.index'))
+    return redirect(url_for("main.index"))
 
 
-@auth.route('/confirm')
+@auth.route("/confirm")
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, "Confirmation de votre adresse mail",
-               'email/confirm', user = current_user, token = token)
+               "email/confirm", user = current_user, token = token)
     flash(CONFIRMATION_MAIL_RESENT)
-    return redirect(url_for('main.index'))
+    return redirect(url_for("main.index"))
 
 
 @auth.route("/change-password", methods = ["GET", "POST"])
@@ -136,5 +136,40 @@ def change_password():
             flash("Votre mot de passe a été mis à jour")
             return redirect(url_for("main.index"))
         else:
-            flash("Mot de passe incorrect")
+            form.old_password.errors.append("Mot de passe incorrect")
     return render_template("auth/change_password.html", form = form)
+
+
+@auth.route("/reset", methods = ["GET", "POST"])
+def reset_password_request():
+    if not current_user.is_anonymous:
+        return redirect(url_for("main.index"))
+    form = PasswordResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email = form.email.data).first()
+        if user:
+            token = user.generate_reset_token()
+            send_email(user.email, "Réinitialisation de votre mot de passe",
+                       "email/reset_password",
+                       user = user, token = token,
+                       next = request.args.get("next"))
+            flash("Un email contenant des instructions pour réinitialiser votre mot de passe vous a été envoyé.")
+        return redirect(url_for("auth.login"))
+    return render_template("auth/reset_password_request.html", form = form)
+
+
+@auth.route("/reset/<token>", methods = ["GET", "POST"])
+def reset_password(token):
+    if not current_user.is_anonymous:
+        return redirect(url_for("main.index"))
+    form = PasswordResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email = form.email.data).first()
+        if user is None:
+            return redirect(url_for("main.index"))
+        if user.reset_password(token, form.password.data):
+            flash("Votre mot de passe a été mis à jour.")
+            return redirect(url_for("auth.login"))
+        else:
+            return redirect(url_for("main.index"))
+    return render_template("auth/reset_password.html", form = form, token = token)

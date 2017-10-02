@@ -48,7 +48,15 @@
                                     <button class="btn btn-success" type="submit">Valider</button>
                                     <span class="pull-right">
                                         Pas encore inscrit ?
-                                        <a href="{{ url_for('auth.signup') }}">Créer un compte</a>
+                                        <a href="{{ url_for('auth.signup') }}">
+                                            Créer un compte
+                                        </a>
+                                    </span>
+                                    <span class="pull-right">
+                                        Mot de passe oublié ?
+                                        <a href="{{ url_for('auth.reset_password_request') }}">
+                                            Réinitialiser mon mot de passe
+                                        </a>
                                     </span>
                                 </div>
 

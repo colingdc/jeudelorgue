@@ -2,11 +2,13 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, SubmitField
+from wtforms import ValidationError
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 from ..texts import MISSING_FIELD
 from ..texts import MISSING_EMAIL_ADDRESS, INVALID_EMAIL_ADDRESS
 from ..texts import INVALID_PASSWORD
 from ..texts import VALIDATION
+from ..models import User
 
 
 class SignupForm(FlaskForm):
@@ -35,3 +37,20 @@ class ChangePasswordForm(FlaskForm):
     password2 = PasswordField("Confirmer le nouveau mot de passe", validators = [DataRequired()])
     submit = SubmitField(VALIDATION)
 
+
+class PasswordResetRequestForm(FlaskForm):
+    email = StringField("Email", validators = [DataRequired(), Length(1, 64),
+                                               Email()])
+    submit = SubmitField("Réinitialiser le mot de passe")
+
+
+class PasswordResetForm(FlaskForm):
+    email = StringField("Email", validators = [DataRequired(), Length(1, 64),
+                                               Email()])
+    password = PasswordField("Nouveau mot de passe",
+                             validators = [DataRequired(),
+                                           Length(min = 8, message = INVALID_PASSWORD),
+                                           EqualTo("password2",
+                                                   message = "Les mots de passe entrés sont différents")])
+    password2 = PasswordField("Confirmer le mot de passe", validators = [DataRequired()])
+    submit = SubmitField("Réinitialiser le mot de passe")

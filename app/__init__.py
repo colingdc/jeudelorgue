@@ -20,6 +20,7 @@ mail = Mail()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 login_manager.login_message_category = "danger"
+login_manager.login_message = u"Veuillez vous connecter pour accéder à cette page."
 
 
 def create_app(config_name):

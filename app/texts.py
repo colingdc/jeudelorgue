@@ -4,7 +4,7 @@ MISSING_EMAIL_ADDRESS = u"Merci de renseigner une adresse email valide"
 INVALID_EMAIL_ADDRESS = u"Cette adresse n'est pas valide"
 
 MISSING_FIELD = "Ce champ est obligatoire"
-INVALID_PASSWORD = u"Votre mot de passe doit contenir au moins 6 caractères"
+INVALID_PASSWORD = u"Votre mot de passe doit contenir au moins 8 caractères"
 
 VALIDATION = "Valider"
 

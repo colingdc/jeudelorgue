@@ -18,7 +18,7 @@ class User(db.Model):
     password = db.Column(db.String(256), unique = False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return "<User %r>" % self.username
 
     def __init__(self, username, password, email, role = "USER"):
         self.username = username
@@ -43,34 +43,34 @@ class User(db.Model):
         return bcrypt.check_password_hash(self.password, password)
 
     def generate_confirmation_token(self, expiration = 3600):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'confirm': self.id})
+        s = Serializer(current_app.config["SECRET_KEY"], expiration)
+        return s.dumps({"confirm": self.id})
 
     def generate_reset_token(self, expiration = 3600):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'reset': self.id})
+        s = Serializer(current_app.config["SECRET_KEY"], expiration)
+        return s.dumps({"reset": self.id})
 
     def confirm(self, token):
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
         except :
             return False
-        if data.get('confirm') != self.id:
+        if data.get("confirm") != self.id:
             return False
         self.confirmed = True
         db.session.add(self)
         return True
 
     def reset_password(self, token, new_password):
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
         except:
             return False
-        if data.get('reset') != self.id:
+        if data.get("reset") != self.id:
             return False
-        self.password = new_password
+        self.password = bcrypt.generate_password_hash(new_password)
         db.session.add(self)
         return True
 
