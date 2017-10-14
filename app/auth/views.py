@@ -30,13 +30,13 @@ def signup():
         else:
             user = User(username = form.username.data,
                         email = form.email.data,
-                        password = form.password.data)
+                        password = bcrypt.generate_password_hash(form.password.data))
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirmation_token()
             send_email(user.email, "Confirmation de votre adresse mail",
                        "email/confirm", user = user, token = token)
-            flash(CONFIRMATION_MAIL_SENT)
+            flash(CONFIRMATION_MAIL_SENT, "info")
             session.pop("signed", None)
             session.pop("username", None)
             logout_user()
@@ -74,7 +74,7 @@ def login():
         login_user(user, remember = form.remember_me.data)
         session["signed"] = True
         session["username"] = user.username
-        flash(LOGIN_SUCCESSFUL)
+        flash(LOGIN_SUCCESSFUL, "success")
 
         # Redirect the user to the page he initially wanted to access
         if session.get("next"):
@@ -109,9 +109,9 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for("main.index"))
     if current_user.confirm(token):
-        flash(ACCOUNT_CONFIRMED)
+        flash(ACCOUNT_CONFIRMED, "success")
     else:
-        flash(INVALID_CONFIRMATION_TOKEN)
+        flash(INVALID_CONFIRMATION_TOKEN, "error")
     return redirect(url_for("main.index"))
 
 
@@ -121,7 +121,7 @@ def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, "Confirmation de votre adresse mail",
                "email/confirm", user = current_user, token = token)
-    flash(CONFIRMATION_MAIL_RESENT)
+    flash(CONFIRMATION_MAIL_RESENT, "info")
     return redirect(url_for("main.index"))
 
 
@@ -133,7 +133,7 @@ def change_password():
         if current_user.verify_password(form.old_password.data):
             current_user.password = bcrypt.generate_password_hash(form.password.data)
             db.session.add(current_user)
-            flash("Votre mot de passe a été mis à jour")
+            flash("Votre mot de passe a été mis à jour", "success")
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
@@ -153,7 +153,9 @@ def reset_password_request():
                        "email/reset_password",
                        user = user, token = token,
                        next = request.args.get("next"))
-            flash("Un email contenant des instructions pour réinitialiser votre mot de passe vous a été envoyé.")
+            flash("Un email contenant des instructions pour réinitialiser "
+                  "votre mot de passe vous a été envoyé.",
+                  "info")
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password_request.html", form = form)
 
@@ -168,8 +170,9 @@ def reset_password(token):
         if user is None:
             return redirect(url_for("main.index"))
         if user.reset_password(token, form.password.data):
-            flash("Votre mot de passe a été mis à jour.")
+            flash("Votre mot de passe a été mis à jour.", "success")
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))
     return render_template("auth/reset_password.html", form = form, token = token)
+
