@@ -2,19 +2,20 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="panel panel-default">
+<div class="panel panel-default">
 
-        <div class="panel-heading">
-            <h3 class="panel-title"><strong>Profil de {{ user.username }}</strong></h3>
-        </div>
+    <div class="panel-heading">
+        <h3 class="panel-title"><strong>Profil de {{ user.username }}</strong></h3>
+    </div>
 
-        <div class="panel-body">
-            <p>Pseudo : {{ user.username }}</p>
-            {% if current_user.is_administrator() %}
-            <p>Email : {{ user.email }}</p>
-            {% endif %}
-        </div>
+    <div class="panel-body">
+        <p>Pseudo : {{ user.username }}</p>
+        {% if current_user.is_administrator() %}
+        <p>Email : {{ user.email }}</p>
+        <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id = user.id) }}">
+            Edit Profile [Admin]
+        </a>
+        {% endif %}
     </div>
 </div>
 

@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, abort
+from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 from . import main
-from ..models import User
+from ..decorators import admin_required
+from ..models import User, Role
+from .. import db
+from ..texts import PROFILE_UPDATED
+from .forms import EditProfileAdminForm
 
 
 @main.route("/")
@@ -23,3 +28,25 @@ def user(username):
     user = User.query.filter_by(username = username).first_or_404()
     title = "Profil de {}".format(username)
     return render_template("main/user.html", title = title, user = user)
+
+
+@main.route("/edit-profile/<int:id>", methods = ['GET', 'POST'])
+@login_required
+@admin_required
+def edit_profile_admin(id):
+    title = "Modification de profil"
+    user = User.query.get_or_404(id)
+    form = EditProfileAdminForm(user = user)
+    if form.validate_on_submit():
+        user.email = form.email.data
+        user.username = form.username.data
+        user.confirmed = form.confirmed.data
+        user.role = Role.query.get(form.role.data)
+        db.session.add(user)
+        flash(PROFILE_UPDATED, "success")
+        return redirect(url_for(".user", username = user.username))
+    form.email.data = user.email
+    form.username.data = user.username
+    form.confirmed.data = user.confirmed
+    form.role.data = user.role_id
+    return render_template("main/edit_profile.html", form = form, user = user, title = title)
