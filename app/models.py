@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index = True, unique = True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     email = db.Column(db.String(120), index = True, unique = True)
-    password = db.Column(db.String(256), unique = False)
+    password_hash = db.Column(db.String(128))
 
     def __repr__(self):
         return "<User %r>" % self.username
@@ -29,14 +29,22 @@ class User(UserMixin, db.Model):
             if self.role is None:
                 self.role = Role.query.filter_by(default = True).first()
 
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = bcrypt.generate_password_hash(password)
+
+    def verify_password(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password)
+
     def can(self, permissions):
         return self.role is not None and (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
-
-    def verify_password(self, password):
-        return bcrypt.check_password_hash(self.password, password)
 
     def generate_confirmation_token(self, expiration = 3600):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
@@ -66,7 +74,7 @@ class User(UserMixin, db.Model):
             return False
         if data.get("reset") != self.id:
             return False
-        self.password = bcrypt.generate_password_hash(new_password)
+        self.password = new_password
         db.session.add(self)
         return True
 
@@ -81,7 +89,9 @@ class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
         return False
 
+
 login_manager.anonymous_user = AnonymousUser
+
 
 class Permission:
     PARTICIPATE_TOURNAMENT = 0x01

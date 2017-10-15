@@ -6,7 +6,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from . import auth
 from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
 from ..models import User
-from ..models import db, bcrypt
+from ..models import db
 from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
 from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
 from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN
@@ -30,7 +30,7 @@ def signup():
         else:
             user = User(username = form.username.data,
                         email = form.email.data,
-                        password = bcrypt.generate_password_hash(form.password.data))
+                        password = form.password.data)
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirmation_token()
@@ -64,7 +64,7 @@ def login():
             form.password.errors.append("")
             return render_template("auth/login.html", form = form, title = title)
 
-        is_password_correct = bcrypt.check_password_hash(user.password, form.password.data)
+        is_password_correct = user.verify_password(form.password.data)
         if not is_password_correct:
             form.username.errors.append(INCORRECT_CREDENTIALS)
             form.password.errors.append("")
@@ -131,7 +131,7 @@ def change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.old_password.data):
-            current_user.password = bcrypt.generate_password_hash(form.password.data)
+            current_user.password = form.password.data
             db.session.add(current_user)
             flash("Votre mot de passe a été mis à jour", "success")
             return redirect(url_for("main.index"))
