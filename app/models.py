@@ -127,3 +127,16 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Role %r>' % self.name
+
+
+class Tournament(db.Model):
+    __tablename__ = "tournament"
+    id = db.Column(db.Integer, primary_key = True)
+    deleted_at = db.Column(db.Boolean, default = None)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+
+    name = db.Column(db.String(64))
+    number_rounds = db.Column(db.Integer)
+    started_at = db.Column(db.DateTime)
+    ended_at = db.Column(db.DateTime, default = None)
+    is_open = db.Column(db.Boolean, default = False)

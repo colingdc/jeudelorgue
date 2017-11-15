@@ -3,66 +3,62 @@
 {% block content %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
+    <div class="panel panel-default">
 
-                <div class="panel-heading">
-                    <h3 class="panel-title"><strong>Modification de profil</strong></h3>
-                </div>
-
-                <form action="{{ url_for('main.edit_profile_admin', id=user.id) }}" class="form-horizontal" method="POST">
-                    {{ form.hidden_tag() }}
-
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2">
-
-                                <div class="form-group {% if form.email.errors %} has-error {% endif %}">
-                                    {{form.email.label()}}
-                                    <div>
-                                        {{form.email(class="form-control")}}
-                                    </div>
-                                    <p class="help-block">
-                                        {{ form.email.errors[0] }}
-                                </div>
-
-                                <div class="form-group {% if form.username.errors %} has-error {% endif %}">
-                                    {{form.username.label()}}
-                                    <div>
-                                        {{form.username(class="form-control")}}
-                                    </div>
-                                    <p class="help-block">
-                                        {{ form.username.errors[0] }}
-                                </div>
-
-                                <div class="form-group {% if form.role.errors %} has-error {% endif %}">
-                                    {{form.role.label()}}
-                                    <div>
-                                        {{ form.role(class="form-control") }}
-                                    </div>
-                                    <p class="help-block">
-                                        {{ form.role.errors[0] }}
-                                </div>
-
-                                <div class="form-group {% if form.confirmed.errors %} has-error {% endif %}">
-                                    <div class="checkbox">
-                                        <label>{{ form.confirmed }} {{ form.confirmed.label}}</label>
-                                    </div>
-                                    <p class="help-block">
-                                        {{ form.confirmed.errors[0] }}
-                                </div>
-
-                                <div class="form-group">
-                                    <button class="btn btn-success" type="submit">Valider</button>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>Modification de profil</strong></h3>
         </div>
+
+        <form action="{{ url_for('main.edit_profile_admin', id=user.id) }}" class="form-horizontal" method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+
+                        <div class="form-group {% if form.email.errors %} has-error {% endif %}">
+                            {{form.email.label()}}
+                            <div>
+                                {{form.email(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.email.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.username.errors %} has-error {% endif %}">
+                            {{form.username.label()}}
+                            <div>
+                                {{form.username(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.username.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.role.errors %} has-error {% endif %}">
+                            {{form.role.label()}}
+                            <div>
+                                {{ form.role(class="form-control") }}
+                            </div>
+                            <p class="help-block">
+                                {{ form.role.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.confirmed.errors %} has-error {% endif %}">
+                            <div class="checkbox">
+                                <label>{{ form.confirmed }} {{ form.confirmed.label}}</label>
+                            </div>
+                            <p class="help-block">
+                                {{ form.confirmed.errors[0] }}
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success" type="submit">Valider</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
