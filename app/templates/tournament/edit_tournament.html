@@ -6,10 +6,10 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h3 class="panel-title"><strong>Créer un tournoi</strong></h3>
+            <h3 class="panel-title"><strong>Editer le tournoi</strong></h3>
         </div>
 
-        <form action="{{ url_for('admin.create_tournament') }}" class="form-horizontal" method="POST">
+        <form action="{{ url_for('tournament.edit_tournament', tournament_id=tournament.id) }}" class="form-horizontal" method="POST">
             {{ form.hidden_tag() }}
 
             <div class="panel-body">

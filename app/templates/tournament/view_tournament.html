@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>Tournoi {{ tournament.name }}</strong></h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <ul class="col-md-8 col-md-offset-2">
+                    <li>{{ tournament.number_rounds }} tours</li>
+                    <li>Date de début : {{ tournament.started_at }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

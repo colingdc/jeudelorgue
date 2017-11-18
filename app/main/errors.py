@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, request, jsonify
-from . import main
+from . import bp
 
 
-@main.app_errorhandler(403)
+@bp.app_errorhandler(403)
 def forbidden(e):
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
         response = jsonify({'error': 'forbidden'})
@@ -13,7 +13,7 @@ def forbidden(e):
     return render_template('errors/403.html'), 403
 
 
-@main.app_errorhandler(404)
+@bp.app_errorhandler(404)
 def page_not_found(e):
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
         response = jsonify({'error': 'not found'})
@@ -22,7 +22,7 @@ def page_not_found(e):
     return render_template('errors/404.html'), 404
 
 
-@main.app_errorhandler(500)
+@bp.app_errorhandler(500)
 def internal_server_error(e):
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
         response = jsonify({'error': 'internal server error'})

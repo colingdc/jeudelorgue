@@ -3,7 +3,7 @@
 from flask import render_template, redirect, request, session, flash, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 
-from . import auth
+from . import bp
 from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
 from ..models import User
 from ..models import db
@@ -13,7 +13,7 @@ from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN
 from ..email import send_email
 
 
-@auth.route("/signup", methods = ["GET", "POST"])
+@bp.route("/signup", methods = ["GET", "POST"])
 def signup():
     title = "Inscription"
     form = SignupForm(request.form)
@@ -45,7 +45,7 @@ def signup():
         return render_template("auth/signup.html", form = form, title = title)
 
 
-@auth.route("/login", methods = ["GET", "POST"])
+@bp.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm()
     title = "Connexion"
@@ -88,7 +88,7 @@ def login():
     return render_template("auth/login.html", form = form, title = title)
 
 
-@auth.route("/logout")
+@bp.route("/logout")
 def logout():
     session.pop("signed", None)
     session.pop("username", None)
@@ -96,14 +96,14 @@ def logout():
     return redirect(url_for("main.landing"))
 
 
-@auth.route("/unconfirmed")
+@bp.route("/unconfirmed")
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect("main.index")
     return render_template("auth/unconfirmed.html")
 
 
-@auth.route("/confirm/<token>")
+@bp.route("/confirm/<token>")
 @login_required
 def confirm(token):
     if current_user.confirmed:
@@ -115,7 +115,7 @@ def confirm(token):
     return redirect(url_for("main.index"))
 
 
-@auth.route("/confirm")
+@bp.route("/confirm")
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
@@ -125,7 +125,7 @@ def resend_confirmation():
     return redirect(url_for("main.index"))
 
 
-@auth.route("/change-password", methods = ["GET", "POST"])
+@bp.route("/change-password", methods = ["GET", "POST"])
 @login_required
 def change_password():
     form = ChangePasswordForm()
@@ -140,7 +140,7 @@ def change_password():
     return render_template("auth/change_password.html", form = form)
 
 
-@auth.route("/reset", methods = ["GET", "POST"])
+@bp.route("/reset", methods = ["GET", "POST"])
 def reset_password_request():
     if not current_user.is_anonymous:
         return redirect(url_for("main.index"))
@@ -160,7 +160,7 @@ def reset_password_request():
     return render_template("auth/reset_password_request.html", form = form)
 
 
-@auth.route("/reset/<token>", methods = ["GET", "POST"])
+@bp.route("/reset/<token>", methods = ["GET", "POST"])
 def reset_password(token):
     if not current_user.is_anonymous:
         return redirect(url_for("main.index"))
