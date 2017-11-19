@@ -20,3 +20,6 @@ INVALID_CONFIRMATION_TOKEN = u"Le lien de confirmation est invalide ou a expiré
 PROFILE_UPDATED = u"Le profil a été mis à jour."
 
 PLAYER_ALREADY_EXISTS = u"Ce joueur existe déjà"
+
+REGISTRATION_OPENED = u"Les inscriptions au tournoi sont ouvertes"
+REGISTRATION_CLOSED = u"Les inscriptions au tournoi sont closes"

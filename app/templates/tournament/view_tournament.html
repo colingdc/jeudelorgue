@@ -13,7 +13,32 @@
             <div class="row">
                 <ul class="col-md-8 col-md-offset-2">
                     <li>{{ tournament.number_rounds }} tours</li>
-                    <li>Date de début : {{ tournament.started_at }}</li>
+                    {% if tournament.is_open_to_registration() %}
+                    <li>Date limite d'inscription : {{ tournament.started_at }}
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
+                            Fermer les inscriptions
+                        </a>
+                    </li>
+                    {% elif not tournament.is_visible() %}
+                    <li>Inscriptions non ouvertes
+                        <a class="btn btn-success"
+                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
+                            Ouvrir les inscriptions
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>Inscriptions closes
+                        <a class="btn btn-success"
+                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
+                            Réouvrir les inscriptions
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+
+
+                    </li>
                 </ul>
             </div>
         </div>

@@ -6,7 +6,8 @@ from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament
+from ..models import Tournament, TournamentStatus
+from ..texts import REGISTRATION_CLOSED, REGISTRATION_OPENED
 
 
 @bp.route("/create", methods = ["GET", "POST"])
@@ -68,3 +69,25 @@ def view_tournaments():
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
     return render_template("tournament/view_tournaments.html", title = title,
                            pagination = pagination)
+
+
+@bp.route("/<tournament_id>/open_registrations")
+@manager_required
+def open_registrations(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament.status = TournamentStatus.REGISTRATION_OPEN
+    db.session.add(tournament)
+    db.session.commit()
+    flash(REGISTRATION_OPENED, "info")
+    return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
+
+@bp.route("/<tournament_id>/close_registrations")
+@manager_required
+def close_registrations(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament.status = TournamentStatus.ONGOING
+    db.session.add(tournament)
+    db.session.commit()
+    flash(REGISTRATION_CLOSED, "info")
+    return redirect(url_for(".view_tournament", tournament_id = tournament.id))

@@ -26,6 +26,7 @@ login_manager.login_message = u"Veuillez vous connecter pour accéder à cette p
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config.get(config_name, "default"))
+    app.url_map.strict_slashes = False
 
     db.init_app(app)
     bootstrap.init_app(app)
@@ -52,6 +53,10 @@ def create_app(config_name):
 
         if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
             return redirect(url_for('auth.unconfirmed'))
+
+        rp = request.path
+        if rp != '/' and rp.endswith('/'):
+            return redirect(rp[:-1])
 
     @app.after_request
     def after_request(response):

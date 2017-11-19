@@ -152,7 +152,7 @@ class Tournament(db.Model):
         return self.status == TournamentStatus.REGISTRATION_OPEN
 
     def is_visible(self):
-        return self.status == TournamentStatus.CREATED
+        return self.status >= TournamentStatus.REGISTRATION_OPEN
 
 
 class Player(db.Model):
