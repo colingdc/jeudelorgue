@@ -2,8 +2,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateTimeField, IntegerField, SubmitField
-from wtforms.validators import DataRequired, InputRequired, ValidationError
-from ..models import Tournament
+from wtforms.validators import DataRequired, InputRequired
 
 
 class CreateTournamentForm(FlaskForm):

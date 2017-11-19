@@ -40,7 +40,7 @@ def edit_tournament(tournament_id):
         tournament.number_rounds = form.number_rounds.data
         db.session.add(tournament)
         db.session.commit()
-        flash("Le tournoi {} a été mis à jour".format(form.name.data), "info")
+        flash(u"Le tournoi {} a été mis à jour".format(form.name.data), "info")
         return redirect(url_for(".edit_tournament", tournament_id = tournament_id))
     else:
         return render_template("tournament/edit_tournament.html", form = form, tournament = tournament)
@@ -59,5 +59,4 @@ def view_tournaments():
     page = request.args.get("page", 1, type = int)
     pagination = (Tournament.query.order_by(Tournament.started_at.desc())
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
-    posts = pagination.items
-    return render_template("tournament/view_tournaments.html", posts = posts, pagination = pagination)
+    return render_template("tournament/view_tournaments.html", pagination = pagination)

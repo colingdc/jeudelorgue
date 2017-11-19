@@ -20,6 +20,7 @@ class Config:
     MAIL_SENDER = 'Le Jeu de L-orgue <jeudelorgue@gmail.com>'
     ADMIN_JDL = os.environ.get('ADMIN_JDL')
     TOURNAMENTS_PER_PAGE = 10
+    PLAYERS_PER_PAGE = 10
     SLOW_DB_QUERY_TIME = 0.5
 
     @staticmethod

@@ -68,4 +68,7 @@ def create_app(config_name):
     from .tournament import bp as tournament_blueprint
     app.register_blueprint(tournament_blueprint, url_prefix = "/tournament")
 
+    from .player import bp as player_blueprint
+    app.register_blueprint(player_blueprint, url_prefix = "/player")
+
     return app

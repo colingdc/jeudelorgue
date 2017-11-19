@@ -10,7 +10,7 @@ from . import db, bcrypt, login_manager
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key = True)
-    deleted = db.Column(db.Boolean)
+    deleted_at = db.Column(db.DateTime, default = None)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     confirmed = db.Column(db.Boolean, default = False)
     username = db.Column(db.String(64), index = True, unique = True)
@@ -153,3 +153,16 @@ class Tournament(db.Model):
 
     def is_visible(self):
         return self.status == TournamentStatus.CREATED
+
+
+class Player(db.Model):
+    __tablename__ = "player"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.Boolean, default = None)
+
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+
+    def get_full_name(self):
+        return u"{} {}".format(self.first_name.capitalize(), self.last_name.upper())
