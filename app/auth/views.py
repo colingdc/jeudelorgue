@@ -137,7 +137,8 @@ def change_password():
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
-    return render_template("auth/change_password.html", form = form)
+    return render_template("auth/change_password.html",
+                           form = form)
 
 
 @bp.route("/reset", methods = ["GET", "POST"])
@@ -157,7 +158,8 @@ def reset_password_request():
                   "votre mot de passe vous a été envoyé.",
                   "info")
         return redirect(url_for("auth.login"))
-    return render_template("auth/reset_password_request.html", form = form)
+    return render_template("auth/reset_password_request.html",
+                           form = form)
 
 
 @bp.route("/reset/<token>", methods = ["GET", "POST"])
@@ -174,5 +176,6 @@ def reset_password(token):
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))
-    return render_template("auth/reset_password.html", form = form, token = token)
+    return render_template("auth/reset_password.html",
+                           form = form, token = token)
 
