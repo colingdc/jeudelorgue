@@ -129,14 +129,27 @@ class Role(db.Model):
         return '<Role %r>' % self.name
 
 
+class TournamentStatus:
+    CREATED = 10
+    REGISTRATION_OPEN = 20
+    ONGOING = 30
+    FINISHED = 40
+
+
 class Tournament(db.Model):
     __tablename__ = "tournament"
     id = db.Column(db.Integer, primary_key = True)
-    deleted_at = db.Column(db.Boolean, default = None)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.Boolean, default = None)
 
     name = db.Column(db.String(64))
     number_rounds = db.Column(db.Integer)
     started_at = db.Column(db.DateTime)
     ended_at = db.Column(db.DateTime, default = None)
-    is_open = db.Column(db.Boolean, default = False)
+    status = db.Column(db.Integer, default = TournamentStatus.CREATED)
+
+    def is_open_to_registration(self):
+        return self.status == TournamentStatus.REGISTRATION_OPEN
+
+    def is_visible(self):
+        return self.status == TournamentStatus.CREATED
