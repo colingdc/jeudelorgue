@@ -41,6 +41,15 @@
                         {% endif %}
                     </li>
                     {% endif %}
+
+                    {% if current_user.is_registered_to_tournament(tournament.id) %}
+                    <li>
+                        <a class="btn btn-success"
+                           href="{{ url_for('.register', tournament_id=tournament.id) }}">
+                            Je m'inscris au tournoi
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

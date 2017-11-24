@@ -87,6 +87,12 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.id)
 
+    def is_registered_to_tournament(self, tournament_id):
+        return (Participant.query
+                .filter(Participant.tournament_id == tournament_id)
+                .filter(Participant.user_id == self.id)
+                ).first() is None
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
@@ -166,7 +172,7 @@ class Tournament(db.Model):
         query = (User.query
                  .with_entities(User.username, User.created_at)
                  .join(Participant)
-                 .filter(Tournament.id == self.id)
+                 .filter(Participant.tournament_id == self.id)
                  .all())
         df = pd.DataFrame(query)
 

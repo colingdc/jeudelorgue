@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, request, flash, url_for, current_app
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus
-from ..texts import REGISTRATION_CLOSED, REGISTRATION_OPENED
+from ..models import Tournament, TournamentStatus, Participant
+from ..texts import REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT
 
 
 @bp.route("/create", methods = ["GET", "POST"])
@@ -91,4 +91,16 @@ def close_registrations(tournament_id):
     db.session.add(tournament)
     db.session.commit()
     flash(REGISTRATION_CLOSED, "info")
+    return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
+
+@bp.route("/<tournament_id>/register")
+@manager_required
+def register(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    participant = Participant(tournament_id = tournament_id,
+                              user_id = current_user.id)
+    db.session.add(participant)
+    db.session.commit()
+    flash(REGISTERED_TO_TOURNAMENT, "info")
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))

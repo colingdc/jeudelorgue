@@ -23,3 +23,4 @@ PLAYER_ALREADY_EXISTS = u"Ce joueur existe déjà"
 
 REGISTRATION_OPENED = u"Les inscriptions au tournoi sont ouvertes"
 REGISTRATION_CLOSED = u"Les inscriptions au tournoi sont closes"
+REGISTERED_TO_TOURNAMENT = u"Vous êtes inscrit au tournoi, vous pouvez désormais remplir votre tableau."
