@@ -13,6 +13,21 @@
     </div>
 </div>
 
+{% if current_user.is_manager() %}
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a class="btn btn-success"
+                   href="{{ url_for('.create_tournament') }}">
+                    Nouveau tournoi
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="container">
     {% for tournament in pagination.items %}
     <div class="row">
@@ -28,11 +43,11 @@
                 <ul>
                     <li>{{ tournament.number_rounds }} tours</li>
                     {% if tournament.is_open_to_registration %}
-                        <li>Date limite d'inscription : {{ tournament.started_at }}</li>
+                    <li>Date limite d'inscription : {{ tournament.started_at }}</li>
                     {% elif not tournament.is_visible %}
-                        <li>Inscriptions non ouvertes</li>
+                    <li>Inscriptions non ouvertes</li>
                     {% else %}
-                        <li>Inscriptions closes</li>
+                    <li>Inscriptions closes</li>
                     {% endif %}
                 </ul>
             </div>

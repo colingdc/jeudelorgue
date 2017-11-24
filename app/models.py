@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import pandas as pd
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -17,6 +18,8 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     email = db.Column(db.String(120), index = True, unique = True)
     password_hash = db.Column(db.String(128))
+
+    participants = db.relationship("Participant", backref = "user", lazy = "dynamic")
 
     def __repr__(self):
         return "<User %r>" % self.username
@@ -45,6 +48,9 @@ class User(UserMixin, db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
+
+    def is_manager(self):
+        return self.can(Permission.MANAGE_TOURNAMENT)
 
     def generate_confirmation_token(self, expiration = 3600):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
@@ -137,7 +143,7 @@ class TournamentStatus:
 
 
 class Tournament(db.Model):
-    __tablename__ = "tournament"
+    __tablename__ = "tournaments"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.Boolean, default = None)
@@ -148,15 +154,41 @@ class Tournament(db.Model):
     ended_at = db.Column(db.DateTime, default = None)
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)
 
+    participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
+
     def is_open_to_registration(self):
         return self.status == TournamentStatus.REGISTRATION_OPEN
 
     def is_visible(self):
         return self.status >= TournamentStatus.REGISTRATION_OPEN
 
+    def get_participants(self):
+        query = (User.query
+                 .with_entities(User.username, User.created_at)
+                 .join(Participant)
+                 .filter(Tournament.id == self.id)
+                 .all())
+        df = pd.DataFrame(query)
+
+        try:
+            df.columns = [u"Pseudo", u"Date d'inscription"]
+        except ValueError:
+            df = pd.DataFrame(columns = [u"Pseudo", u"Date d'inscription"])
+        return df
+
+
+class Participant(db.Model):
+    __tablename__ = "participants"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.Boolean, default = None)
+
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
 
 class Player(db.Model):
-    __tablename__ = "player"
+    __tablename__ = "players"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.Boolean, default = None)

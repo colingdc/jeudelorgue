@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, request, flash, url_for, current_app
+from flask_login import login_required
 
 from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm
@@ -52,7 +53,7 @@ def edit_tournament(tournament_id):
 
 
 @bp.route("/<tournament_id>")
-@manager_required
+@login_required
 def view_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     title = u"Tournoi {}".format(tournament.name)
@@ -61,7 +62,7 @@ def view_tournament(tournament_id):
 
 
 @bp.route("/")
-@manager_required
+@login_required
 def view_tournaments():
     title = "Tournois"
     page = request.args.get("page", 1, type = int)

@@ -15,30 +15,49 @@
                     <li>{{ tournament.number_rounds }} tours</li>
                     {% if tournament.is_open_to_registration() %}
                     <li>Date limite d'inscription : {{ tournament.started_at }}
+                        {% if current_user.is_manager() %}
                         <a class="btn btn-warning"
                            href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
                             Fermer les inscriptions
                         </a>
+                        {% endif %}
                     </li>
                     {% elif not tournament.is_visible() %}
                     <li>Inscriptions non ouvertes
+                        {% if current_user.is_manager() %}
                         <a class="btn btn-success"
                            href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
                             Ouvrir les inscriptions
                         </a>
+                        {% endif %}
                     </li>
                     {% else %}
                     <li>Inscriptions closes
+                        {% if current_user.is_manager() %}
                         <a class="btn btn-success"
                            href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
                             Réouvrir les inscriptions
                         </a>
+                        {% endif %}
                     </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </div>
+
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>Participants</strong></h3>
+        </div>
+
+        <div class="panel-body">
+        {{ tournament.get_participants().to_html(index = False, classes = "table table-striped") | safe }}
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}
