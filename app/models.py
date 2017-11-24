@@ -91,7 +91,7 @@ class User(UserMixin, db.Model):
         return (Participant.query
                 .filter(Participant.tournament_id == tournament_id)
                 .filter(Participant.user_id == self.id)
-                ).first() is None
+                ).first() is not None
 
 
 class AnonymousUser(AnonymousUserMixin):

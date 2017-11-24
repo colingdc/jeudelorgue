@@ -21,6 +21,13 @@
                             Fermer les inscriptions
                         </a>
                         {% endif %}
+                        {% if not current_user.is_registered_to_tournament(tournament.id) %}
+
+                        <a class="btn btn-success"
+                           href="{{ url_for('.register', tournament_id=tournament.id) }}">
+                            Je m'inscris au tournoi
+                        </a>
+                        {% endif %}
                     </li>
                     {% elif not tournament.is_visible() %}
                     <li>Inscriptions non ouvertes
@@ -42,14 +49,6 @@
                     </li>
                     {% endif %}
 
-                    {% if current_user.is_registered_to_tournament(tournament.id) %}
-                    <li>
-                        <a class="btn btn-success"
-                           href="{{ url_for('.register', tournament_id=tournament.id) }}">
-                            Je m'inscris au tournoi
-                        </a>
-                    </li>
-                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -63,7 +62,7 @@
         </div>
 
         <div class="panel-body">
-        {{ tournament.get_participants().to_html(index = False, classes = "table table-striped") | safe }}
+            {{ tournament.get_participants().to_html(index = False, classes = "table table-striped") | safe }}
         </div>
     </div>
 

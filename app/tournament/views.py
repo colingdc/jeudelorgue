@@ -8,7 +8,7 @@ from .forms import CreateTournamentForm, EditTournamentForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant
-from ..texts import REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT
+from ..texts import REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN
 
 
 @bp.route("/create", methods = ["GET", "POST"])
@@ -23,7 +23,7 @@ def create_tournament():
         db.session.add(tournament)
         db.session.commit()
         flash("Le tournoi {} a été créé".format(form.name.data), "info")
-        return redirect(url_for(".create_tournament"))
+        return redirect(url_for(".view_tournament", tournament_id = tournament.id))
     else:
         return render_template("tournament/create_tournament.html", title = title,
                                form = form)
@@ -98,6 +98,10 @@ def close_registrations(tournament_id):
 @manager_required
 def register(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
+    if not tournament.is_open_to_registration():
+        flash(REGISTRATION_NOT_OPEN, "warning")
+        return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
     participant = Participant(tournament_id = tournament_id,
                               user_id = current_user.id)
     db.session.add(participant)
