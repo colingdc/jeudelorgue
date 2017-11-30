@@ -502,3 +502,8 @@ ul {
     position: absolute;
     max-width: 1280px;
 }
+
+.btn {
+    display: block;
+    margin-bottom: 15px;
+}

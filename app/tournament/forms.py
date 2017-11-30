@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateTimeField, IntegerField, SubmitField
+from wtforms import StringField, DateTimeField, IntegerField, SubmitField, SelectField, FormField, FieldList
 from wtforms.validators import DataRequired, InputRequired
 
 
@@ -29,3 +29,14 @@ class EditTournamentForm(FlaskForm):
     def __init__(self, tournament, *args, **kwargs):
         super(EditTournamentForm, self).__init__(*args, **kwargs)
         self.tournament = tournament
+
+
+class PlayerTournamentDrawForm(FlaskForm):
+    player_name = SelectField("Joueur", coerce = int)
+    status = SelectField("Statut", coerce = int)
+    seed = IntegerField(u"Tête de série")
+
+
+class CreateTournamentDrawForm(FlaskForm):
+    player = FieldList(FormField(PlayerTournamentDrawForm))
+    submit = SubmitField("Valider")

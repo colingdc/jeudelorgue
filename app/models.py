@@ -2,7 +2,7 @@
 
 import datetime
 import pandas as pd
-from flask import current_app
+from flask import current_app, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db, bcrypt, login_manager
@@ -87,11 +87,14 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.id)
 
-    def is_registered_to_tournament(self, tournament_id):
+    def get_participant(self, tournament_id):
         return (Participant.query
                 .filter(Participant.tournament_id == tournament_id)
                 .filter(Participant.user_id == self.id)
-                ).first() is not None
+                ).first()
+
+    def is_registered_to_tournament(self, tournament_id):
+        return self.get_participant(tournament_id) is not None
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -99,6 +102,9 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
     def is_administrator(self):
+        return False
+
+    def is_manager(self):
         return False
 
 
@@ -161,6 +167,7 @@ class Tournament(db.Model):
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)
 
     participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
+    players = db.relationship("TournamentPlayer", backref = "tournament", lazy = "dynamic")
 
     def is_open_to_registration(self):
         return self.status == TournamentStatus.REGISTRATION_OPEN
@@ -170,17 +177,22 @@ class Tournament(db.Model):
 
     def get_participants(self):
         query = (User.query
-                 .with_entities(User.username, User.created_at)
                  .join(Participant)
+                 .with_entities(User.id, User.username, Participant.created_at)
                  .filter(Participant.tournament_id == self.id)
                  .all())
         df = pd.DataFrame(query)
 
         try:
-            df.columns = [u"Pseudo", u"Date d'inscription"]
+            df.columns = [u"id", u"Pseudo", u"Date d'inscription"]
+            df["Tableau"] = df["id"].apply(lambda x: url_for("tournament.view_participant_draw",
+                                                             tournament_id = self.id,
+                                                             user_id = x,
+                                                             _external = True))
+            del df["id"]
+            return df
         except ValueError:
-            df = pd.DataFrame(columns = [u"Pseudo", u"Date d'inscription"])
-        return df
+            return None
 
 
 class Participant(db.Model):
@@ -188,9 +200,11 @@ class Participant(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.Boolean, default = None)
+    matches_not_forecasted = db.Column(db.Integer, default = None)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    forecasts = db.relationship("Forecast", backref = "participant", lazy = "dynamic")
 
 
 class Player(db.Model):
@@ -204,3 +218,39 @@ class Player(db.Model):
 
     def get_full_name(self):
         return u"{} {}".format(self.first_name.capitalize(), self.last_name.upper())
+
+
+class TournamentPlayer(db.Model):
+    __tablename__ = "tournament_players"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.Boolean, default = None)
+
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+    position = db.Column(db.Integer)
+    matches_won = db.relationship("Match", backref = "tournament_player", lazy = "dynamic")
+
+
+class Match(db.Model):
+    __tablename__ = "matches"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.Boolean, default = None)
+
+    position = db.Column(db.Integer)
+    score = db.Column(db.String(64))
+
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+    winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
+    tournament_player1_id = db.Column(db.Integer)
+    tournament_player2_id = db.Column(db.Integer)
+
+
+class Forecast(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.Boolean, default = None)
+
+    match_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+    winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
+    participant_id = db.Column(db.Integer, db.ForeignKey('participants.id'))

@@ -23,19 +23,19 @@ def index():
     return render_template("main/index.html", title = title)
 
 
-@bp.route("/user/<username>")
-def user(username):
-    user = User.query.filter_by(username = username).first_or_404()
-    title = "Profil de {}".format(username)
+@bp.route("/user/<user_id>")
+def view_user(user_id):
+    user = User.query.get_or_404(user_id)
+    title = "Profil de {}".format(user.username)
     return render_template("main/user.html", title = title, user = user)
 
 
-@bp.route("/edit-profile/<int:id>", methods = ['GET', 'POST'])
+@bp.route("/edit-profile/<int:user_id>", methods = ['GET', 'POST'])
 @login_required
 @admin_required
-def edit_profile_admin(id):
+def edit_profile_admin(user_id):
     title = "Modification de profil"
-    user = User.query.get_or_404(id)
+    user = User.query.get_or_404(user_id)
     form = EditProfileAdminForm(user = user)
     if request.method == "GET":
         form.email.data = user.email

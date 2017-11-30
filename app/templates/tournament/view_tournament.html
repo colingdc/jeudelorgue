@@ -11,45 +11,64 @@
 
         <div class="panel-body">
             <div class="row">
-                <ul class="col-md-8 col-md-offset-2">
+                <ul class="col-md-6">
                     <li>{{ tournament.number_rounds }} tours</li>
-                    {% if tournament.is_open_to_registration() %}
-                    <li>Date limite d'inscription : {{ tournament.started_at }}
-                        {% if current_user.is_manager() %}
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
-                            Fermer les inscriptions
-                        </a>
+                    <li>
+                        {% if tournament.is_open_to_registration() %}
+                        Date limite d'inscription : {{ tournament.started_at }}
+                        {% elif not tournament.is_visible() %}
+                        Inscriptions non ouvertes
+                        {% else %}
+                        Inscriptions closes
                         {% endif %}
-                        {% if not current_user.is_registered_to_tournament(tournament.id) %}
+                    </li>
+                </ul>
+                <ul class="col-md-6">
+                    <li>
+                        <a class="btn btn-default"
+                           href="{{ url_for('.view_draw', tournament_id=tournament.id) }}">
+                            Voir le tableau
+                        </a>
+                    </li>
 
+
+                    <li>
+                        {% if current_user.is_registered_to_tournament(tournament.id) %}
+                        <a class="btn btn-default"
+                           href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, user_id=current_user.id) }}">
+                            Voir mon tableau
+                        </a>
+                        {% elif tournament.is_open_to_registration() %}
                         <a class="btn btn-success"
                            href="{{ url_for('.register', tournament_id=tournament.id) }}">
                             Je m'inscris au tournoi
                         </a>
                         {% endif %}
                     </li>
-                    {% elif not tournament.is_visible() %}
-                    <li>Inscriptions non ouvertes
-                        {% if current_user.is_manager() %}
-                        <a class="btn btn-success"
+
+                    {% if current_user.is_manager() %}
+                    <li>
+                        {% if tournament.is_open_to_registration() %}
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
+                            Fermer les inscriptions
+                        </a>
+
+                        {% elif not tournament.is_visible() %}
+                        <a class="btn btn-warning"
                            href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
                             Ouvrir les inscriptions
                         </a>
-                        {% endif %}
-                    </li>
-                    {% else %}
-                    <li>Inscriptions closes
-                        {% if current_user.is_manager() %}
-                        <a class="btn btn-success"
+                        {% else %}
+                        <a class="btn btn-warning"
                            href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
                             Réouvrir les inscriptions
                         </a>
                         {% endif %}
                     </li>
                     {% endif %}
-
                 </ul>
+
             </div>
         </div>
     </div>
@@ -62,7 +81,13 @@
         </div>
 
         <div class="panel-body">
-            {{ tournament.get_participants().to_html(index = False, classes = "table table-striped") | safe }}
+            {% with participants = tournament.get_participants() %}
+                {% if participants | length > 0 %}
+            {{ participants.to_html(index = False, classes = "table table-striped") | safe }}
+            {% else %}
+                Aucun participant à ce tournoi pour le moment
+            {% endif %}
+            {% endwith %}
         </div>
     </div>
 

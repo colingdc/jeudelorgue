@@ -92,7 +92,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mon compte <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{{ url_for('main.user', username=current_user.username) }}">
+                            <a href="{{ url_for('main.view_user', user_id=current_user.id) }}">
                                 <span class="fa fa-user" aria-hidden="true"></span>
                                 Mon profil
                             </a>

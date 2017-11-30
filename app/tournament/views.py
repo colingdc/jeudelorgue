@@ -8,7 +8,8 @@ from .forms import CreateTournamentForm, EditTournamentForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant
-from ..texts import REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN
+from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
+                     ALREADY_REGISTERED)
 
 
 @bp.route("/create", methods = ["GET", "POST"])
@@ -102,9 +103,44 @@ def register(tournament_id):
         flash(REGISTRATION_NOT_OPEN, "warning")
         return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
+    if current_user.is_registered_to_tournament(tournament_id):
+        flash(ALREADY_REGISTERED, "warning")
+        return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
     participant = Participant(tournament_id = tournament_id,
                               user_id = current_user.id)
     db.session.add(participant)
     db.session.commit()
     flash(REGISTERED_TO_TOURNAMENT, "info")
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
+
+@bp.route("/<tournament_id>/draw")
+@login_required
+def view_draw(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if not tournament.is_visible():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+    return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+
+@bp.route("/<tournament_id>/draw/<user_id>")
+@login_required
+def view_participant_draw(tournament_id, user_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if not tournament.is_visible():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+    participant = (Participant.query
+                   .filter(Participant.user_id == user_id)
+                   .filter(Participant.tournament_id == tournament_id)
+                   .first())
+    if participant is None:
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+
+@bp.route("/<tournament_id>/draw/create")
+@manager_required
+def create_draw(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
