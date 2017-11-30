@@ -8,7 +8,7 @@ from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant
+from ..models import Tournament, TournamentStatus, Participant, Match
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED)
 
@@ -23,6 +23,11 @@ def create_tournament():
                                 started_at = form.start_date.data,
                                 number_rounds = form.number_rounds.data)
         db.session.add(tournament)
+        db.session.commit()
+        for i in range(1, 2 ** form.number_rounds.data):
+            match = Match(position = i,
+                          tournament_id = tournament.id)
+            db.session.add(match)
         db.session.commit()
         flash("Le tournoi {} a été créé".format(form.name.data), "info")
         return redirect(url_for(".view_tournament", tournament_id = tournament.id))

@@ -236,7 +236,7 @@ class Match(db.Model):
     __tablename__ = "matches"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    deleted_at = db.Column(db.DateTime)
 
     position = db.Column(db.Integer)
     score = db.Column(db.String(64))
