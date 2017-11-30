@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, flash, url_for, current_app
+from flask import render_template, redirect, request, flash, url_for, current_app, abort
 from flask_login import login_required, current_user
+import datetime
 
 from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm
@@ -43,7 +44,6 @@ def edit_tournament(tournament_id):
     if form.validate_on_submit():
         tournament.name = form.name.data
         tournament.started_at = form.start_date.data
-        tournament.number_rounds = form.number_rounds.data
         db.session.add(tournament)
         db.session.commit()
         flash(u"Le tournoi {} a été mis à jour".format(form.name.data), "info")
@@ -53,10 +53,23 @@ def edit_tournament(tournament_id):
                                form = form, tournament = tournament)
 
 
+@bp.route("/<tournament_id>/delete")
+@manager_required
+def delete_tournament(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament.deleted_at = datetime.datetime.now()
+    db.session.add(tournament)
+    db.session.commit()
+    flash(u"Le tournoi {} a été supprimé".format(tournament.name), "info")
+    return redirect(url_for(".view_tournaments"))
+
+
 @bp.route("/<tournament_id>")
 @login_required
 def view_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
     title = u"Tournoi {}".format(tournament.name)
     return render_template("tournament/view_tournament.html", title = title,
                            tournament = tournament)
@@ -68,6 +81,7 @@ def view_tournaments():
     title = "Tournois"
     page = request.args.get("page", 1, type = int)
     pagination = (Tournament.query.order_by(Tournament.started_at.desc())
+                  .filter(Tournament.deleted_at == None)
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
     return render_template("tournament/view_tournaments.html", title = title,
                            pagination = pagination)

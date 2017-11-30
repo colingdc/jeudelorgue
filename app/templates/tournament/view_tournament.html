@@ -23,7 +23,7 @@
                         {% endif %}
                     </li>
                 </ul>
-                <ul class="col-md-6">
+                <ul class="col-md-3">
                     <li>
                         <a class="btn btn-default"
                            href="{{ url_for('.view_draw', tournament_id=tournament.id) }}">
@@ -45,7 +45,8 @@
                         </a>
                         {% endif %}
                     </li>
-
+                </ul>
+                <ul class="col-md-3">
                     {% if current_user.is_manager() %}
                     <li>
                         {% if tournament.is_open_to_registration() %}
@@ -66,6 +67,18 @@
                         </a>
                         {% endif %}
                     </li>
+                    <li>
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.edit_tournament', tournament_id=tournament.id) }}">
+                            Editer le tournoi
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-danger"
+                           href="{{ url_for('.delete_tournament', tournament_id=tournament.id) }}">
+                            Supprimer le tournoi
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
 
@@ -82,10 +95,10 @@
 
         <div class="panel-body">
             {% with participants = tournament.get_participants() %}
-                {% if participants | length > 0 %}
+            {% if participants | length > 0 %}
             {{ participants.to_html(index = False, classes = "table table-striped") | safe }}
             {% else %}
-                Aucun participant à ce tournoi pour le moment
+            Aucun participant à ce tournoi pour le moment
             {% endif %}
             {% endwith %}
         </div>

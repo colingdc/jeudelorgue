@@ -158,7 +158,7 @@ class Tournament(db.Model):
     __tablename__ = "tournaments"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.Boolean, default = None)
+    deleted_at = db.Column(db.DateTime, default = None)
 
     name = db.Column(db.String(64))
     number_rounds = db.Column(db.Integer)
@@ -192,14 +192,15 @@ class Tournament(db.Model):
             del df["id"]
             return df
         except ValueError:
-            return None
+            df = pd.DataFrame(columns = [u"Pseudo", u"Date d'inscription", u"Tableau"])
+            return df
 
 
 class Participant(db.Model):
     __tablename__ = "participants"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.Boolean, default = None)
+    deleted_at = db.Column(db.DateTime, default = None)
     matches_not_forecasted = db.Column(db.Integer, default = None)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
@@ -211,7 +212,7 @@ class Player(db.Model):
     __tablename__ = "players"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.Boolean, default = None)
+    deleted_at = db.Column(db.DateTime, default = None)
 
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
@@ -224,7 +225,7 @@ class TournamentPlayer(db.Model):
     __tablename__ = "tournament_players"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.Boolean, default = None)
+    deleted_at = db.Column(db.DateTime, default = None)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     position = db.Column(db.Integer)
@@ -235,7 +236,7 @@ class Match(db.Model):
     __tablename__ = "matches"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.Boolean, default = None)
+    deleted_at = db.Column(db.DateTime, default = None)
 
     position = db.Column(db.Integer)
     score = db.Column(db.String(64))
@@ -247,9 +248,10 @@ class Match(db.Model):
 
 
 class Forecast(db.Model):
+    __tablename__ = "forecasts"
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.Boolean, default = None)
+    deleted_at = db.Column(db.DateTime, default = None)
 
     match_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
