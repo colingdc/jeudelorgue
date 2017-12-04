@@ -10,6 +10,7 @@ from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_wtf.csrf import CSRFProtect
 
 from config import config
 
@@ -27,6 +28,7 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config.get(config_name, "default"))
     app.url_map.strict_slashes = False
+    CSRFProtect(app)
 
     db.init_app(app)
     bootstrap.init_app(app)

@@ -2,7 +2,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateTimeField, IntegerField, SubmitField, SelectField, FormField, FieldList
-from wtforms.validators import DataRequired, InputRequired
+from wtforms.validators import DataRequired, InputRequired, Optional
 
 
 class CreateTournamentForm(FlaskForm):
@@ -32,9 +32,12 @@ class EditTournamentForm(FlaskForm):
 
 
 class PlayerTournamentDrawForm(FlaskForm):
-    player_name = SelectField("Joueur", coerce = int)
-    status = SelectField("Statut", coerce = int)
-    seed = IntegerField(u"Tête de série")
+    player1_name = SelectField("Joueur", coerce = int)
+    player2_name = SelectField("Joueur", coerce = int)
+    player1_status = StringField("Statut")
+    player2_status = StringField("Statut")
+    player1_seed = IntegerField(u"Tête de série", validators = [Optional()])
+    player2_seed = IntegerField(u"Tête de série", validators = [Optional()])
 
 
 class CreateTournamentDrawForm(FlaskForm):

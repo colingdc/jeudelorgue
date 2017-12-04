@@ -5,10 +5,10 @@ from flask_login import login_required, current_user
 import datetime
 
 from . import bp
-from .forms import CreateTournamentForm, EditTournamentForm
+from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match
+from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED)
 
@@ -159,7 +159,57 @@ def view_participant_draw(tournament_id, user_id):
     return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
 
-@bp.route("/<tournament_id>/draw/create")
+@bp.route("/<tournament_id>/draw/create", methods = ["GET", "POST"])
 @manager_required
-def create_draw(tournament_id):
+def create_tournament_draw(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+    title = u"Créer le tableau du tournoi"
+
+    matches = tournament.get_matches_first_round()
+
+    if not request.form:
+        form = CreateTournamentDrawForm()
+
+        for _ in matches:
+            form.player.append_entry()
+
+    else:
+        form = CreateTournamentDrawForm(request.form)
+
+    player_names = Player.get_all_players()
+    for p in form.player:
+        p.player1_name.choices = player_names
+        p.player2_name.choices = player_names
+
+    if form.validate_on_submit():
+        for match, p in zip(matches, form.player):
+            t1 = TournamentPlayer(player_id = p.data["player1_name"],
+                                  seed = p.data["player1_seed"],
+                                  status = p.data["player1_status"],
+                                  position = 0,
+                                  tournament_id = tournament_id)
+            t2 = TournamentPlayer(player_id = p.data["player2_name"],
+                                  seed = p.data["player2_seed"],
+                                  status = p.data["player2_status"],
+                                  position = 1,
+                                  tournament_id = tournament_id)
+
+            # Add tournament players
+            db.session.add(t1)
+            db.session.add(t2)
+            db.session.commit()
+
+            # Link these tournament players to the match
+            match.tournament_player1_id = t1.id
+            match.tournament_player2_id = t2.id
+            db.session.add(match)
+            db.session.commit()
+
+        flash("Le tableau du tournoi {} a été créé".format(tournament.name), "info")
+        return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+    else:
+        return render_template("tournament/create_tournament_draw.html", title = title,
+                               form = form,
+                               tournament = tournament)

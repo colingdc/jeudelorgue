@@ -166,6 +166,7 @@ class Tournament(db.Model):
     ended_at = db.Column(db.DateTime, default = None)
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)
 
+    matches = db.relationship("Match", backref = "tournament", lazy = "dynamic")
     participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
     players = db.relationship("TournamentPlayer", backref = "tournament", lazy = "dynamic")
 
@@ -195,6 +196,12 @@ class Tournament(db.Model):
             df = pd.DataFrame(columns = [u"Pseudo", u"Date d'inscription", u"Tableau"])
             return df
 
+    def get_matches_first_round(self):
+        return [m for m in self.matches if m.position >= 2 ** (self.number_rounds - 1)]
+
+    def is_draw_created(self):
+        return TournamentPlayer.query.filter(TournamentPlayer.tournament_id == self.id).first() is not None
+
 
 class Participant(db.Model):
     __tablename__ = "participants"
@@ -217,8 +224,14 @@ class Player(db.Model):
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
 
+    tournament_players = db.relationship("TournamentPlayer", backref = "player", lazy = "dynamic")
+
     def get_full_name(self):
         return u"{} {}".format(self.first_name.capitalize(), self.last_name.upper())
+
+    @classmethod
+    def get_all_players(cls):
+        return [(p.id, p.get_full_name()) for p in cls.query.order_by(cls.last_name, cls.first_name).all()]
 
 
 class TournamentPlayer(db.Model):
@@ -226,6 +239,10 @@ class TournamentPlayer(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.DateTime, default = None)
+    player_id = db.Column(db.Integer, db.ForeignKey('players.id'))
+
+    seed = db.Column(db.Integer)
+    status = db.Column(db.String(8))
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     position = db.Column(db.Integer)
