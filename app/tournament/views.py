@@ -207,6 +207,7 @@ def create_tournament_draw(tournament_id):
             db.session.add(match)
             db.session.commit()
 
+
         flash("Le tableau du tournoi {} a été créé".format(tournament.name), "info")
         return redirect(url_for(".view_tournament", tournament_id = tournament.id))
     else:
