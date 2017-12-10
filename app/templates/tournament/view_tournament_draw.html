@@ -31,7 +31,7 @@
                 <li class="game game-spacer">&nbsp;</li>
                 <li id="player-{{ match.position }}-1"
                     class="game game-player {% if round['first_round'] %}first-round{% endif %}">
-                    {% if match.tournament_player1_id %}
+                    {% if match.tournament_player2_id %}
                         {{ match.tournament_player2.get_full_name() }}
                     {% else %}
                         &nbsp;
