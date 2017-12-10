@@ -199,8 +199,17 @@ class Tournament(db.Model):
     def get_matches_first_round(self):
         return [m for m in self.matches if m.position >= 2 ** (self.number_rounds - 1)]
 
+    def get_matches_by_round(self):
+        return [{"round": i,
+                 "matches": self.matches.filter(Match.round == i).all(),
+                 "first_round": i == self.number_rounds}
+                for i in range(self.number_rounds, 0, -1)]
+
     def is_draw_created(self):
         return TournamentPlayer.query.filter(TournamentPlayer.tournament_id == self.id).first() is not None
+
+    def last_match(self):
+        return self.matches.filter(Match.position == 1)
 
 
 class Participant(db.Model):
@@ -246,7 +255,23 @@ class TournamentPlayer(db.Model):
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     position = db.Column(db.Integer)
-    matches_won = db.relationship("Match", backref = "tournament_player", lazy = "dynamic")
+    matches_won = db.relationship("Match",
+                                  backref = "winner_tournament_player",
+                                  primaryjoin = "TournamentPlayer.id==Match.winner_id",
+                                  lazy = "dynamic")
+    matches = db.relationship("Match",
+                              backref = "tournament_player",
+                              primaryjoin = "or_(TournamentPlayer.id==Match.tournament_player1_id, TournamentPlayer.id==Match.tournament_player2_id)",
+                              lazy ='dynamic')
+
+    def get_full_name(self):
+        full_name = u""
+        if self.status:
+            full_name += "[{}] ".format(self.status)
+        if self.seed:
+            full_name += "[{}] ".format(self.seed)
+        full_name += self.player.get_full_name()
+        return full_name
 
 
 class Match(db.Model):
@@ -256,12 +281,15 @@ class Match(db.Model):
     deleted_at = db.Column(db.DateTime)
 
     position = db.Column(db.Integer)
+    round = db.Column(db.Integer)
     score = db.Column(db.String(64))
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
-    tournament_player1_id = db.Column(db.Integer)
-    tournament_player2_id = db.Column(db.Integer)
+    tournament_player1_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
+    tournament_player2_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
+    tournament_player1 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player1_id")
+    tournament_player2 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player2_id")
 
 
 class Forecast(db.Model):

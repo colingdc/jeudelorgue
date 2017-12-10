@@ -1,0 +1,123 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+<h1>{{ tournament.name }}</h1>
+
+<div class="wrapper">
+    <div class="brackets">
+        <div class="brackets-header">
+            {% for t in titles %}
+            <div class="title">
+                {{ t }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="container-brackets" id="container-brackets">
+            {% for round in rounds %}
+            <div class="round rd-{{ loop.index }}">
+                {% for match in round %}
+                <div class="match">
+                    {% if match.player1 %}
+                    <div id="{{ match.player1.player_code }}"
+                         class="player player-{{ match.player1.ID }}"
+                         data-id="{{ match.player1.ID }}"
+                         data-name="{{ match.player1.name}}">
+                    </div>
+                    {% if match.player1.url %}
+                    <a class="name" href="{{ match.player1.url }}">
+                        <input type="text">
+                        <!--{{ match.player1.name}}-->
+                    </a>
+                    {% else %}
+                    <!--{{ match.player1.name}}-->
+                    {% endif %}
+                    {% endif %}
+                    {% if match.player2 %}
+                    <div id="{{ match.player2.player_code }}"
+                         class="player player-{{ match.player2.ID }}"
+                         data-id="{{ match.player2.ID }}"
+                         data-name="{{ match.player2.name}}">
+                    </div>
+                    {% if match.player2.url %}
+                    <a class="name" href="{{ match.player2.url }}">
+                        <!--{{ match.player2.name}}-->
+                    </a>
+                    {% else %}
+                    <!--{{ match.player2.name}}-->
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% if loop.index <= tournament.number_rounds %}
+            <div class="separator-brackets rd-{{ loop.index }}">
+                {% for i in range(round | length) %}
+                <div class="line">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<form action="{{url_for('tournament.fill_draw', tournament_id = tournament.id)}}" class="form-horizontal" method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group {% if form.incomplete_fields.errors %} has-error {% endif %}">
+        {{form.prediction(class="form-control", type = "hidden")}}
+        {{form.incomplete_fields(class="form-control", type = "hidden")}}
+        <p class="col-sm-4 help-block">{{ form.incomplete_fields.errors[0] }}
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" id="incomplete_fields_msg"></label>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-success" id="submitbtn" type="submit" disabled="disabled">Valider</button>
+    </div>
+
+
+</form>
+
+
+<script src="{{ url_for('static', filename='js/brackets_custom.js') }}"></script>
+
+<script>
+    var rounds = {{ rounds | tojson }};
+    var titles = {{ titles | tojson }};
+
+    ;(function($){
+        $(".brackets").brackets({
+            titles: titles,
+            rounds: rounds,
+            color_title: 'black',
+            border_color: 'black',
+            color_player: 'black',
+            bg_player: 'white',
+            color_player_hover: 'black',
+            bg_player_hover: 'lightblue',
+            border_radius_player: '10px',
+            border_radius_lines: '10px',
+        });
+    })(jQuery);
+
+
+
+
+
+</script>
+
+<script>
+    $(".player").each(function(i, obj) {
+        $(this).html($(this).data("name"));
+    });
+</script>
+
+
+<script src="{{ url_for('static', filename='js/tournament_draw_fill.js') }}"></script>
+
+{% endblock %}

@@ -43,3 +43,8 @@ class PlayerTournamentDrawForm(FlaskForm):
 class CreateTournamentDrawForm(FlaskForm):
     player = FieldList(FormField(PlayerTournamentDrawForm))
     submit = SubmitField("Valider")
+
+
+class FillTournamentDrawForm(FlaskForm):
+    prediction = StringField("prediction", validators = [DataRequired("Ton tableau est incomplet")])
+    submit = SubmitField("Valider")

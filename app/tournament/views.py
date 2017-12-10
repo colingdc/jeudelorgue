@@ -3,6 +3,7 @@
 from flask import render_template, redirect, request, flash, url_for, current_app, abort
 from flask_login import login_required, current_user
 import datetime
+from math import log, floor
 
 from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm
@@ -26,7 +27,8 @@ def create_tournament():
         db.session.commit()
         for i in range(1, 2 ** form.number_rounds.data):
             match = Match(position = i,
-                          tournament_id = tournament.id)
+                          tournament_id = tournament.id,
+                          round = floor(log(i) / log(2)) + 1)
             db.session.add(match)
         db.session.commit()
         flash("Le tournoi {} a été créé".format(form.name.data), "info")
@@ -134,15 +136,6 @@ def register(tournament_id):
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
 
-@bp.route("/<tournament_id>/draw")
-@login_required
-def view_draw(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if not tournament.is_visible():
-        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
-    return redirect(url_for(".view_tournament", tournament_id = tournament_id))
-
-
 @bp.route("/<tournament_id>/draw/<user_id>")
 @login_required
 def view_participant_draw(tournament_id, user_id):
@@ -214,3 +207,22 @@ def create_tournament_draw(tournament_id):
         return render_template("tournament/create_tournament_draw.html", title = title,
                                form = form,
                                tournament = tournament)
+
+
+@bp.route("/<tournament_id>/draw")
+def view_tournament_draw(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+    title = u"Tableau du tournoi"
+
+    return render_template("tournament/view_tournament_draw.html",
+                           title = title,
+                           tournament = tournament)
+
+
+
+
+
+
+
