@@ -236,7 +236,7 @@ class Player(db.Model):
     tournament_players = db.relationship("TournamentPlayer", backref = "player", lazy = "dynamic")
 
     def get_full_name(self):
-        return u"{} {}".format(self.first_name.capitalize(), self.last_name.upper())
+        return u"{} {}".format(self.first_name, self.last_name.upper())
 
     @classmethod
     def get_all_players(cls):
@@ -301,3 +301,6 @@ class Forecast(db.Model):
     match_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     participant_id = db.Column(db.Integer, db.ForeignKey('participants.id'))
+
+
+

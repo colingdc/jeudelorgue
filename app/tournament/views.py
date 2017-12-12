@@ -6,7 +6,7 @@ import datetime
 from math import log, floor
 
 from . import bp
-from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm
+from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player
@@ -202,7 +202,7 @@ def create_tournament_draw(tournament_id):
 
 
         flash("Le tableau du tournoi {} a été créé".format(tournament.name), "info")
-        return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
     else:
         return render_template("tournament/create_tournament_draw.html", title = title,
                                form = form,
@@ -221,8 +221,21 @@ def view_tournament_draw(tournament_id):
                            tournament = tournament)
 
 
+@bp.route("/<tournament_id>/draw/fill", methods = ["GET", "POST"])
+def fill_tournament_draw(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+    title = u"Remplir mon tableau"
 
+    form = FillTournamentDrawForm()
 
+    if form.validate_on_submit():
+        flash(form.forecast.data, "info")
+        return redirect(url_for(".fill_tournament_draw", tournament_id = tournament_id))
 
-
-
+    else:
+        return render_template("tournament/fill_tournament_draw.html",
+                               title = title,
+                               tournament = tournament,
+                               form = form)

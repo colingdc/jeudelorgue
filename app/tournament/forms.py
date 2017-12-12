@@ -46,5 +46,6 @@ class CreateTournamentDrawForm(FlaskForm):
 
 
 class FillTournamentDrawForm(FlaskForm):
-    prediction = StringField("prediction", validators = [DataRequired("Ton tableau est incomplet")])
+    forecast = StringField("forecast")
     submit = SubmitField("Valider")
+
