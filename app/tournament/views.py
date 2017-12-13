@@ -4,12 +4,13 @@ from flask import render_template, redirect, request, flash, url_for, current_ap
 from flask_login import login_required, current_user
 import datetime
 from math import log, floor
+import json
 
 from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player
+from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED)
 
@@ -136,18 +137,13 @@ def register(tournament_id):
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
 
-@bp.route("/<tournament_id>/draw/<user_id>")
+@bp.route("/<tournament_id>/draw/<participant_id>")
 @login_required
-def view_participant_draw(tournament_id, user_id):
+def view_participant_draw(tournament_id, participant_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if not tournament.is_visible():
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
-    participant = (Participant.query
-                   .filter(Participant.user_id == user_id)
-                   .filter(Participant.tournament_id == tournament_id)
-                   .first())
-    if participant is None:
-        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+    participant = Participant.query.get_or_404(participant_id)
 
     return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
@@ -221,21 +217,31 @@ def view_tournament_draw(tournament_id):
                            tournament = tournament)
 
 
-@bp.route("/<tournament_id>/draw/fill", methods = ["GET", "POST"])
-def fill_tournament_draw(tournament_id):
+@bp.route("/<tournament_id>/draw/<participant_id>/fill", methods = ["GET", "POST"])
+def fill_tournament_draw(tournament_id, participant_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
+        abort(404)
+    participant = Participant.query.get_or_404(participant_id)
+    if participant.user_id != current_user.id:
         abort(404)
     title = u"Remplir mon tableau"
 
     form = FillTournamentDrawForm()
 
     if form.validate_on_submit():
-        flash(form.forecast.data, "info")
-        return redirect(url_for(".fill_tournament_draw", tournament_id = tournament_id))
+        forecasts = json.loads(form.forecast.data)
+        for match_id, tournament_player_id in forecasts.items():
+            forecast = Forecast(match_id = match_id,
+                                winner_id = tournament_player_id,
+                                participant_id = participant_id)
+            db.session.add(forecast)
+        db.session.commit()
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
     else:
         return render_template("tournament/fill_tournament_draw.html",
                                title = title,
                                tournament = tournament,
+                               participant = participant,
                                form = form)

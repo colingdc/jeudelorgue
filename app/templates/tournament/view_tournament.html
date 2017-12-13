@@ -36,11 +36,11 @@
                     {% if tournament.is_open_to_registration() %}
                         {% if current_user.is_registered_to_tournament(tournament.id) %}
                             <a class="btn btn-primary"
-                               href="{{ url_for('.fill_tournament_draw', tournament_id=tournament.id) }}">
+                               href="{{ url_for('.fill_tournament_draw', tournament_id=tournament.id, participant_id=current_user.get_participant(tournament.id).id) }}">
                                 Remplir mon tableau
                             </a>
                             <a class="btn btn-primary"
-                               href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, user_id=current_user.id) }}">
+                               href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, participant_id=current_user.get_participant(tournament.id).id) }}">
                                 Voir mon tableau
                             </a>
                         {% else %}
@@ -105,22 +105,39 @@
 </div>
 
 
-<div class="panel panel-default">
+<div class="panel panel-default panel-table">
 
     <div class="panel-heading">
         <h3 class="panel-title"><strong>Participants</strong></h3>
     </div>
 
     <div class="panel-body">
-        {% with participants = tournament.get_participants() %}
-        {% if participants | length > 0 %}
-        {{ participants.to_html(index = False, classes = "table table-striped") | safe }}
+
+        {% if tournament.participants %}
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pseudo</th>
+                        <th>Date d'inscription</th>
+                        <th>Tableau</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for participant in tournament.participants %}
+                        <tr>
+                            <th>{{ participant.user_id }}</th>
+                            <th>{{ participant.user.username }}</th>
+                            <th>{{ participant.created_at }}</th>
+                            <th><a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>Tableau</a></th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-        Aucun participant à ce tournoi pour le moment
+            Aucun participant à ce tournoi pour le moment
         {% endif %}
-        {% endwith %}
     </div>
 </div>
-
 
 {% endblock %}

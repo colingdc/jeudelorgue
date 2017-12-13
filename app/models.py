@@ -188,7 +188,7 @@ class Tournament(db.Model):
             df.columns = [u"id", u"Pseudo", u"Date d'inscription"]
             df["Tableau"] = df["id"].apply(lambda x: url_for("tournament.view_participant_draw",
                                                              tournament_id = self.id,
-                                                             user_id = x,
+                                                             participant_id = x,
                                                              _external = True))
             del df["id"]
             return df
@@ -298,7 +298,7 @@ class Forecast(db.Model):
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.DateTime, default = None)
 
-    match_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+    match_id = db.Column(db.Integer, db.ForeignKey('matches.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     participant_id = db.Column(db.Integer, db.ForeignKey('participants.id'))
 
