@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <h3 class="panel-title"><strong>Modifier mon tableau</strong></h3>
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+
+            <form action="{{ url_for('tournament.edit_my_draw', tournament_id=tournament.id,
+            participant_id = participant.id) }}" class="form-horizontal" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <div>
+                        {{form.forecast(class="form-control")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" type="submit">Valider mon pronostic</button>
+                </div>
+            </form>
+
+        </div>
+        </div>
+
+        <main id="tournament">
+
+            {% with matches = tournament.get_matches_first_round() %}
+                <div class="round">
+                    <div class="spacer">
+                        &nbsp;
+                    </div>
+
+                    {% for match in matches %}
+                        <div id="player-{{ match.position }}-0"
+                            class="game game-player match first-round"
+                            tournament_player_id="{{ match.tournament_player1_id }}"
+                            match_position_id="{{ match.position }}"
+                            match_id="{{ match.id }}"
+                            onclick="fill_next_round({{ match.position }}, 0)">
+                            {% if match.tournament_player1_id %}
+                                {{ match.tournament_player1.get_full_name() }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+
+                        <div class="game game-spacer">
+                            &nbsp;
+                        </div>
+
+                        <div id="player-{{ match.position }}-1"
+                            class="game game-player match first-round"
+                            tournament_player_id="{{ match.tournament_player2_id }}"
+                            match_position_id="{{ match.position }}"
+                            match_id="{{ match.id }}"
+                            onclick="fill_next_round({{ match.position }}, 1)">
+                            {% if match.tournament_player2_id %}
+                                {{ match.tournament_player2.get_full_name() }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+
+                        <div class="spacer">
+                            &nbsp;
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+            {% endwith %}
+
+
+            {% for round in tournament.get_matches_by_round() %}
+
+                {% if loop.index < loop.length %}
+
+                    <div class="round">
+                        <div class="spacer">
+                            &nbsp;
+                        </div>
+
+                        {% for match in round["matches"] %}
+
+                            {% with next_match = match.get_next_match() %}
+
+                                {% with forecast = match.get_forecast(participant.id) %}
+                                    {% if forecast.winner %}
+
+                                        <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                            class="game game-player match"
+                                            tournament_player_id="{{ forecast.winner_id }}"
+                                            match_position_id="{{ next_match.position }}"
+                                            match_id="{{ next_match.id }}"
+                                            onclick="fill_next_round({{ next_match.position }}, {{ loop.cycle(0, 1) }})">
+                                                {{ forecast.winner.get_full_name() }}
+                                        </div>
+
+                                    {% else %}
+
+                                        <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                            class="game game-player match"
+                                            tournament_player_id="None"
+                                            match_position_id="{{ next_match.position }}"
+                                            match_id="{{ next_match.id }}"
+                                            onclick="fill_next_round({{ next_match.position }}, {{ loop.cycle(0, 1) }})">
+                                            &nbsp;
+                                        </div>
+
+                                    {% endif %}
+
+                                    <div class="{{ loop.cycle('game game-spacer', 'spacer') }}">
+                                        &nbsp;
+                                    </div>
+
+                                {% endwith %}
+                            {% endwith %}
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+
+                    {% with match = round["matches"][0] %}
+                        {% with forecast = match.get_forecast(participant.id) %}
+                            <div class="round">
+                                <div id="player-0-1"
+                                    class="game game-player"
+                                    tournament_player_id="{{ match.winner_id }}">
+                                    {% if forecast.winner %}
+                                        {{ forecast.winner.get_full_name() }}
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endwith %}
+                    {% endwith %}
+                {% endif %}
+            {% endfor %}
+
+        </main>
+
+        </div>
+    </div>
+
+<script>
+
+function fill_next_round(match_position, player_position) {
+    // find id of origin div : id = player-{{match_position}}-{{player_position}}
+    origin_id = "#player-" + match_position + "-" + player_position;
+
+    // find id of destination div
+    next_match_position = Math.floor(match_position / 2);
+    next_player_position = match_position % 2;
+    destination_id = "#player-" + next_match_position + "-" + next_player_position;
+
+    // fiil text of destination with text of origin
+    $(destination_id).text($(origin_id).text());
+
+    // fill tournament_player_id attribute with origin tournament_player_id
+    $(destination_id).attr("tournament_player_id", $(origin_id).attr("tournament_player_id"));
+    update_json();
+}
+
+function update_json() {
+    var res = {};
+    $(".match").each(function() {
+        match_position = $(this).attr("match_position_id");
+        next_match_position = Math.floor(match_position / 2);
+        next_player_position = match_position % 2;
+        destination_id = "#player-" + next_match_position + "-" + next_player_position;
+
+        res[$(this).attr("match_id")] = $(destination_id).attr("tournament_player_id");
+    })
+    $("#forecast").attr("value", JSON.stringify(res));
+
+}
+
+</script>
+
+{% endblock %}
+

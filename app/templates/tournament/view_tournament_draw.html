@@ -13,46 +13,55 @@
         <main id="tournament">
 
             {% for round in tournament.get_matches_by_round() %}
-                <ul class="round">
-                    <li class="spacer">&nbsp;</li>
+                <div class="round">
+                    <div class="spacer">
+                        &nbsp;
+                    </div>
 
                     {% for match in round["matches"] %}
 
-                        <li id="player-{{ match.position }}-0"
-                            class="game game-player {% if round['first_round'] %}first-round{% endif %}">
+                        <div id="player-{{ match.position }}-0"
+                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}">
                             {% if match.tournament_player1_id %}
                                 {{ match.tournament_player1.get_full_name() }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
-                        </li>
-                        <li class="game game-spacer">&nbsp;</li>
-                        <li id="player-{{ match.position }}-1"
-                            class="game game-player {% if round['first_round'] %}first-round{% endif %}">
+                        </div>
+
+                        <div class="game game-spacer">
+                            &nbsp;
+                        </div>
+
+                        <div id="player-{{ match.position }}-1"
+                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}">
                             {% if match.tournament_player2_id %}
                                 {{ match.tournament_player2.get_full_name() }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
-                        </li>
+                        </div>
 
-                        <li class="spacer">&nbsp;</li>
+                    <div class="spacer">
+                        &nbsp;
+                    </div>
+
                     {% endfor %}
 
-                </ul>
+                </div>
                 {% endfor %}
 
-            <ul class="round">
+            <div class="round">
 
-                <li id="player-0-0"
+                <div id="player-0-1"
                     class="game game-player">
                     {% if tournament.last_match.winner %}
                         {{ tournament.last_match.winner.get_full_name() }}
                     {% else %}
                         &nbsp;
                     {% endif %}
-                </li>
-            </ul>
+                </div>
+            </div>
         </main>
 
         </div>

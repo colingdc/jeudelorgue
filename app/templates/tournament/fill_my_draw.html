@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
 
-            <form action="{{ url_for('tournament.fill_tournament_draw', tournament_id=tournament.id,
+            <form action="{{ url_for('tournament.fill_my_draw', tournament_id=tournament.id,
             participant_id = participant.id) }}" class="form-horizontal" method="POST">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
@@ -68,9 +68,9 @@
                             {% endif %}
                         </div>
 
-                    <div class="spacer">
-                        &nbsp;
-                    </div>
+                        <div class="spacer">
+                            &nbsp;
+                        </div>
 
                     {% endfor %}
 
@@ -81,9 +81,9 @@
 
                 <div id="player-0-1"
                     class="game game-player"
-                    tournament_player_id="{{ tournament.last_match.winner_id }}">
-                    {% if tournament.last_match.winner %}
-                        {{ tournament.last_match.winner.get_full_name() }}
+                    tournament_player_id="{{ tournament.last_match().winner_id }}">
+                    {% if tournament.last_match().winner %}
+                        {{ tournament.last_match().winner.get_full_name() }}
                     {% else %}
                         &nbsp;
                     {% endif %}

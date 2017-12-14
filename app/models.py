@@ -176,26 +176,6 @@ class Tournament(db.Model):
     def is_visible(self):
         return self.status >= TournamentStatus.REGISTRATION_OPEN
 
-    def get_participants(self):
-        query = (User.query
-                 .join(Participant)
-                 .with_entities(User.id, User.username, Participant.created_at)
-                 .filter(Participant.tournament_id == self.id)
-                 .all())
-        df = pd.DataFrame(query)
-
-        try:
-            df.columns = [u"id", u"Pseudo", u"Date d'inscription"]
-            df["Tableau"] = df["id"].apply(lambda x: url_for("tournament.view_participant_draw",
-                                                             tournament_id = self.id,
-                                                             participant_id = x,
-                                                             _external = True))
-            del df["id"]
-            return df
-        except ValueError:
-            df = pd.DataFrame(columns = [u"Pseudo", u"Date d'inscription", u"Tableau"])
-            return df
-
     def get_matches_first_round(self):
         return [m for m in self.matches if m.position >= 2 ** (self.number_rounds - 1)]
 
@@ -209,7 +189,7 @@ class Tournament(db.Model):
         return TournamentPlayer.query.filter(TournamentPlayer.tournament_id == self.id).first() is not None
 
     def last_match(self):
-        return self.matches.filter(Match.position == 1)
+        return self.matches.filter(Match.position == 1).first()
 
 
 class Participant(db.Model):
@@ -222,6 +202,9 @@ class Participant(db.Model):
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     forecasts = db.relationship("Forecast", backref = "participant", lazy = "dynamic")
+
+    def has_filled_draw(self):
+        return self.forecasts is not None
 
 
 class Player(db.Model):
@@ -264,6 +247,9 @@ class TournamentPlayer(db.Model):
                               primaryjoin = "or_(TournamentPlayer.id==Match.tournament_player1_id, TournamentPlayer.id==Match.tournament_player2_id)",
                               lazy ='dynamic')
 
+    forecasts = db.relationship("Forecast", backref = "winner", lazy = "dynamic")
+
+
     def get_full_name(self):
         full_name = u""
         if self.status:
@@ -290,6 +276,25 @@ class Match(db.Model):
     tournament_player2_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     tournament_player1 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player1_id")
     tournament_player2 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player2_id")
+
+    def get_forecast(self, participant_id):
+        forecast = (Forecast.query
+                    .filter(Forecast.participant_id == participant_id)
+                    .filter(Forecast.match_id == self.id)
+                    .first()
+                    )
+
+        return forecast
+
+    def get_next_match(self):
+        if self.round == 1:
+            return None
+        else:
+            match = (Match.query
+                     .filter(Match.tournament_id == self.tournament_id)
+                     .filter(Match.position == self.position // 2)
+                     .first())
+            return match
 
 
 class Forecast(db.Model):
