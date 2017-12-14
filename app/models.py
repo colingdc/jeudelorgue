@@ -191,6 +191,9 @@ class Tournament(db.Model):
     def last_match(self):
         return self.matches.filter(Match.position == 1).first()
 
+    def are_draws_private(self):
+        return self.status >= TournamentStatus.ONGOING
+
 
 class Participant(db.Model):
     __tablename__ = "participants"

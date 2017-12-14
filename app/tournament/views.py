@@ -137,17 +137,6 @@ def register(tournament_id):
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
 
-@bp.route("/<tournament_id>/draw/<participant_id>")
-@login_required
-def view_participant_draw(tournament_id, participant_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if not tournament.is_visible():
-        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
-    participant = Participant.query.get_or_404(participant_id)
-
-    return redirect(url_for(".view_tournament", tournament_id = tournament_id))
-
-
 @bp.route("/<tournament_id>/draw/create", methods = ["GET", "POST"])
 @manager_required
 def create_tournament_draw(tournament_id):
@@ -224,7 +213,11 @@ def fill_my_draw(tournament_id, participant_id):
         abort(404)
     participant = Participant.query.get_or_404(participant_id)
     if participant.user_id != current_user.id:
-        abort(404)
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    if not tournament.is_open_to_registration():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
     title = u"Remplir mon tableau"
 
     if participant.has_filled_draw():
@@ -262,9 +255,12 @@ def edit_my_draw(tournament_id, participant_id):
         abort(404)
     participant = Participant.query.get_or_404(participant_id)
     if participant.user_id != current_user.id:
-        abort(404)
-    title = u"Modifier mon tableau"
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
+    if not tournament.is_open_to_registration():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"Modifier mon tableau"
     form = FillTournamentDrawForm()
 
     if form.validate_on_submit():
@@ -288,3 +284,22 @@ def edit_my_draw(tournament_id, participant_id):
                                tournament = tournament,
                                participant = participant,
                                form = form)
+
+
+@bp.route("/<tournament_id>/draw/<participant_id>")
+def view_participant_draw(tournament_id, participant_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+    participant = Participant.query.get_or_404(participant_id)
+
+    if tournament.are_draws_private():
+        if participant.user_id != current_user.id:
+            return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"Tableau"
+
+    return render_template("tournament/view_participant_draw.html",
+                           title = title,
+                           tournament = tournament,
+                           participant = participant)
