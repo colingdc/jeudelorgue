@@ -157,6 +157,7 @@
                         <th>Pseudo</th>
                         <th>Tableau</th>
                         <th>Score / {{ tournament.get_current_maximal_score() }}</th>
+                        <th>Coefficient de risque</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,6 +166,7 @@
                             <th>{{ participant.user.username }}</th>
                             <th><a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>Tableau</a></th>
                             <th>{{ participant.score }}</th>
+                            <th>{{ participant.risk_coefficient }}</th>
                         </tr>
                     {% endfor %}
                 </tbody>

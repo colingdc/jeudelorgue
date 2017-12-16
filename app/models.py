@@ -213,7 +213,7 @@ class Tournament(db.Model):
         return score
 
     def participants_sorted(self):
-        return (self.participants.order_by(Participant.score.desc()))
+        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient))
 
 
 class TournamentCategory(db.Model):
@@ -239,6 +239,7 @@ class Participant(db.Model):
     deleted_at = db.Column(db.DateTime, default = None)
     matches_not_forecasted = db.Column(db.Integer, default = None)
     score = db.Column(db.Integer, default = 0)
+    risk_coefficient = db.Column(db.Integer, default = 0)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -256,6 +257,19 @@ class Participant(db.Model):
                 match_score = (result.winner_id == forecast.winner_id) * score_per_round[result.round]
                 score += match_score
         return score
+
+    def get_risk_coefficient(self):
+        score_per_round = self.tournament.get_score_per_round()
+
+        my_forecasts = self.forecasts
+        coeffs = {forecast.match.id: 0 for forecast in my_forecasts}
+        other_participants_forecasts = [p.forecasts for p in self.tournament.participants if p.id != self.id]
+
+        for other_participant_forecasts in other_participants_forecasts:
+            for my_forecast, other_participant_forecast in zip(my_forecasts.order_by(Forecast.match_id), other_participant_forecasts.order_by(Forecast.match_id)):
+                coeffs[my_forecast.match.id] = (my_forecast.winner_id == other_participant_forecast.winner_id) * score_per_round[my_forecast.match.round]
+
+        return sum(coeffs.values())
 
 
 class Player(db.Model):

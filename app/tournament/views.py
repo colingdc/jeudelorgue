@@ -121,6 +121,12 @@ def close_registrations(tournament_id):
     tournament.status = TournamentStatus.ONGOING
     db.session.add(tournament)
     db.session.commit()
+
+    for participant in tournament.participants:
+        participant.risk_coefficient = participant.get_risk_coefficient()
+        db.session.add(participant)
+    db.session.commit()
+
     flash(REGISTRATION_CLOSED, "info")
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
