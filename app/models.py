@@ -188,7 +188,7 @@ class Tournament(db.Model):
     def is_draw_created(self):
         return TournamentPlayer.query.filter(TournamentPlayer.tournament_id == self.id).first() is not None
 
-    def last_match(self):
+    def get_last_match(self):
         return self.matches.filter(Match.position == 1).first()
 
     def are_draws_private(self):
@@ -275,6 +275,7 @@ class Match(db.Model):
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
+    winner = db.relationship("TournamentPlayer", foreign_keys = "Match.winner_id")
     tournament_player1_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     tournament_player2_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     tournament_player1 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player1_id")

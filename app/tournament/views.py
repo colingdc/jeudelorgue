@@ -228,11 +228,12 @@ def edit_tournament_draw(tournament_id):
             else:
                 match.winner_id = winner_id
                 next_match = match.get_next_match()
-                if match.position % 2 == 0:
-                    next_match.tournament_player1_id = winner_id
-                else:
-                    next_match.tournament_player2_id = winner_id
-                db.session.add(next_match)
+                if next_match:
+                    if match.position % 2 == 0:
+                        next_match.tournament_player1_id = winner_id
+                    else:
+                        next_match.tournament_player2_id = winner_id
+                    db.session.add(next_match)
 
             db.session.add(match)
         db.session.commit()
