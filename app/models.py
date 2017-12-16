@@ -199,6 +199,10 @@ class Tournament(db.Model):
     def number_rounds(self):
         return self.category.number_rounds
 
+    def get_score_per_round(self):
+        return {round: 2 ** (self.number_rounds - round)
+                for round in range(1, self.number_rounds + 1)}
+
 
 class TournamentCategory(db.Model):
     __tablename__ = "tournament_categories"
@@ -222,6 +226,7 @@ class Participant(db.Model):
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.DateTime, default = None)
     matches_not_forecasted = db.Column(db.Integer, default = None)
+    score = db.Column(db.Integer, default = 0)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -229,6 +234,16 @@ class Participant(db.Model):
 
     def has_filled_draw(self):
         return len(self.forecasts.all()) > 0
+
+    def get_score(self):
+        score_per_round = self.tournament.get_score_per_round()
+        score = 0
+        for forecast in self.forecasts:
+            result = forecast.match
+            if result.winner_id:
+                match_score = (result.winner_id == forecast.winner_id) * score_per_round[result.round]
+                score += match_score
+        return score
 
 
 class Player(db.Model):
@@ -295,6 +310,9 @@ class Match(db.Model):
     score = db.Column(db.String(64))
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+
+    forecasts = db.relationship("Forecast", backref = "match", lazy = "dynamic")
+
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     winner = db.relationship("TournamentPlayer", foreign_keys = "Match.winner_id")
     tournament_player1_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
@@ -331,6 +349,3 @@ class Forecast(db.Model):
     match_id = db.Column(db.Integer, db.ForeignKey('matches.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     participant_id = db.Column(db.Integer, db.ForeignKey('participants.id'))
-
-
-

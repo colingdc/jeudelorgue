@@ -55,7 +55,7 @@ def edit_tournament(tournament_id):
 
     if request.method == "GET":
         form.name.data = tournament.name
-        form.category.data = tournament.category
+        form.category.data = tournament.category_id
         form.start_date.data = tournament.started_at
     if form.validate_on_submit():
         tournament.name = form.name.data
