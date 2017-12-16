@@ -24,46 +24,59 @@
                 </li>
             </ul>
             <ul class="col-md-3">
-                <li>
-                    <a class="btn btn-primary"
-                       href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
-                        Voir le tableau
-                    </a>
-                </li>
+
+                {% if tournament.is_open_to_registration() %}
+
+                    <li>
+                        <a class="btn btn-primary"
+                           href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
+                            Voir le tableau
+                        </a>
+                    </li>
 
 
-                <li>
-                    {% if tournament.is_open_to_registration() %}
-                        {% if current_user.is_registered_to_tournament(tournament.id) %}
-                            {% with participant = current_user.get_participant(tournament.id) %}
+                    {% if not current_user.is_registered_to_tournament(tournament.id) %}
+                    <li>
+                        <a class="btn btn-success"
+                           href="{{ url_for('.register', tournament_id=tournament.id) }}">
+                            Je m'inscris au tournoi
+                        </a>
+                    </li>
 
-                                {% if participant.has_filled_draw() %}
-                                    <a class="btn btn-primary"
-                                       href="{{ url_for('.edit_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
-                                        Modifier mon tableau
-                                    </a>
-                                {% else %}
-                                    <a class="btn btn-primary"
-                                       href="{{ url_for('.fill_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
-                                        Remplir mon tableau
-                                    </a>
-                                {% endif %}
+                    {% else %}
 
+                        {% with participant = current_user.get_participant(tournament.id) %}
+
+                            <li>
                                 <a class="btn btn-primary"
                                    href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
                                     Voir mon tableau
                                 </a>
-                            {% endwith %}
+                            </li>
 
-                        {% else %}
-                                <a class="btn btn-success"
-                                   href="{{ url_for('.register', tournament_id=tournament.id) }}">
-                                    Je m'inscris au tournoi
-                                </a>
-                        {% endif %}
+                            {% if participant.has_filled_draw() %}
+                                <li>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('.edit_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
+                                        Modifier mon tableau
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('.fill_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
+                                        Remplir mon tableau
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        {% endwith %}
+
                     {% endif %}
-                </li>
+                {% endif %}
+
             </ul>
+
             {% if current_user.is_manager() %}
             <ul class="col-md-3">
                 {% if tournament.is_open_to_registration() %}
@@ -74,35 +87,33 @@
                         </a>
                     </li>
 
-                {% elif not tournament.is_visible() %}
-                    {% if not tournament.is_draw_created() %}
-                        <li>
-                            <a class="btn btn-warning"
-                               href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
-                                Créer le tableau
-                            </a>
-                        </li>
-                    {% endif %}
+                {% else %}
+
                     <li>
                         <a class="btn btn-warning"
                            href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
                             Ouvrir les inscriptions
                         </a>
                     </li>
-                {% else %}
-                    <li>
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
-                            Réouvrir les inscriptions
-                        </a>
-                    </li>
+
+                {% endif %}
+
+                {% if tournament.is_draw_created() %}
                     <li>
                         <a class="btn btn-warning"
                            href="{{ url_for('.edit_tournament_draw', tournament_id=tournament.id) }}">
                             Mettre à jour le tableau
                         </a>
                     </li>
+                {% else %}
+                    <li>
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
+                            Créer le tableau
+                        </a>
+                    </li>
                 {% endif %}
+
             </ul>
 
             <ul class="col-md-3">
