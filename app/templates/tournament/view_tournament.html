@@ -148,21 +148,17 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Pseudo</th>
-                        <th>Date d'inscription</th>
                         <th>Tableau</th>
-                        <th>Score</th>
+                        <th>Score / {{ tournament.get_current_maximal_score() }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for participant in tournament.participants %}
+                    {% for participant in tournament.participants_sorted() %}
                         <tr>
-                            <th>{{ participant.user_id }}</th>
                             <th>{{ participant.user.username }}</th>
-                            <th>{{ participant.created_at }}</th>
                             <th><a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>Tableau</a></th>
-                            <th>{{ participant.get_score() }}</th>
+                            <th>{{ participant.score }}</th>
                         </tr>
                     {% endfor %}
                 </tbody>

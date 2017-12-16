@@ -203,6 +203,18 @@ class Tournament(db.Model):
         return {round: 2 ** (self.number_rounds - round)
                 for round in range(1, self.number_rounds + 1)}
 
+    def get_current_maximal_score(self):
+        score_per_round = self.get_score_per_round()
+        score = 0
+        for match in self.matches:
+            if match.winner_id:
+                match_score = score_per_round[match.round]
+                score += match_score
+        return score
+
+    def participants_sorted(self):
+        return (self.participants.order_by(Participant.score.desc()))
+
 
 class TournamentCategory(db.Model):
     __tablename__ = "tournament_categories"

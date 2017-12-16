@@ -226,7 +226,11 @@ def edit_tournament_draw(tournament_id):
     form = FillTournamentDrawForm()
 
     if form.validate_on_submit():
-        results = json.loads(form.forecast.data)
+        try:
+            results = json.loads(form.forecast.data)
+        except json.decoder.JSONDecodeError:
+            return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
         matches = tournament.matches
 
         for match in matches:
@@ -244,6 +248,11 @@ def edit_tournament_draw(tournament_id):
                     db.session.add(next_match)
 
             db.session.add(match)
+        db.session.commit()
+
+        for participant in tournament.participants:
+            participant.score = participant.get_score()
+            db.session.add(participant)
         db.session.commit()
 
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
