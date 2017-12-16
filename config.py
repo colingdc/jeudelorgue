@@ -21,6 +21,7 @@ class Config:
     ADMIN_JDL = os.environ.get('ADMIN_JDL')
     TOURNAMENTS_PER_PAGE = 10
     PLAYERS_PER_PAGE = 10
+    CATEGORIES_PER_PAGE = 10
     SLOW_DB_QUERY_TIME = 0.5
 
     @staticmethod

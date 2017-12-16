@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>Editer la catégorie de tournois</strong></h3>
+        </div>
+
+        <form action="{{ url_for('tournament_category.edit_category', category_id=category.id) }}" class="form-horizontal" method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+
+                        <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                            {{form.name.label()}}
+                            <div>
+                                {{form.name(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.name.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.number_rounds.errors %} has-error {% endif %}">
+                            {{form.number_rounds.label()}}
+                            <div>
+                                {{form.number_rounds(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.number_rounds.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.maximal_score.errors %} has-error {% endif %}">
+                            {{form.maximal_score.label()}}
+                            <div>
+                                {{form.maximal_score(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.maximal_score.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.minimal_score.errors %} has-error {% endif %}">
+                            {{form.minimal_score.label()}}
+                            <div>
+                                {{form.minimal_score(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.minimal_score.errors[0] }}
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-success" type="submit">Valider</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

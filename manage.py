@@ -4,7 +4,9 @@ from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 import os
 from app import create_app, db
-from app.models import User, Role, Permission, Tournament, Match, Forecast, TournamentPlayer, TournamentStatus, Player, Participant
+from app.models import (User, Role, Permission, Tournament, Match, Forecast,
+                        TournamentPlayer, TournamentStatus, Player,
+                        Participant, TournamentCategory)
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
@@ -25,7 +27,8 @@ def make_shell_context():
                 Match = Match,
                 Player = Player,
                 Forecast = Forecast,
-                Participant = Participant)
+                Participant = Participant,
+                TournamentCategory = TournamentCategory)
 
 
 app = create_app(os.getenv("FLASK_CONFIG") or "default")

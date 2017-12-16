@@ -161,10 +161,11 @@ class Tournament(db.Model):
     deleted_at = db.Column(db.DateTime, default = None)
 
     name = db.Column(db.String(64))
-    number_rounds = db.Column(db.Integer)
     started_at = db.Column(db.DateTime)
     ended_at = db.Column(db.DateTime, default = None)
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)
+    category_id = db.Column(db.Integer, db.ForeignKey("tournament_categories.id"))
+    category = db.relationship("TournamentCategory", foreign_keys = category_id)
 
     matches = db.relationship("Match", backref = "tournament", lazy = "dynamic")
     participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
@@ -194,6 +195,26 @@ class Tournament(db.Model):
     def are_draws_private(self):
         return self.status >= TournamentStatus.ONGOING
 
+    @property
+    def number_rounds(self):
+        return self.category.number_rounds
+
+
+class TournamentCategory(db.Model):
+    __tablename__ = "tournament_categories"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default = None)
+
+    name = db.Column(db.String(64))
+    number_rounds = db.Column(db.Integer)
+    maximal_score = db.Column(db.Integer)
+    minimal_score = db.Column(db.Integer)
+
+    @classmethod
+    def get_all_categories(cls):
+        return [(p.id, p.name) for p in cls.query.order_by(cls.name).all()]
+
 
 class Participant(db.Model):
     __tablename__ = "participants"
@@ -207,7 +228,7 @@ class Participant(db.Model):
     forecasts = db.relationship("Forecast", backref = "participant", lazy = "dynamic")
 
     def has_filled_draw(self):
-        return self.forecasts is not None
+        return len(self.forecasts.all()) > 0
 
 
 class Player(db.Model):

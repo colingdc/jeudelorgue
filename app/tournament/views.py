@@ -10,7 +10,7 @@ from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast
+from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED)
 
@@ -20,13 +20,17 @@ from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOU
 def create_tournament():
     title = u"Créer un tournoi"
     form = CreateTournamentForm(request.form)
+
+    categories = TournamentCategory.get_all_categories()
+    form.category.choices = categories
+
     if form.validate_on_submit():
         tournament = Tournament(name = form.name.data,
                                 started_at = form.start_date.data,
-                                number_rounds = form.number_rounds.data)
+                                category_id = form.category.data)
         db.session.add(tournament)
         db.session.commit()
-        for i in range(1, 2 ** form.number_rounds.data):
+        for i in range(1, 2 ** tournament.number_rounds):
             match = Match(position = i,
                           tournament_id = tournament.id,
                           round = floor(log(i) / log(2)) + 1)
@@ -45,9 +49,13 @@ def edit_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     title = u"Tournoi {}".format(tournament.name)
     form = EditTournamentForm(request.form)
+
+    categories = TournamentCategory.get_all_categories()
+    form.category.choices = categories
+
     if request.method == "GET":
         form.name.data = tournament.name
-        form.number_rounds.data = tournament.number_rounds
+        form.category.data = tournament.category
         form.start_date.data = tournament.started_at
     if form.validate_on_submit():
         tournament.name = form.name.data

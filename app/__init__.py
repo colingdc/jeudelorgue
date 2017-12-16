@@ -78,6 +78,9 @@ def create_app(config_name):
     from .player import bp as player_blueprint
     app.register_blueprint(player_blueprint, url_prefix = "/player")
 
+    from .tournament_category import bp as tournament_category_blueprint
+    app.register_blueprint(tournament_category_blueprint, url_prefix = "/tournament_category")
+
     from .admin import bp as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix = "/admin")
 

@@ -26,3 +26,5 @@ REGISTRATION_CLOSED = u"Les inscriptions au tournoi sont closes"
 REGISTERED_TO_TOURNAMENT = u"Vous êtes inscrit au tournoi, vous pouvez désormais remplir votre tableau."
 REGISTRATION_NOT_OPEN = u"Les inscriptions à ce tournoi ne sont pas ouvertes"
 ALREADY_REGISTERED = u"Vous êtes déjà inscrit à ce tournoi"
+
+CATEGORY_ALREADY_EXISTS = u"Cette catégorie de tournois existe déjà"
