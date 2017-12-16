@@ -118,7 +118,7 @@ def close_registrations(tournament_id):
 
 
 @bp.route("/<tournament_id>/register")
-@manager_required
+@login_required
 def register(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if not tournament.is_open_to_registration():
@@ -195,6 +195,7 @@ def create_tournament_draw(tournament_id):
 
 
 @bp.route("/<tournament_id>/draw")
+@login_required
 def view_tournament_draw(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
@@ -206,7 +207,47 @@ def view_tournament_draw(tournament_id):
                            tournament = tournament)
 
 
+@bp.route("/<tournament_id>/draw/edit", methods = ["GET", "POST"])
+@manager_required
+def edit_tournament_draw(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+    title = u"Mettre à jour le tableau du tournoi"
+
+    form = FillTournamentDrawForm()
+
+    if form.validate_on_submit():
+        results = json.loads(form.forecast.data)
+        matches = tournament.matches
+
+        for match in matches:
+            winner_id = results[str(match.id)]
+            if winner_id == "None":
+                match.winner_id = None
+            else:
+                match.winner_id = winner_id
+                next_match = match.get_next_match()
+                if match.position % 2 == 0:
+                    next_match.tournament_player1_id = winner_id
+                else:
+                    next_match.tournament_player2_id = winner_id
+                db.session.add(next_match)
+
+            db.session.add(match)
+        db.session.commit()
+
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    else:
+        return render_template("tournament/edit_tournament_draw.html",
+                               title = title,
+                               tournament = tournament,
+                               form = form)
+
+
 @bp.route("/<tournament_id>/draw/<participant_id>/fill", methods = ["GET", "POST"])
+@login_required
 def fill_my_draw(tournament_id, participant_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
@@ -249,6 +290,7 @@ def fill_my_draw(tournament_id, participant_id):
 
 
 @bp.route("/<tournament_id>/draw/<participant_id>/edit", methods = ["GET", "POST"])
+@login_required
 def edit_my_draw(tournament_id, participant_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
@@ -287,6 +329,7 @@ def edit_my_draw(tournament_id, participant_id):
 
 
 @bp.route("/<tournament_id>/draw/<participant_id>")
+@login_required
 def view_participant_draw(tournament_id, participant_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:

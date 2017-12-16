@@ -66,37 +66,45 @@
             </ul>
             {% if current_user.is_manager() %}
             <ul class="col-md-3">
-                <li>
-                    {% if tournament.is_open_to_registration() %}
-                    <a class="btn btn-warning"
-                       href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
-                        Fermer les inscriptions
-                    </a>
+                {% if tournament.is_open_to_registration() %}
+                    <li>
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
+                            Fermer les inscriptions
+                        </a>
+                    </li>
 
-                    {% elif not tournament.is_visible() %}
-                        {% if not tournament.is_draw_created() %}
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
-                            Créer le tableau
-                        </a>
-                        {% else %}
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
-                            Editer le tableau
-                        </a>
-                        {% endif %}
-                    <a class="btn btn-warning"
-                       href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
-                        Ouvrir les inscriptions
-                    </a>
-                    {% else %}
-                    <a class="btn btn-warning"
-                       href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
-                        Réouvrir les inscriptions
-                    </a>
+                {% elif not tournament.is_visible() %}
+                    {% if not tournament.is_draw_created() %}
+                        <li>
+                            <a class="btn btn-warning"
+                               href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
+                                Créer le tableau
+                            </a>
+                        </li>
                     {% endif %}
-                </li>
+                    <li>
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
+                            Ouvrir les inscriptions
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
+                            Réouvrir les inscriptions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-warning"
+                           href="{{ url_for('.edit_tournament_draw', tournament_id=tournament.id) }}">
+                            Mettre à jour le tableau
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
+
             <ul class="col-md-3">
                 <li>
                     <a class="btn btn-warning"

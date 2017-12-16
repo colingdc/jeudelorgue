@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <h3 class="panel-title"><strong>Mettre à jour le tableau</strong></h3>
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+
+            <form action="{{ url_for('tournament.edit_tournament_draw', tournament_id=tournament.id) }}"
+            class="form-horizontal" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <div>
+                        {{form.forecast(class="form-control")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" type="submit">Valider les modifications</button>
+                </div>
+            </form>
+
+        </div>
+        </div>
+
+        <main id="tournament">
+
+            {% for round in tournament.get_matches_by_round() %}
+                <div class="round">
+                    <div class="spacer">
+                        &nbsp;
+                    </div>
+
+                    {% for match in round["matches"] %}
+
+                        <div id="player-{{ match.position }}-0"
+                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}"
+                            tournament_player_id="{{ match.tournament_player1_id }}"
+                            match_position_id="{{ match.position }}"
+                            match_id="{{ match.id }}"
+                            onclick="fill_next_round({{ match.position }}, 0)">
+                            {% if match.tournament_player1_id %}
+                                {{ match.tournament_player1.get_full_name() }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+
+                        <div class="game game-spacer">
+                            &nbsp;
+                        </div>
+
+                        <div id="player-{{ match.position }}-1"
+                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}"
+                            tournament_player_id="{{ match.tournament_player2_id }}"
+                            match_position_id="{{ match.position }}"
+                            match_id="{{ match.id }}"
+                            onclick="fill_next_round({{ match.position }}, 1)">
+                            {% if match.tournament_player2_id %}
+                                {{ match.tournament_player2.get_full_name() }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+
+                        <div class="spacer">
+                            &nbsp;
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                {% endfor %}
+
+            <div class="round">
+
+                <div id="player-0-1"
+                    class="game game-player"
+                    tournament_player_id="{{ tournament.last_match().winner_id }}">
+                    {% if tournament.last_match().winner %}
+                        {{ tournament.last_match().winner.get_full_name() }}
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+
+        </div>
+    </div>
+
+<script>
+
+function fill_next_round(match_position, player_position) {
+    // find id of origin div : id = player-{{match_position}}-{{player_position}}
+    origin_id = "#player-" + match_position + "-" + player_position;
+
+    // find id of destination div
+    next_match_position = Math.floor(match_position / 2);
+    next_player_position = match_position % 2;
+    destination_id = "#player-" + next_match_position + "-" + next_player_position;
+
+    // fiil text of destination with text of origin
+    $(destination_id).text($(origin_id).text());
+
+    // fill tournament_player_id attribute with origin tournament_player_id
+    $(destination_id).attr("tournament_player_id", $(origin_id).attr("tournament_player_id"));
+    update_json();
+}
+
+function update_json() {
+    var res = {};
+    $(".match").each(function() {
+        match_position = $(this).attr("match_position_id");
+        next_match_position = Math.floor(match_position / 2);
+        next_player_position = match_position % 2;
+        destination_id = "#player-" + next_match_position + "-" + next_player_position;
+
+        res[$(this).attr("match_id")] = $(destination_id).attr("tournament_player_id");
+    })
+    $("#forecast").attr("value", JSON.stringify(res));
+
+}
+
+</script>
+
+{% endblock %}
