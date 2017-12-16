@@ -164,19 +164,20 @@ def create_tournament_draw(tournament_id):
     else:
         form = CreateTournamentDrawForm(request.form)
 
-    player_names = Player.get_all_players()
+    player_names = [(-1, "Choisir un joueur...")] + Player.get_all_players()
+
     for p in form.player:
         p.player1_name.choices = player_names
         p.player2_name.choices = player_names
 
     if form.validate_on_submit():
         for match, p in zip(matches, form.player):
-            t1 = TournamentPlayer(player_id = p.data["player1_name"],
+            t1 = TournamentPlayer(player_id = p.data["player1_name"] if p.data["player1_name"] >= 0 else None,
                                   seed = p.data["player1_seed"],
                                   status = p.data["player1_status"],
                                   position = 0,
                                   tournament_id = tournament_id)
-            t2 = TournamentPlayer(player_id = p.data["player2_name"],
+            t2 = TournamentPlayer(player_id = p.data["player2_name"] if p.data["player2_name"] >= 0 else None,
                                   seed = p.data["player2_seed"],
                                   status = p.data["player2_status"],
                                   position = 1,
@@ -202,6 +203,68 @@ def create_tournament_draw(tournament_id):
                                tournament = tournament)
 
 
+@bp.route("/<tournament_id>/draw/edit", methods = ["GET", "POST"])
+@manager_required
+def edit_tournament_draw(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+    title = u"Créer le tableau du tournoi"
+
+    matches = tournament.get_matches_first_round()
+
+    if not request.form:
+        form = CreateTournamentDrawForm()
+
+        for _ in matches:
+            form.player.append_entry()
+
+    else:
+        form = CreateTournamentDrawForm(request.form)
+
+    player_names = [(-1, "Choisir un joueur...")] + Player.get_all_players()
+
+    for p in form.player:
+        p.player1_name.choices = player_names
+        p.player2_name.choices = player_names
+
+    if request.method == "GET":
+        for p, match in zip(form.player, matches):
+            if match.tournament_player1.player:
+                p.player1_name.data = match.tournament_player1.player.id
+            if match.tournament_player2.player:
+                p.player2_name.data = match.tournament_player2.player.id
+            p.player1_status.data = match.tournament_player1.status
+            p.player2_status.data = match.tournament_player2.status
+            p.player1_seed.data = match.tournament_player1.seed
+            p.player2_seed.data = match.tournament_player2.seed
+
+    if form.validate_on_submit():
+        for match, p in zip(matches, form.player):
+            t1 = match.tournament_player1
+            t1.player_id = p.data["player1_name"] if p.data["player1_name"] >= 0 else None
+            t1.seed = p.data["player1_seed"]
+            t1.status = p.data["player1_status"]
+
+            t2 = match.tournament_player2
+            t2.player_id = p.data["player2_name"] if p.data["player2_name"] >= 0 else None
+            t2.seed = p.data["player2_seed"]
+            t2.status = p.data["player2_status"]
+
+            # Add tournament players
+            db.session.add(t1)
+            db.session.add(t2)
+            db.session.commit()
+
+        flash("Le tableau du tournoi {} a été modifié".format(tournament.name), "info")
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+    else:
+        return render_template("tournament/edit_tournament_draw.html", title = title,
+                               form = form,
+                               tournament = tournament)
+
+
+
 @bp.route("/<tournament_id>/draw")
 @login_required
 def view_tournament_draw(tournament_id):
@@ -215,9 +278,9 @@ def view_tournament_draw(tournament_id):
                            tournament = tournament)
 
 
-@bp.route("/<tournament_id>/draw/edit", methods = ["GET", "POST"])
+@bp.route("/<tournament_id>/draw/update", methods = ["GET", "POST"])
 @manager_required
-def edit_tournament_draw(tournament_id):
+def update_tournament_draw(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
         abort(404)
@@ -258,7 +321,7 @@ def edit_tournament_draw(tournament_id):
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
     else:
-        return render_template("tournament/edit_tournament_draw.html",
+        return render_template("tournament/update_tournament_draw.html",
                                title = title,
                                tournament = tournament,
                                form = form)

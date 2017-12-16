@@ -272,9 +272,12 @@ class Player(db.Model):
     def get_full_name(self):
         return u"{} {}".format(self.first_name, self.last_name.upper())
 
+    def get_full_name_surname_first(self):
+        return u"{}, {}".format(self.last_name.upper(), self.first_name)
+
     @classmethod
     def get_all_players(cls):
-        return [(p.id, p.get_full_name()) for p in cls.query.order_by(cls.last_name, cls.first_name).all()]
+        return [(p.id, p.get_full_name_surname_first()) for p in cls.query.order_by(cls.last_name, cls.first_name).all()]
 
 
 class TournamentPlayer(db.Model):
@@ -307,7 +310,10 @@ class TournamentPlayer(db.Model):
             full_name += "[{}] ".format(self.status)
         if self.seed:
             full_name += "[{}] ".format(self.seed)
-        full_name += self.player.get_full_name()
+        if self.player:
+            full_name += self.player.get_full_name()
+        else:
+            full_name += u"Qualifié " + str(self.id)
         return full_name
 
 
