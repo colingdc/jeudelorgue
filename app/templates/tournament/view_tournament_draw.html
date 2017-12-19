@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block styles %}
+{{ super() }}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/draw.css') }}">
+
+{% endblock %}
+
+
 {% block content %}
 
 

@@ -47,3 +47,6 @@ class FillTournamentDrawForm(FlaskForm):
     forecast = StringField("forecast")
     submit = SubmitField("Valider")
 
+
+class TournamentPlayerStatsForm(FlaskForm):
+    player_name = SelectField("Joueur", coerce = int)

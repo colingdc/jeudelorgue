@@ -7,7 +7,7 @@ from math import log, floor
 import json
 
 from . import bp
-from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm
+from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory
@@ -433,3 +433,30 @@ def view_participant_draw(tournament_id, participant_id):
                            title = title,
                            tournament = tournament,
                            participant = participant)
+
+
+@bp.route("/<tournament_id>/stats/tournament_players", methods = ["GET", "POST"])
+@login_required
+def tournament_player_stats(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    if tournament.are_draws_private():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"Pronostics par joueur"
+    form = TournamentPlayerStatsForm()
+
+    tournament_players = [(-1, "Choisir un joueur...")] + [(p.id, p.get_full_name()) for p in tournament.players]
+    form.player_name.choices = tournament_players
+
+    tournament_player = None
+    if form.validate_on_submit():
+        tournament_player = TournamentPlayer.query.get(form.player_name.data)
+
+    return render_template("tournament/tournament_player_stats.html",
+                           title = title,
+                           tournament = tournament,
+                           form = form,
+                           tournament_player = tournament_player)

@@ -6,6 +6,7 @@ from flask import current_app, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db, bcrypt, login_manager
+from sqlalchemy import or_
 
 
 class User(UserMixin, db.Model):
@@ -83,6 +84,24 @@ class User(UserMixin, db.Model):
         self.password = new_password
         db.session.add(self)
         return True
+
+    @staticmethod
+    def insert_user(email, role_name, username = None, confirmed = True, password = "test1234"):
+        role = Role.query.filter_by(name = role_name).first()
+        if role is None:
+            print("This role does not exist")
+        else:
+            if username is None:
+                username = email
+            user = User(email = email,
+                        role = role,
+                        confirmed = confirmed,
+                        username = username,
+                        password = password)
+            db.session.add(user)
+            db.session.commit()
+
+
 
     def get_id(self):
         return str(self.id)
@@ -178,7 +197,7 @@ class Tournament(db.Model):
         return self.status >= TournamentStatus.REGISTRATION_OPEN
 
     def get_matches_first_round(self):
-        return [m for m in self.matches if m.position >= 2 ** (self.number_rounds - 1)]
+        return [m for m in self.matches if m.round == self.number_rounds]
 
     def get_matches_by_round(self):
         return [{"round": i,
@@ -199,6 +218,12 @@ class Tournament(db.Model):
     def number_rounds(self):
         return self.category.number_rounds
 
+    def get_round_names(self):
+        names = ["F", "DF", "QF", "HF"]
+        if self.number_rounds > 4:
+            names += ["T" + str(i) for i in range(self.number_rounds - 4, 0, -1)]
+        return names[::-1]
+
     def get_score_per_round(self):
         return {round: 2 ** (self.number_rounds - round)
                 for round in range(1, self.number_rounds + 1)}
@@ -214,6 +239,26 @@ class Tournament(db.Model):
 
     def participants_sorted(self):
         return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient))
+
+    def get_tournament_player_stats(self, tournament_player):
+        # Get the tournament player's first round match
+        first_match = (self.matches.filter(or_(Match.tournament_player1_id == tournament_player.id,
+                                               Match.tournament_player2_id == tournament_player.id))
+                                   .filter(Match.round == self.number_rounds)).first()
+        if not first_match:
+            return None
+
+        stats = {}
+        for round in range(1, self.number_rounds + 1):
+            position = first_match.position // 2 ** (self.number_rounds - round)
+            match = self.matches.filter(Match.position == position)
+
+            round_stats = {f.participant: f.winner
+                           for f in match.first().forecasts}
+            stats[round] = round_stats
+
+        return stats
+
 
 
 class TournamentCategory(db.Model):
