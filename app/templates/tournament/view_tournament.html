@@ -125,6 +125,12 @@
             <ul class="col-md-3">
                 <li>
                     <a class="btn btn-warning"
+                       href="{{ url_for('.close_tournament', tournament_id=tournament.id) }}">
+                        Clôturer le tournoi
+                    </a>
+                </li>
+                <li>
+                    <a class="btn btn-warning"
                        href="{{ url_for('.edit_tournament', tournament_id=tournament.id) }}">
                         Editer le tournoi
                     </a>
@@ -150,6 +156,22 @@
 
     <div class="panel-body">
 
+        {% if not tournament.are_draws_private() %}
+            <div class="col-md-6">
+                    <a class="btn btn-primary"
+                    href="{{ url_for('.overall_forecasts_stats', tournament_id=tournament.id) }}">
+                        Voir les pronostics globaux
+                    </a>
+            </div>
+            <div class="col-md-6">
+                    <a class="btn btn-primary"
+                    href="{{ url_for('.tournament_player_stats', tournament_id=tournament.id) }}">
+                        Voir les pronostics par joueur
+                    </a>
+            </div>
+
+        {% endif %}
+
         {% if tournament.participants %}
             <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -158,6 +180,9 @@
                         <th>Tableau</th>
                         <th>Score / {{ tournament.get_current_maximal_score() }}</th>
                         <th>Coefficient de risque</th>
+                        {% if tournament.is_finished() %}
+                            <th>Points ATP attribués</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -167,6 +192,9 @@
                             <th><a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>Tableau</a></th>
                             <th>{{ participant.score }}</th>
                             <th>{{ participant.risk_coefficient }}</th>
+                            {% if tournament.is_finished() %}
+                                <th>{{ participant.points }}</th>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -2,6 +2,7 @@
 
 import datetime
 import pandas as pd
+from math import log, exp
 from flask import current_app, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -196,6 +197,9 @@ class Tournament(db.Model):
     def is_visible(self):
         return self.status >= TournamentStatus.REGISTRATION_OPEN
 
+    def is_finished(self):
+        return self.status >= TournamentStatus.FINISHED
+
     def get_matches_first_round(self):
         return [m for m in self.matches if m.round == self.number_rounds]
 
@@ -259,6 +263,28 @@ class Tournament(db.Model):
 
         return stats
 
+    def get_overall_forecasts_stats(self):
+        stats = {}
+        forecasts = (Forecast.query
+                     .join(Match, Match.id == Forecast.match_id)
+                     .filter(Match.tournament_id == self.id))
+
+        for tournament_player in self.players:
+            stats[tournament_player] = {}
+            for round in range(1, self.number_rounds + 1):
+                 stats[tournament_player][round] = (forecasts
+                                                   .filter(Match.round == round)
+                                                   .filter(Forecast.winner_id == tournament_player.id)
+                                                   .count())
+
+        return stats
+
+    def distribute_points(self):
+        participants = self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient, Participant.created_at)
+        alpha = self.category.maximal_score
+        beta = (log(self.category.minimal_score) - log(self.category.maximal_score)) / log(self.participants.count())
+        scores = {participant: round(alpha * (rank + 1) ** beta) for rank, participant in enumerate(participants)}
+        return scores
 
 
 class TournamentCategory(db.Model):
@@ -285,6 +311,7 @@ class Participant(db.Model):
     matches_not_forecasted = db.Column(db.Integer, default = None)
     score = db.Column(db.Integer, default = 0)
     risk_coefficient = db.Column(db.Integer, default = 0)
+    points = db.Column(db.Integer, default = 0)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

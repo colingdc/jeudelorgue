@@ -12,7 +12,7 @@ from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
-                     ALREADY_REGISTERED)
+                     ALREADY_REGISTERED, TOURNAMENT_CLOSED)
 
 
 @bp.route("/create", methods = ["GET", "POST"])
@@ -128,6 +128,24 @@ def close_registrations(tournament_id):
     db.session.commit()
 
     flash(REGISTRATION_CLOSED, "info")
+    return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
+
+@bp.route("/<tournament_id>/close_tournament")
+@manager_required
+def close_tournament(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament.status = TournamentStatus.FINISHED
+    db.session.add(tournament)
+    db.session.commit()
+
+    scores = tournament.distribute_points()
+    for participant in tournament.participants:
+        participant.points = scores[participant]
+        db.session.add(participant)
+    db.session.commit()
+
+    flash(TOURNAMENT_CLOSED, "info")
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
 
@@ -460,3 +478,21 @@ def tournament_player_stats(tournament_id):
                            tournament = tournament,
                            form = form,
                            tournament_player = tournament_player)
+
+
+@bp.route("/<tournament_id>/stats/forecasts")
+@login_required
+def overall_forecasts_stats(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    if tournament.are_draws_private():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"Pronostics globaux"
+
+
+    return render_template("tournament/overall_forecasts_stats.html",
+                           title = title,
+                           tournament = tournament)
