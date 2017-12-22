@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from dateutil.relativedelta import relativedelta
 import pandas as pd
 from math import log, exp
 from flask import current_app, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db, bcrypt, login_manager
-from sqlalchemy import or_
+from sqlalchemy import or_, func
+
 
 
 class User(UserMixin, db.Model):
@@ -20,6 +22,8 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     email = db.Column(db.String(120), index = True, unique = True)
     password_hash = db.Column(db.String(128))
+    annual_points = db.Column(db.Integer)
+    year_to_date_points = db.Column(db.Integer)
 
     participants = db.relationship("Participant", backref = "user", lazy = "dynamic")
 
@@ -115,6 +119,28 @@ class User(UserMixin, db.Model):
 
     def is_registered_to_tournament(self, tournament_id):
         return self.get_participant(tournament_id) is not None
+
+    @property
+    def year_to_date_participations(self):
+        participations = (self.participants
+                          .join(Tournament, Tournament.id == Participant.tournament_id)
+                          .filter(func.year(Tournament.started_at) == datetime.datetime.now().year)
+                          .filter(Tournament.started_at <= datetime.datetime.now()))
+        return participations
+
+    @property
+    def annual_participations(self):
+        participations = (self.participants
+                          .join(Tournament, Tournament.id == Participant.tournament_id)
+                          .filter(Tournament.started_at >= datetime.datetime.now() - relativedelta(years = 1))
+                          .filter(Tournament.started_at <= datetime.datetime.now()))
+        return participations
+
+    def get_annual_points(self):
+        return sum(participation.points for participation in self.annual_participations if participation.points is not None)
+
+    def get_year_to_date_points(self):
+        return sum(participation.points for participation in self.annual_participations if participation.points is not None)
 
 
 class AnonymousUser(AnonymousUserMixin):
