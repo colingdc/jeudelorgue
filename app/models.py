@@ -2,7 +2,6 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
-import pandas as pd
 from math import log, exp
 from flask import current_app, url_for
 from flask_login import UserMixin, AnonymousUserMixin
