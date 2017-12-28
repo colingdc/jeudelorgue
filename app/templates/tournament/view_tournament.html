@@ -5,203 +5,249 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Tournoi {{ tournament.name }}</strong></h3>
+        <h3 class="panel-title">
+            <a data-toggle="collapse" href="#collapse1">
+            Tournoi {{ tournament.name }}</a>
+        </h3>
     </div>
 
-    <div class="panel-body">
-        <div class="row">
-            <ul class="col-md-3">
-                <li>{{ tournament.number_rounds }} tours</li>
-                <li>
-                    {% if tournament.is_open_to_registration() %}
-                    <p>Date limite d'inscription :</p>
-                    <p>{{ tournament.started_at }}</p>
-                    {% elif not tournament.is_visible() %}
-                    Inscriptions non ouvertes
-                    {% else %}
-                    Inscriptions closes
-                    {% endif %}
-                </li>
-            </ul>
-            <ul class="col-md-3">
-
-                {% if tournament.is_open_to_registration() or current_user.is_manager() %}
-
-                    <li>
+    <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
+            <div class="row">
+                {% if tournament.is_draw_created() %}
+                    <div class="col-md-4">
                         <a class="btn btn-primary"
                            href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
+                        <span class="fa fa-sitemap"></span>
                             Voir le tableau
                         </a>
-                    </li>
+                    </div>
+                {% endif %}
 
-
-                    {% if not current_user.is_registered_to_tournament(tournament.id) %}
-                    <li>
+                {% if not current_user.is_registered_to_tournament(tournament.id) %}
+                    <div class="col-md-4">
                         <a class="btn btn-success"
                            href="{{ url_for('.register', tournament_id=tournament.id) }}">
+                        <span class="fa fa-user-plus"></span>
                             Je m'inscris au tournoi
                         </a>
-                    </li>
+                        <p>Date limite d'inscription :
+                        {{ tournament.started_at }}</p>
+                    </div>
 
-                    {% else %}
+                {% else %}
 
-                        {% with participant = current_user.get_participant(tournament.id) %}
+                    {% with participant = current_user.get_participant(tournament.id) %}
 
-                            <li>
+                        <div class="col-md-4">
+                            <a class="btn btn-primary"
+                               href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
+                            <span class="fa fa-eye"></span>
+                                Voir mon tableau
+                            </a>
+                        </div>
+
+                        {% if participant.has_filled_draw() %}
+                            <div class="col-md-4">
                                 <a class="btn btn-primary"
-                                   href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
-                                    Voir mon tableau
+                                   href="{{ url_for('.edit_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
+                            <span class="fa fa-pencil"></span>
+                                    Modifier mon tableau
                                 </a>
-                            </li>
+                            </div>
 
-                            {% if participant.has_filled_draw() %}
-                                <li>
-                                    <a class="btn btn-primary"
-                                       href="{{ url_for('.edit_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
-                                        Modifier mon tableau
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a class="btn btn-primary"
-                                       href="{{ url_for('.fill_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
-                                        Remplir mon tableau
-                                    </a>
-                                </li>
-                            {% endif %}
+                        {% else %}
+                            <div class="col-md-4">
+                                <a class="btn btn-primary"
+                                   href="{{ url_for('.fill_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
+                            <span class="fa fa-pencil"></span>
+                                    Remplir mon tableau
+                                </a>
+                            </div>
 
-                        {% endwith %}
+                        {% endif %}
 
-                    {% endif %}
-                {% endif %}
-
-            </ul>
-
-            {% if current_user.is_manager() %}
-            <ul class="col-md-3">
-                {% if tournament.is_open_to_registration() %}
-                    <li>
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
-                            Fermer les inscriptions
-                        </a>
-                    </li>
-
-                {% else %}
-
-                    <li>
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
-                            Ouvrir les inscriptions
-                        </a>
-                    </li>
+                    {% endwith %}
 
                 {% endif %}
 
-                {% if tournament.is_draw_created() %}
-                    <li>
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.update_tournament_draw', tournament_id=tournament.id) }}">
-                            Mettre à jour le tableau
-                        </a>
-                    </li>
-                    <li>
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.edit_tournament_draw', tournament_id=tournament.id) }}">
-                            Modifier le tableau de départ
-                        </a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a class="btn btn-warning"
-                           href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
-                            Créer le tableau
-                        </a>
-                    </li>
-                {% endif %}
-
-            </ul>
-
-            <ul class="col-md-3">
-                <li>
-                    <a class="btn btn-warning"
-                       href="{{ url_for('.close_tournament', tournament_id=tournament.id) }}">
-                        Clôturer le tournoi
-                    </a>
-                </li>
-                <li>
-                    <a class="btn btn-warning"
-                       href="{{ url_for('.edit_tournament', tournament_id=tournament.id) }}">
-                        Editer le tournoi
-                    </a>
-                </li>
-                <li>
-                    <a class="btn btn-danger"
-                       href="{{ url_for('.delete_tournament', tournament_id=tournament.id) }}">
-                        Supprimer le tournoi
-                    </a>
-                </li>
-            </ul>
-            {% endif %}
+            </div>
         </div>
     </div>
+
 </div>
 
+
+{% if current_user.is_manager() %}
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a data-toggle="collapse" href="#collapse2">Gestion du tournoi</a>
+            </h3>
+        </div>
+
+        <div id="collapse2" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <h5>Tournoi</h5>
+                    <div class="row">
+                        {% if not tournament.is_finished() %}
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.close_tournament', tournament_id=tournament.id) }}">
+                                   <span class="fa fa-lock"></span>
+                                        Clôturer le tournoi
+                                </a>
+                            </div>
+                        {% endif %}
+                        <div class="col-md-4">
+                            <a class="btn btn-warning"
+                               href="{{ url_for('.edit_tournament', tournament_id=tournament.id) }}">
+                               <span class="fa fa-pencil"></span>
+                                Editer le tournoi
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="btn btn-danger"
+                               href="{{ url_for('.delete_tournament', tournament_id=tournament.id) }}">
+                               <span class="fa fa-trash"></span>
+                                Supprimer le tournoi
+                            </a>
+                        </div>
+                    </div>
+
+                <h5>Inscriptions</h5>
+                    <div class="row">
+                        {% if tournament.is_open_to_registration() %}
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.close_registrations', tournament_id=tournament.id) }}">
+                                    <span class="fa fa-lock"></span>
+                                    Fermer les inscriptions
+                                </a>
+                            </div>
+
+                        {% else %}
+
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
+                                   <span class="fa fa-unlock"></span>
+                                    Ouvrir les inscriptions
+                                </a>
+                            </div>
+
+                        {% endif %}
+                    </div>
+
+                <h5>Tableau</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a class="btn btn-warning"
+                               href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
+                               <span class="fa fa-sitemap"></span>
+                               Voir le tableau
+                            </a>
+                        </div>
+
+                        {% if not tournament.is_draw_created() %}
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.create_tournament_draw', tournament_id=tournament.id) }}">
+                                    <span class="fa fa-list"></span>
+                                    Créer le tableau
+                                </a>
+                            </div>
+
+                        {% else %}
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.update_tournament_draw', tournament_id=tournament.id) }}">
+                                    <span class="fa fa-pencil"></span>
+                                    Mettre à jour le tableau
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.edit_tournament_draw', tournament_id=tournament.id) }}">
+                                    <span class="fa fa-list"></span>
+                                    Modifier le tableau de départ
+                                </a>
+                            </div>
+                        {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
 
 <div class="panel panel-default panel-table">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Participants</strong></h3>
+        <h3 class="panel-title">
+            <a data-toggle="collapse" href="#collapse3">
+            Participants</a></h3>
     </div>
 
-    <div class="panel-body">
+    <div id="collapse3" class="panel-collapse collapse in">
+        <div class="panel-body">
 
-        {% if not tournament.are_draws_private() %}
-            <div class="col-md-6">
-                    <a class="btn btn-primary"
-                    href="{{ url_for('.overall_forecasts_stats', tournament_id=tournament.id) }}">
-                        Voir les pronostics globaux
-                    </a>
-            </div>
-            <div class="col-md-6">
-                    <a class="btn btn-primary"
-                    href="{{ url_for('.tournament_player_stats', tournament_id=tournament.id) }}">
-                        Voir les pronostics par joueur
-                    </a>
-            </div>
+            {% if not tournament.are_draws_private() %}
+                <div class="col-md-6">
+                        <a class="btn btn-primary"
+                        href="{{ url_for('.overall_forecasts_stats', tournament_id=tournament.id) }}">
+                            Voir les pronostics globaux
+                        </a>
+                </div>
+                <div class="col-md-6">
+                        <a class="btn btn-primary"
+                        href="{{ url_for('.tournament_player_stats', tournament_id=tournament.id) }}">
+                            Voir les pronostics par joueur
+                        </a>
+                </div>
 
-        {% endif %}
+            {% endif %}
 
-        {% if tournament.participants %}
-            <table class="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Pseudo</th>
-                        <th>Tableau</th>
-                        <th>Score / {{ tournament.get_current_maximal_score() }}</th>
-                        <th>Coefficient de risque</th>
-                        {% if tournament.is_finished() %}
-                            <th>Points ATP attribués</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for participant in tournament.participants_sorted() %}
+            {% if tournament.participants %}
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
                         <tr>
-                            <th>{{ participant.user.username }}</th>
-                            <th><a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>Tableau</a></th>
-                            <th>{{ participant.score }}</th>
-                            <th>{{ participant.risk_coefficient }}</th>
+                            <th>Pseudo</th>
+                            <th>Tableau</th>
+                            <th>Score / {{ tournament.get_current_maximal_score() }}</th>
+                            <th>Coefficient de risque</th>
                             {% if tournament.is_finished() %}
-                                <th>{{ participant.points }}</th>
+                                <th>Points ATP attribués</th>
                             {% endif %}
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            Aucun participant à ce tournoi pour le moment
-        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for participant in tournament.participants_sorted() %}
+                            <tr>
+                                <th>
+                                    <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
+                                    {{ participant.user.username }}</a>
+                                </th>
+                                <th>
+                                    <a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>
+                                    Voir</a>
+                                </th>
+                                <th>{{ participant.score }}</th>
+                                <th>{{ participant.risk_coefficient }}</th>
+                                {% if tournament.is_finished() %}
+                                    <th>{{ participant.points }}</th>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                Aucun participant à ce tournoi pour le moment
+            {% endif %}
+        </div>
     </div>
 </div>
 

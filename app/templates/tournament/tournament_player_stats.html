@@ -2,10 +2,16 @@
 
 {% block content %}
 
+<a class="btn btn-default"
+   href="{{ url_for('.view_tournament', tournament_id=tournament.id) }}">
+    <span class="fa fa-arrow-left"></span>
+    Revenir au tournoi
+</a>
+
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Voir les pronostics pour un joueur donné</strong></h3>
+        <h3 class="panel-title">Voir les pronostics pour un joueur donné</h3>
     </div>
 
     <div class="panel-body">
@@ -40,7 +46,7 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Pronostics pour le joueur {{ tournament_player.get_full_name() }}</strong></h3>
+        <h3 class="panel-title">Pronostics pour le joueur {{ tournament_player.get_full_name() }}</h3>
     </div>
 
     <div class="panel-body">

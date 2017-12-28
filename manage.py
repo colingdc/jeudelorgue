@@ -4,9 +4,7 @@ from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 import os
 from app import create_app, db
-from app.models import (User, Role, Permission, Tournament, Match, Forecast,
-                        TournamentPlayer, TournamentStatus, Player,
-                        Participant, TournamentCategory)
+from app.models import *
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):

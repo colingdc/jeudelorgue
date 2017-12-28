@@ -2,53 +2,25 @@
 
 {% block content %}
 
-<div class="jumbotron">
-    <h1>Le jeu de L-orgue</h1>
-</div>
 
-<div class="well">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="well"></div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="jumbotron">
+            <h1>Le jeu de L-orgue</h1>
         </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
+        <div class="well text-center">
+            <div class="row">
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-success col-md-6" role="button">
+                    Je m'inscris</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-success col-md-6" role="button">
+                    Je me connecte</a>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3">
-            <div class="well"></div>
-        </div>
-        <div class="col-md-3 text-center">
-            <a href="{{ url_for('auth.signup') }}" class="btn btn-success" role="button">
-                Je m'inscris</a>
-        </div>
+    <div class="col-md-4">
+        <img src="{{ url_for('static', filename = 'images/homepage.jpeg') }}"
+        style="height: 100%"/>
     </div>
 </div>
 

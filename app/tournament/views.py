@@ -151,6 +151,16 @@ def close_tournament(tournament_id):
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
 
+@bp.route("/latest")
+@login_required
+def view_latest_tournament():
+    tournament = Tournament.query.order_by(Tournament.started_at.desc()).first()
+    if not tournament:
+        flash("Il n'y a pas encore de tournois")
+        return redirect(url_for(".view_tournaments"))
+    return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+
+
 @bp.route("/<tournament_id>/register")
 @login_required
 def register(tournament_id):
