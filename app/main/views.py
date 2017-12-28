@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from . import bp
 from ..decorators import admin_required
 from ..models import User, Role
@@ -13,7 +13,8 @@ from .forms import EditProfileAdminForm
 @bp.route("/")
 def landing():
     title = "Accueil"
-
+    if current_user.is_authenticated:
+        return render_template("main/index.html", title = title)
     return render_template("main/homepage.html", title = title)
 
 
