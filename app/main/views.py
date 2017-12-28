@@ -30,6 +30,12 @@ def view_user(user_id):
     return render_template("main/user.html", title = title, user = user)
 
 
+@bp.route("/faq")
+def faq():
+    title = "FAQ"
+    return render_template("main/faq.html", title = title)
+
+
 @bp.route("/edit-profile/<int:user_id>", methods = ['GET', 'POST'])
 @login_required
 @admin_required
