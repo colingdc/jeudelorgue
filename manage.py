@@ -67,7 +67,7 @@ class GunicornServer(Command):
         settings = make_settings()
         options = (
             Option(*klass.cli, action=klass.action)
-            for setting, klass in settings.iteritems() if klass.cli
+            for setting, klass in settings.items() if klass.cli
         )
         return options
 
