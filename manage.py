@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask_script import Manager, Shell
+from flask_script import Manager, Shell, Command, Option
 from flask_migrate import Migrate, MigrateCommand
 import os
 from app import create_app, db
@@ -56,6 +56,30 @@ def test(coverage = False):
         COV.html_report(directory = covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
+
+
+class GunicornServer(Command):
+    """Run the app within Gunicorn"""
+
+    def get_options(self):
+        from gunicorn.config import make_settings
+
+        settings = make_settings()
+        options = (
+            Option(*klass.cli, action=klass.action)
+            for setting, klass in settings.iteritems() if klass.cli
+        )
+        return options
+
+    def run(self, *args, **kwargs):
+        from gunicorn.app.wsgiapp import WSGIApplication
+
+        app = WSGIApplication()
+        app.app_uri = 'manage:app'
+        return app.run()
+
+
+manager.add_command("gunicorn", GunicornServer())
 
 
 if __name__ == "__main__":
