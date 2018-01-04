@@ -3,6 +3,8 @@
 from flask_script import Manager, Shell, Command, Option
 from flask_migrate import Migrate, MigrateCommand
 import os
+import sys
+import subprocess
 from app import create_app, db
 from app.models import *
 
@@ -65,18 +67,23 @@ class GunicornServer(Command):
         from gunicorn.config import make_settings
 
         settings = make_settings()
-        options = (
-            Option(*klass.cli, action=klass.action)
-            for setting, klass in settings.items() if klass.cli
-        )
+        options = []
+
+        for setting, klass in settings.items():
+            if klass.cli:
+                if klass.const is not None:
+                    options.append(Option(*klass.cli, const=klass.const, action=klass.action))
+                else:
+                    options.append(Option(*klass.cli, action=klass.action))
+
         return options
 
     def run(self, *args, **kwargs):
-        from gunicorn.app.wsgiapp import WSGIApplication
-
-        app = WSGIApplication()
-        app.app_uri = 'manage:app'
-        return app.run()
+        run_args = sys.argv[2:]
+        # !!!!! Change your app here !!!!!
+        run_args.append('--reload')
+        run_args.append('manage:app')
+        subprocess.Popen([os.path.join(os.path.dirname(sys.executable), 'gunicorn')] + run_args).wait()
 
 
 manager.add_command("gunicorn", GunicornServer())
