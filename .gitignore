@@ -103,3 +103,6 @@ ENV/
 .idea/
 migrations/
 tmp/coverage/
+
+# instance file
+instance.py

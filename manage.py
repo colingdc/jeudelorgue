@@ -2,11 +2,10 @@
 
 from flask_script import Manager, Shell, Command, Option
 from flask_migrate import Migrate, MigrateCommand
-import os
-import sys
-import subprocess
 from app import create_app, db
 from app.models import *
+from instance import INSTANCE
+import os
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
@@ -31,7 +30,7 @@ def make_shell_context():
                 TournamentCategory = TournamentCategory)
 
 
-app = create_app(os.getenv("FLASK_CONFIG") or "default")
+app = create_app(INSTANCE)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command("db", MigrateCommand)
@@ -58,35 +57,6 @@ def test(coverage = False):
         COV.html_report(directory = covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
-
-
-class GunicornServer(Command):
-    """Run the app within Gunicorn"""
-
-    def get_options(self):
-        from gunicorn.config import make_settings
-
-        settings = make_settings()
-        options = []
-
-        for setting, klass in settings.items():
-            if klass.cli:
-                if klass.const is not None:
-                    options.append(Option(*klass.cli, const=klass.const, action=klass.action))
-                else:
-                    options.append(Option(*klass.cli, action=klass.action))
-
-        return options
-
-    def run(self, *args, **kwargs):
-        run_args = sys.argv[2:]
-        # !!!!! Change your app here !!!!!
-        run_args.append('--reload')
-        run_args.append('manage:app')
-        subprocess.Popen([os.path.join(os.path.dirname(sys.executable), 'gunicorn')] + run_args).wait()
-
-
-manager.add_command("gunicorn", GunicornServer())
 
 
 if __name__ == "__main__":
