@@ -241,7 +241,7 @@ class Tournament(db.Model):
         return self.matches.filter(Match.position == 1).first()
 
     def are_draws_private(self):
-        return self.status >= TournamentStatus.ONGOING
+        return self.status < TournamentStatus.ONGOING
 
     @property
     def number_rounds(self):
