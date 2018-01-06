@@ -104,6 +104,6 @@ def create_app(config_name):
     from .admin import bp as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix = "/admin")
 
-    app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix = app.config.get("URL_PREFIX", "/jeudelorgue"))
+    # app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix = app.config.get("URL_PREFIX", "/jeudelorgue"))
 
     return app
