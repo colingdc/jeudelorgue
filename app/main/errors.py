@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, current_app
 from . import bp
 
 
@@ -10,6 +10,7 @@ def forbidden(e):
         response = jsonify({'error': 'forbidden'})
         response.status_code = 403
         return response
+    current_app.logger.error('Unauthorized: %s', (request.path))
     return render_template('errors/403.html'), 403
 
 
@@ -19,6 +20,7 @@ def page_not_found(e):
         response = jsonify({'error': 'not found'})
         response.status_code = 404
         return response
+    current_app.logger.error('Page not found: %s', (request.path))
     return render_template('errors/404.html'), 404
 
 
@@ -28,4 +30,15 @@ def internal_server_error(e):
         response = jsonify({'error': 'internal server error'})
         response.status_code = 500
         return response
+    current_app.logger.error('Server Error: %s', (error))
+    return render_template('errors/500.html'), 500
+
+
+@bp.app_errorhandler(Exception)
+def unhandled_exception(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'unhandled exception'})
+        response.status_code = 500
+        return response
+    current_app.logger.error('Unhandled exception: %s', (error))
     return render_template('errors/500.html'), 500
