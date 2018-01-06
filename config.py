@@ -34,6 +34,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     PRODUCTION = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL')
+    URL_PREFIX = "/jeudelorgue/dev"
 
 
 class TestingConfig(Config):
@@ -46,6 +47,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     PRODUCTION = True
+    URL_PREFIX = "/jeudelorgue"
 
     @classmethod
     def init_app(cls, app):
