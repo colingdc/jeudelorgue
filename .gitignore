@@ -104,5 +104,6 @@ ENV/
 migrations/
 tmp/coverage/
 
-# instance file
+# instance and run files
 instance.py
+run.sh
