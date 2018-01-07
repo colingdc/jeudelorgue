@@ -1,0 +1,9 @@
+Bonjour
+
+Vous avez un nouveau message de la part de {{ user.username }} :
+
+{{ message }}
+
+Lui répondre : {{ user.email }}
+
+L'équipe du Jeu de L-orgue
