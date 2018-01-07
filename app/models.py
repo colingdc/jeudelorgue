@@ -318,6 +318,11 @@ class Tournament(db.Model):
     def get_current_tournament(cls):
         return cls.query.filter(cls.ended_at == None).order_by(cls.started_at.desc()).first()
 
+    @classmethod
+    def get_recent_tournaments(cls, number_tournaments):
+        return cls.query.order_by(cls.started_at.desc()).limit(number_tournaments)
+
+
 
 class TournamentCategory(db.Model):
     __tablename__ = "tournament_categories"

@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from . import bp
 from ..decorators import admin_required
-from ..models import User, Role
+from ..models import User, Role, Tournament
 from .. import db
 from ..texts import PROFILE_UPDATED
 from .forms import EditProfileAdminForm
@@ -21,7 +21,13 @@ def landing():
 @bp.route("/index")
 def index():
     title = "Accueil"
-    return render_template("main/index.html", title = title)
+    tournaments = Tournament.get_recent_tournaments(10)
+    current_tournament = Tournament.get_current_tournament()
+    race_ranking = User.query.order_by(User.year_to_date_points.desc()).limit(10)
+    return render_template("main/index.html", title = title,
+                           tournaments = tournaments,
+                           current_tournament = current_tournament,
+                           race_ranking = race_ranking)
 
 
 @bp.route("/user/<user_id>")
