@@ -25,6 +25,19 @@
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
 
+                        <a class="btn btn-primary"
+                           href="{{ url_for('tournament_category.create_category') }}">
+                        <span class="fa fa-pencil"></span>
+                            Créer une nouvelle catégorie de tournoi
+                        </a>
+
+                        <a class="btn btn-primary"
+                           href="{{ url_for('tournament_category.view_categories') }}">
+                        <span class="fa fa-list"></span>
+                            Voir les catégories de tournoi existantes
+                        </a>
+
+
                         <div class="form-group {% if form.name.errors %} has-error {% endif %}">
                             {{form.name.label()}}
                             <div>

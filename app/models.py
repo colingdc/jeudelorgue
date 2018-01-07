@@ -106,7 +106,6 @@ class User(UserMixin, db.Model):
             db.session.commit()
 
 
-
     def get_id(self):
         return str(self.id)
 
