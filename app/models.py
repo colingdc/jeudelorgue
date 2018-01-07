@@ -314,6 +314,10 @@ class Tournament(db.Model):
         scores = {participant: round(alpha * (rank + 1) ** beta) for rank, participant in enumerate(participants)}
         return scores
 
+    @classmethod
+    def get_current_tournament(cls):
+        return cls.query.filter(cls.ended_at == None).order_by(cls.started_at.desc()).first()
+
 
 class TournamentCategory(db.Model):
     __tablename__ = "tournament_categories"

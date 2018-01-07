@@ -108,6 +108,7 @@ def view_tournaments():
 def open_registrations(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     tournament.status = TournamentStatus.REGISTRATION_OPEN
+    tournament.ended_at = None
     db.session.add(tournament)
     db.session.commit()
     flash(REGISTRATION_OPENED, "info")
@@ -136,6 +137,7 @@ def close_registrations(tournament_id):
 def close_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     tournament.status = TournamentStatus.FINISHED
+    tournament.ended_at = datetime.datetime.now()
     db.session.add(tournament)
     db.session.commit()
 
@@ -508,3 +510,4 @@ def overall_forecasts_stats(tournament_id):
     return render_template("tournament/overall_forecasts_stats.html",
                            title = title,
                            tournament = tournament)
+
