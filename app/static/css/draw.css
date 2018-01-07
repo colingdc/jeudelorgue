@@ -39,6 +39,7 @@ div.game span{
 }
 
 div.game-player{
+  min-height:40px;
   border-top:1px solid #aaa;
   border-bottom:1px solid #aaa;
   border-right:1px solid #aaa;
