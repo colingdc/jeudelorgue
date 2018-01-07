@@ -24,21 +24,21 @@ def page_not_found(e):
     return render_template('errors/404.html'), 404
 
 
-# @bp.app_errorhandler(500)
-# def internal_server_error(e):
-#     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
-#         response = jsonify({'error': 'internal server error'})
-#         response.status_code = 500
-#         return response
-#     current_app.logger.error('Server Error: %s', (e))
-#     return render_template('errors/500.html'), 500
+@bp.app_errorhandler(500)
+def internal_server_error(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'internal server error'})
+        response.status_code = 500
+        return response
+    current_app.logger.error('Server Error: %s', (e))
+    return render_template('errors/500.html'), 500
 
 
-# @bp.app_errorhandler(Exception)
-# def unhandled_exception(e):
-#     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
-#         response = jsonify({'error': 'unhandled exception'})
-#         response.status_code = 500
-#         return response
-#     current_app.logger.error('Unhandled exception: %s', (e))
-#     return render_template('errors/500.html'), 500
+@bp.app_errorhandler(Exception)
+def unhandled_exception(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'unhandled exception'})
+        response.status_code = 500
+        return response
+    current_app.logger.error('Unhandled exception: %s', (e))
+    return render_template('errors/500.html'), 500
