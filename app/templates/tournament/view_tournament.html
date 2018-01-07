@@ -25,15 +25,17 @@
                 {% endif %}
 
                 {% if not current_user.is_registered_to_tournament(tournament.id) %}
-                    <div class="col-md-4">
-                        <a class="btn btn-success"
-                           href="{{ url_for('.register', tournament_id=tournament.id) }}">
-                        <span class="fa fa-user-plus"></span>
-                            Je m'inscris au tournoi
-                        </a>
-                        <p>Date limite d'inscription :
-                        {{ tournament.started_at }}</p>
-                    </div>
+                    {% if tournament.is_open_to_registration() %}
+                        <div class="col-md-4">
+                            <a class="btn btn-success"
+                               href="{{ url_for('.register', tournament_id=tournament.id) }}">
+                            <span class="fa fa-user-plus"></span>
+                                Je m'inscris au tournoi
+                            </a>
+                            <p>Date limite d'inscription :
+                            {{ tournament.started_at }}</p>
+                        </div>
+                    {% endif %}
 
                 {% else %}
 
