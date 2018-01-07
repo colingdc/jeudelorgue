@@ -63,7 +63,7 @@ def view_category(category_id):
                            category = category)
 
 
-@bp.route("/")
+@bp.route("/all")
 @manager_required
 def view_categories():
     title = "Joueurs"

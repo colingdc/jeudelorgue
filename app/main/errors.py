@@ -30,7 +30,7 @@ def internal_server_error(e):
         response = jsonify({'error': 'internal server error'})
         response.status_code = 500
         return response
-    current_app.logger.error('Server Error: %s', (error))
+    current_app.logger.error('Server Error: %s', (e))
     return render_template('errors/500.html'), 500
 
 
@@ -40,5 +40,5 @@ def unhandled_exception(e):
         response = jsonify({'error': 'unhandled exception'})
         response.status_code = 500
         return response
-    current_app.logger.error('Unhandled exception: %s', (error))
+    current_app.logger.error('Unhandled exception: %s', (e))
     return render_template('errors/500.html'), 500

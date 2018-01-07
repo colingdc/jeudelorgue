@@ -91,7 +91,7 @@ def view_tournament(tournament_id):
                            tournament = tournament)
 
 
-@bp.route("/")
+@bp.route("/all")
 @login_required
 def view_tournaments():
     title = "Tournois"
@@ -101,6 +101,7 @@ def view_tournaments():
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
     return render_template("tournament/view_tournaments.html", title = title,
                            pagination = pagination)
+
 
 
 @bp.route("/<tournament_id>/open_registrations")
@@ -150,16 +151,6 @@ def close_tournament(tournament_id):
     db.session.commit()
 
     flash(TOURNAMENT_CLOSED, "info")
-    return redirect(url_for(".view_tournament", tournament_id = tournament.id))
-
-
-@bp.route("/latest")
-@login_required
-def view_latest_tournament():
-    tournament = Tournament.query.order_by(Tournament.started_at.desc()).first()
-    if not tournament:
-        flash("Il n'y a pas encore de tournois")
-        return redirect(url_for(".view_tournaments"))
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
 
 
@@ -511,3 +502,12 @@ def overall_forecasts_stats(tournament_id):
                            title = title,
                            tournament = tournament)
 
+
+@bp.route("/current")
+@login_required
+def current_tournament():
+    tournament = Tournament.get_current_tournament()
+    if tournament:
+        return redirect(url_for(".view_tournament", tournament_id = tournament.id))
+    else:
+        return redirect(url_for(".view_tournaments"))
