@@ -145,14 +145,6 @@
 
                 <h5>Tableau</h5>
                     <div class="row">
-                        <div class="col-md-4">
-                            <a class="btn btn-warning"
-                               href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
-                               <span class="fa fa-sitemap"></span>
-                               Voir le tableau
-                            </a>
-                        </div>
-
                         {% if not tournament.is_draw_created() %}
                             <div class="col-md-4">
                                 <a class="btn btn-warning"
@@ -165,16 +157,16 @@
                         {% else %}
                             <div class="col-md-4">
                                 <a class="btn btn-warning"
-                                   href="{{ url_for('.update_tournament_draw', tournament_id=tournament.id) }}">
-                                    <span class="fa fa-pencil"></span>
-                                    Mettre à jour le tableau
+                                   href="{{ url_for('.edit_tournament_draw', tournament_id=tournament.id) }}">
+                                    <span class="fa fa-list"></span>
+                                    Modifier le tableau de départ
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="btn btn-warning"
-                                   href="{{ url_for('.edit_tournament_draw', tournament_id=tournament.id) }}">
-                                    <span class="fa fa-list"></span>
-                                    Modifier le tableau de départ
+                                   href="{{ url_for('.update_tournament_draw', tournament_id=tournament.id) }}">
+                                    <span class="fa fa-pencil"></span>
+                                    Mettre à jour le tableau
                                 </a>
                             </div>
                         {% endif %}
