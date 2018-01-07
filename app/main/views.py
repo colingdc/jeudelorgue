@@ -25,6 +25,7 @@ def index():
 
 
 @bp.route("/user/<user_id>")
+@login_required
 def view_user(user_id):
     user = User.query.get_or_404(user_id)
     title = "Profil de {}".format(user.username)

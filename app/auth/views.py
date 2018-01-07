@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, flash, url_for
+from flask import render_template, redirect, request, session, flash, url_for, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 
 from . import bp
@@ -36,6 +36,12 @@ def signup():
             token = user.generate_confirmation_token()
             send_email(user.email, "Confirmation de votre adresse mail",
                        "email/confirm", user = user, token = token)
+
+            send_email(current_app.config.get("ADMIN_JDL"),
+                       "Nouvel inscrit au jeu de L'orgue",
+                       "email/new_user",
+                       user = user)
+
             flash(CONFIRMATION_MAIL_SENT, "info")
             session.pop("signed", None)
             session.pop("username", None)

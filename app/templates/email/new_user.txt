@@ -1,0 +1,9 @@
+Bonjour,
+
+Un nouvel utilisateur s'est inscrit :
+
+{{ user.username }}
+{{ url_for('main.view_user', user_id = user.id, _external=True) }}
+
+
+<em>L'équipe du Jeu de L-orgue</em>
