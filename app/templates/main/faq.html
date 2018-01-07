@@ -9,6 +9,49 @@
     </div>
 
     <div class="panel-body">
+        {% if current_user.is_manager() %}
+        <ul>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Comment créer un tournoi ?</h4>
+               <p>Dans la barre de navigation, cliquez sur "Admin > Créer un tournoi".
+               Renseignez un nom et une catégorie de tournoi, et une date de début pour le tournoi (date limite d'inscription). </p>
+               <p>Cette date est uniquement indicative, pour le moment la fermeture des inscriptions se fait à la main par le manager du tournoi.</p>
+            </li>
+
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Comment créer le tableau du tournoi ?</h4>
+               <p>Sur la page du tournoi, cliquez sur "Créer le tableau". </p>
+               <p>Remplissez un par un les joueurs du tableau en les sélectionnant dans la liste des joueurs disponibles. Vous pouvez spécifier un statut particulier (Q, WC, SE, LL) dans la 2ème colonne, et les numéros des têtes de série dans la 3ème.</p>
+               <p>Si un joueur du tableau n'est pas disponible dans la liste, vous pouvez cliquer sur "Ajouter un joueur". La page permettant de créer un joueur s'ouvre dans un nouvel onglet. Créer alors tous les joueurs nécessaires.</p>
+               <p>Une fois que c'est fait, revenez à l'onglet de création du tableau. Cliquez sur "Valider" en bas de la page pour sauvegarder l'état actuel du tableau. Vous êtes redirigé vers la page du tournoi. Cliquez alors sur "Modifier le tableau de départ", vous pourrez continuer à remplir le tableau, les joueurs que vous avez créés apparaitront dans la liste de joueurs disponibles.</p>
+            </li>
+
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Comment gérer les qualifiés ?</h4>
+               <p>Si certains joueurs du tableau de sont pas encore connus, laissez le champ "Joueur vide". Le nom sera automatiquement remplacé par "Qualifié N".  </p>
+               <p>Une fois le nom d'un qualifié connu, vous pourrez modifier le tableau de départ en conséquence. La modification sera prise en compte dans les tableaux des participants ayant déjà fait un pronostic.</p>
+            </li>
+
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Une fois le tournoi lancé, comment rentrer les résutats des matchs ?</h4>
+               <p>Sur la page du tournoi, cliquez sur "Mettre à jour le tableau".</p>
+               <p>Cliquez sur le nom d'un joueur pour le faire avancer au tour suivant.</p>
+               <p>Si vous avez cliqué par erreur sur un joueur, pas de panique, control-cliquez sur le nom du vainqueur pour effacer le contenu de la case.</p>
+            </li>
+
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Que faire à la fin du tournoi ?</h4>
+               <p>Lorsque le résultat du dernier match est validé, cliquez sur "Clôturer le tournoi".</p>
+               <p>Les scores finaux seront calculés et les points ATP attribués aux participants.</p>
+            </li>
+        </ul>
+
+        {% endif %}
         <ul>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
