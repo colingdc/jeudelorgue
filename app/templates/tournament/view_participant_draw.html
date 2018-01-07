@@ -88,7 +88,14 @@
                                     {% if forecast.winner %}
 
                                         <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
-                                            class="game game-player match"
+                                            class="game game-player match
+                                            {% if match.winner_id %}
+                                                {% if match.winner_id == forecast.winner_id %}
+                                                    correct_forecast
+                                                {% else %}
+                                                    incorrect_forecast
+                                                {% endif %}
+                                            {% endif %}"
                                             tournament_player_id="{{ forecast.winner_id }}"
                                             match_position_id="{{ next_match.position }}"
                                             match_id="{{ next_match.id }}">
@@ -122,7 +129,14 @@
                         {% with forecast = match.get_forecast(participant.id) %}
                             <div class="round">
                                 <div id="player-0-1"
-                                    class="game game-player"
+                                    class="game game-player
+                                    {% if match.winner_id %}
+                                        {% if match.winner_id == forecast.winner_id %}
+                                            correct_forecast
+                                        {% else %}
+                                            incorrect_forecast
+                                        {% endif %}
+                                    {% endif %}"
                                     tournament_player_id="{{ match.winner_id }}">
                                     {% if forecast.winner %}
                                         {{ forecast.winner.get_full_name() }}

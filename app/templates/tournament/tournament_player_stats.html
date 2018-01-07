@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block styles %}
+{{ super() }}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+
+{% endblock %}
+
+
 {% block content %}
 
 <a class="btn btn-default"
@@ -82,9 +90,9 @@
                             {% for round in range(tournament.number_rounds, 0, -1) %}
                                 {% with winner = stats[round][participant] %}
                                     {% if winner == tournament_player %}
-                                    <td class="success">V</td>
+                                    <td class="victory">V</td>
                                     {% else %}
-                                    <td class="danger">D</td>
+                                    <td class="defeat">D</td>
                                     {% endif %}
                                 {% endwith %}
                             {% endfor %}
