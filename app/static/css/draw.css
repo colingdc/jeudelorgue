@@ -10,7 +10,7 @@ main {
   display:flex;
   flex-direction:column;
   justify-content:center;
-  min-width:200px;
+  min-width:160px;
   list-style:none;
   padding:0;
 }
@@ -64,6 +64,7 @@ div.game-player{
   cursor: pointer;
   display: flex;
   align-items: center;
+  font-size: 13px;
 }
 
 div.game-player:hover {
