@@ -18,7 +18,8 @@ class CreateTournamentForm(FlaskForm):
 class EditTournamentForm(FlaskForm):
     name = StringField('Nom',
                        validators = [DataRequired(message = "Ce champ est obligatoire")])
-    category = SelectField(u'Catégorie', coerce = int)
+    category = SelectField(u'Catégorie', coerce = int,
+                           validators = [Optional()])
     start_date = DateTimeField(u'Date de début',
                                format = "%d/%m/%Y %H:%M",
                                validators = [InputRequired(message = "Ce champ est obligatoire")])

@@ -13,6 +13,17 @@
 
     <div id="collapse1" class="panel-collapse collapse in">
         <div class="panel-body">
+            {% if not current_user.is_registered_to_tournament(tournament.id) %}
+                {% if tournament.is_open_to_registration() %}
+
+                    <div class="alert alert-info">
+                        <p>La date limite d'inscription n'est donnée qu'à titre indicatif.</p>
+                        <p>La fermeture des inscriptions peut éventuellement être repoussée par l'organisateur.</p>
+                    </div>
+                    <p>Date limite d'inscription : {{ tournament.started_at | datetime("long") }}</p>
+                {% endif %}
+            {% endif %}
+
             <div class="row">
 
                 {% if not current_user.is_registered_to_tournament(tournament.id) %}
@@ -23,8 +34,6 @@
                             <span class="fa fa-user-plus"></span>
                                 Je m'inscris au tournoi
                             </a>
-                            <p>Date limite d'inscription :</p>
-                            <p>{{ tournament.started_at | datetime("long") }}</p>
                         </div>
                     {% endif %}
 
