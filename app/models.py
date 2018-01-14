@@ -221,6 +221,9 @@ class Tournament(db.Model):
     def is_visible(self):
         return self.status >= TournamentStatus.REGISTRATION_OPEN
 
+    def is_ongoing(self):
+        return self.status == TournamentStatus.ONGOING
+
     def is_finished(self):
         return self.status >= TournamentStatus.FINISHED
 
