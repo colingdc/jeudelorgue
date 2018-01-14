@@ -1,33 +1,51 @@
 /*
  *  Flex Layout Specifics
 */
-main{
+main {
   display:flex;
   flex-direction:row;
 }
-.round{
+
+.round {
   display:flex;
   flex-direction:column;
   justify-content:center;
-  width:200px;
+  min-width:200px;
   list-style:none;
   padding:0;
 }
-  .round .spacer{ flex-grow:1; }
-  .round .spacer:first-child,
-  .round .spacer:last-child{ flex-grow:.5; }
 
-  .round .game-spacer{
-    flex-grow:1;
-  }
+.round .spacer {
+  flex-grow:1;
+}
+
+.round .spacer:first-child,
+.round .spacer:last-child {
+  flex-grow:0.5;
+}
+
+.round .game-spacer{
+  flex-grow:1;
+}
 
 /*
  *  General Styles
 */
 
+
+.round-name {
+  font-weight: bold;
+  text-align: center;
+}
+
+
+.last-round {
+  padding-right: 10px;
+}
+
 div.game{
-  padding-left:20px;
-  padding-right:20px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 div.correct_forecast {
@@ -39,18 +57,21 @@ div.incorrect_forecast {
 }
 
 div.game-player{
-  min-height:40px;
-  border-top:1px solid #aaa;
-  border-bottom:1px solid #aaa;
+  min-height:38px;
+  border-top:2px solid #aaa;
+  border-bottom:2px solid #aaa;
   border-right:5px solid #aaa;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 div.game-player:hover {
-  background-color: yellow;
+  background-color: lightblue;
 }
 
 div.game-spacer{
+  height:10px;
   border-right:5px solid #aaa;
 }
 
@@ -58,9 +79,6 @@ div.game.first-round{
   border-left:5px solid #aaa;
 }
 
-.btn{
-  width: 100%;
-}
 
 #player-0-1 {
   font-weight: bold;

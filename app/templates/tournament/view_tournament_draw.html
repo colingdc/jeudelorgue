@@ -23,10 +23,27 @@
     </div>
 
     <div class="panel-body" style ="overflow-x:scroll">
+        <main id="round-names">
+            {% for round in tournament.get_matches_by_round() %}
+                <div class="round">
+                    <div class="round-name">
+                        {{ tournament.get_round_names()[loop.index - 1] }}
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="round">
+                    <div class="round-name">
+                        V
+                    </div>
+                </div>
+        </main>
+
         <main id="tournament">
 
             {% for round in tournament.get_matches_by_round() %}
+
                 <div class="round">
+
                     <div class="spacer">
                         &nbsp;
                     </div>
@@ -64,7 +81,7 @@
                 </div>
                 {% endfor %}
 
-            <div class="round">
+            <div class="round last-round">
 
                 <div id="player-0-1"
                     class="game game-player">
