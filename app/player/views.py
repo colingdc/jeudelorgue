@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, request, flash, url_for, current_app
+import datetime
 
 from . import bp
 from .forms import CreatePlayerForm, EditPlayerForm
@@ -47,6 +48,17 @@ def edit_player(player_id):
                                form = form, player = player)
 
 
+@bp.route("/<player_id>/delete")
+@manager_required
+def delete_player(player_id):
+    player = Player.query.get_or_404(player_id)
+    player.deleted_at = datetime.datetime.now()
+    db.session.add(player)
+    db.session.commit()
+    flash(u"Le joueur {} a été supprimé".format(player.get_full_name()), "info")
+    return redirect(url_for(".view_players"))
+
+
 @bp.route("/<player_id>")
 @manager_required
 def view_player(player_id):
@@ -56,12 +68,13 @@ def view_player(player_id):
                            player = player)
 
 
-@bp.route("/all")
+@bp.route("/")
 @manager_required
 def view_players():
     title = "Joueurs"
     page = request.args.get("page", 1, type = int)
     pagination = (Player.query.order_by(Player.last_name, Player.first_name)
+                  .filter(Player.deleted_at.is_(None))
                   .paginate(page, per_page = current_app.config["PLAYERS_PER_PAGE"], error_out = False))
     return render_template("player/view_players.html", title = title,
                            pagination = pagination)

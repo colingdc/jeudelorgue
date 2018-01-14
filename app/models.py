@@ -406,7 +406,9 @@ class Player(db.Model):
 
     @classmethod
     def get_all_players(cls):
-        return [(p.id, p.get_full_name_surname_first()) for p in cls.query.order_by(cls.last_name, cls.first_name).all()]
+        return [(p.id, p.get_full_name_surname_first())
+        for p in cls.query.filter(cls.deleted_at.is_(None))
+        .order_by(cls.last_name, cls.first_name).all()]
 
 
 class TournamentPlayer(db.Model):
