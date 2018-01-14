@@ -38,19 +38,11 @@ div.incorrect_forecast {
   background-color: rgba(255, 0, 0, 0.3);
 }
 
-div.game.winner{
-  font-weight:bold;
-}
-div.game span{
-  float:right;
-  margin-right:5px;
-}
-
 div.game-player{
   min-height:40px;
   border-top:1px solid #aaa;
   border-bottom:1px solid #aaa;
-  border-right:1px solid #aaa;
+  border-right:5px solid #aaa;
   cursor: pointer;
 }
 
@@ -59,14 +51,17 @@ div.game-player:hover {
 }
 
 div.game-spacer{
-  border-right:1px solid #aaa;
-  min-height:40px;
+  border-right:5px solid #aaa;
 }
 
 div.game.first-round{
-  border-left:1px solid #aaa;
+  border-left:5px solid #aaa;
 }
 
 .btn{
   width: 100%;
+}
+
+#player-0-1 {
+  font-weight: bold;
 }
