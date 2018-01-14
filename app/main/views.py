@@ -65,7 +65,7 @@ def edit_profile_admin(user_id):
         user.role = Role.query.get(form.role.data)
         db.session.add(user)
         flash(PROFILE_UPDATED, "success")
-        return redirect(url_for(".user", username = user.username))
+        return redirect(url_for(".view_user", user_id = user.id))
     form.email.data = user.email
     form.username.data = user.username
     form.confirmed.data = user.confirmed
@@ -85,6 +85,7 @@ def contact():
                    template = "email/contact",
                    message = message,
                    user = current_user)
+        flash(u"Votre message a bien été envoyé.", "info")
         return redirect(url_for(".contact"))
 
     return render_template("main/contact.html", form = form, title = title)
