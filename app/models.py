@@ -140,6 +140,9 @@ class User(UserMixin, db.Model):
     def get_year_to_date_points(self):
         return sum(participation.points for participation in self.annual_participations if participation.points is not None)
 
+    def participants_sorted(self):
+        return (self.participants.order_by(Participant.created_at.desc()))
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
@@ -351,6 +354,7 @@ class Participant(db.Model):
     score = db.Column(db.Integer, default = 0)
     risk_coefficient = db.Column(db.Integer, default = 0)
     points = db.Column(db.Integer, default = 0)
+    ranking = db.Column(db.Integer, default = None)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

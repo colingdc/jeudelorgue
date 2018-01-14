@@ -14,15 +14,6 @@
     <div id="collapse1" class="panel-collapse collapse in">
         <div class="panel-body">
             <div class="row">
-                {% if tournament.is_draw_created() %}
-                    <div class="col-md-4">
-                        <a class="btn btn-primary"
-                           href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
-                        <span class="fa fa-sitemap"></span>
-                            Voir le tableau
-                        </a>
-                    </div>
-                {% endif %}
 
                 {% if not current_user.is_registered_to_tournament(tournament.id) %}
                     {% if tournament.is_open_to_registration() %}
@@ -32,8 +23,8 @@
                             <span class="fa fa-user-plus"></span>
                                 Je m'inscris au tournoi
                             </a>
-                            <p>Date limite d'inscription :
-                            {{ tournament.started_at }}</p>
+                            <p>Date limite d'inscription :</p>
+                            <p>{{ tournament.started_at | datetime("long") }}</p>
                         </div>
                     {% endif %}
 
@@ -71,6 +62,16 @@
 
                     {% endwith %}
 
+                {% endif %}
+
+                {% if tournament.is_draw_created() %}
+                    <div class="col-md-4">
+                        <a class="btn btn-primary"
+                           href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
+                        <span class="fa fa-sitemap"></span>
+                            Voir le tableau
+                        </a>
+                    </div>
                 {% endif %}
 
             </div>

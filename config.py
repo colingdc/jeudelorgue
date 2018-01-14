@@ -24,6 +24,7 @@ class Config:
     USERS_PER_PAGE = 5
     CATEGORIES_PER_PAGE = 10
     SLOW_DB_QUERY_TIME = 0.5
+    BABEL_DEFAULT_LOCALE = "fr"
 
     @staticmethod
     def init_app(app):

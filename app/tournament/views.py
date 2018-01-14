@@ -143,10 +143,11 @@ def close_tournament(tournament_id):
     db.session.commit()
 
     scores = tournament.distribute_points()
-    for participant in tournament.participants:
+    for rank, participant in enumerate(tournament.participants_sorted()):
         participant.points = scores[participant]
         participant.user.annual_points = participant.user.get_annual_points()
         participant.user.year_to_date_points = participant.user.get_year_to_date_points()
+        participant.ranking = rank + 1
         db.session.add(participant)
     db.session.commit()
 

@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from . import bp
 from ..decorators import admin_required
-from ..models import User, Role, Tournament
+from ..models import User, Role, Tournament, Participant, TournamentStatus
 from .. import db
 from ..texts import PROFILE_UPDATED
 from .forms import EditProfileAdminForm, ContactForm
@@ -37,7 +37,13 @@ def index():
 def view_user(user_id):
     user = User.query.get_or_404(user_id)
     title = "Profil de {}".format(user.username)
-    return render_template("main/user.html", title = title, user = user)
+    page = request.args.get("page", 1, type = int)
+    pagination = (user.participants_sorted()
+                  .join(Tournament, Tournament.id == Participant.tournament_id)
+                  .filter(Tournament.status == TournamentStatus.FINISHED)
+                  .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
+    return render_template("main/user.html", title = title, user = user,
+                           pagination = pagination)
 
 
 @bp.route("/faq")

@@ -10,44 +10,48 @@
     <div class="panel-heading">
         <h3 class="panel-title">Liste des tournois</h3>
     </div>
-    {% if current_user.is_manager() %}
+
     <div class="panel-body">
-        <a class="btn btn-success"
-           href="{{ url_for('.create_tournament') }}">
-            Nouveau tournoi
-        </a>
+        {% if current_user.is_manager() %}
+            <a class="btn btn-success"
+               href="{{ url_for('.create_tournament') }}">
+                Nouveau tournoi
+            </a>
+        {% endif %}
+
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Tournoi</th>
+                    <th>Participants</th>
+                    <th>Vainqueur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tournament in pagination.items %}
+                    <tr>
+                        <td><a href="{{ url_for('tournament.view_tournament', tournament_id = tournament.id) }}">{{ tournament.name }}</a></td>
+                        <td>{{ tournament.participants.all() | length }}</td>
+
+                        {% with winner = tournament.participants.first() %}
+                            {% if tournament.is_finished() and winner %}
+                                <td><a href="{{ url_for('main.view_user', user_id = winner.user.id) }}">{{ winner.user.username }}</a></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.view_tournaments') }}
+        </div>
+
     </div>
-    {% endif %}
 </div>
 
-</main>
 
-{% for tournament in pagination.items %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a href="{{ url_for('.view_tournament', tournament_id=tournament.id) }}">
-                    {{ tournament.name }}
-                </a>
-            </h3>
-        </div>
-        <div class="panel-body">
-            <ul>
-                <li>{{ tournament.number_rounds }} tours</li>
-                {% if tournament.is_open_to_registration %}
-                <li>Date limite d'inscription : {{ tournament.started_at }}</li>
-                {% elif not tournament.is_visible %}
-                <li>Inscriptions non ouvertes</li>
-                {% else %}
-                <li>Inscriptions closes</li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-{% endfor %}
-
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.view_tournaments') }}
-</div>
 
 {% endblock %}
