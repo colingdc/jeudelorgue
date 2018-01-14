@@ -75,7 +75,7 @@
                             match_id="{{ match.id }}"
                             onclick="fill_next_round(event, {{ match.position }}, 0)">
                             {% if match.tournament_player1_id %}
-                                {{ match.tournament_player1.get_full_name() }}
+                                {{ match.tournament_player1.get_full_name() | truncate(25) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -92,7 +92,7 @@
                             match_id="{{ match.id }}"
                             onclick="fill_next_round(event, {{ match.position }}, 1)">
                             {% if match.tournament_player2_id %}
-                                {{ match.tournament_player2.get_full_name() }}
+                                {{ match.tournament_player2.get_full_name() | truncate(25) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -130,7 +130,7 @@
                                             match_position_id="{{ next_match.position }}"
                                             match_id="{{ next_match.id }}"
                                             onclick="fill_next_round(event, {{ next_match.position }}, {{ loop.cycle(0, 1) }})">
-                                                {{ forecast.winner.get_full_name() }}
+                                                {{ forecast.winner.get_full_name() | truncate(25) }}
                                         </div>
 
                                     {% else %}
@@ -165,7 +165,7 @@
                                     tournament_player_id="{{ match.winner_id }}"
                                     onclick="fill_next_round(event, 0, 1)">
                                     {% if forecast.winner %}
-                                        {{ forecast.winner.get_full_name() }}
+                                        {{ forecast.winner.get_full_name() | truncate(25) }}
                                     {% else %}
                                         &nbsp;
                                     {% endif %}

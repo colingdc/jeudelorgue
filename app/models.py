@@ -402,6 +402,10 @@ class Player(db.Model):
         return u"{} {}".format(self.first_name,
                                   self.last_name.upper())
 
+    def get_draw_name(self):
+        return u"{} {}".format(self.first_name[0] + ".",
+                                  self.last_name.upper())
+
     def get_full_name_surname_first(self):
         return u"{}, {}".format(self.last_name.upper(), self.first_name)
 
@@ -443,7 +447,7 @@ class TournamentPlayer(db.Model):
         if self.seed:
             full_name += "[{}] ".format(self.seed)
         if self.player:
-            full_name += self.player.get_full_name()
+            full_name += self.player.get_draw_name()
         else:
             full_name += u"Qualifié " + str(self.id)
         return full_name
