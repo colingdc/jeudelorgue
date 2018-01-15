@@ -15,8 +15,6 @@ from flask import current_app
 @bp.route("/")
 def landing():
     title = "Accueil"
-    if current_user.is_authenticated:
-        return render_template("main/index.html", title = title)
     return render_template("main/homepage.html", title = title)
 
 
