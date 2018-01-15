@@ -348,6 +348,11 @@ def update_tournament_draw(tournament_id):
             db.session.add(participant)
         db.session.commit()
 
+        for rank, participant in enumerate(tournament.participants_sorted()):
+            participant.ranking = rank + 1
+            db.session.add(participant)
+        db.session.commit()
+
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
     else:

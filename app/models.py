@@ -307,6 +307,7 @@ class Tournament(db.Model):
                                                    .filter(Forecast.winner_id == tournament_player.id)
                                                    .count())
 
+        self.overall_forecasts_stats = stats
         return stats
 
     def distribute_points(self):

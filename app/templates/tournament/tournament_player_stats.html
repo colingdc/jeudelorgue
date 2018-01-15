@@ -70,6 +70,7 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Participant</th>
                     <th>Score</th>
                     {% for name in tournament.get_round_names() %}
@@ -81,6 +82,7 @@
                 {% with stats = tournament.get_tournament_player_stats(tournament_player) %}
                     {% for participant in tournament.participants_sorted() %}
                         <tr>
+                            <td>{{ loop.index }}</td>
                             <td><a href="{{ url_for('tournament.view_participant_draw', tournament_id = tournament.id, participant_id = participant.id) }}">
                             {{ participant.user.username }}</a>
                             </td>

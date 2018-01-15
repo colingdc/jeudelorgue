@@ -29,27 +29,29 @@
                 <tr>
                     <th>Joueur</th>
                     {% for name in tournament.get_round_names() %}
-                    <th>{{ name }}</th>
+                    <th style="text-align: center;">{{ name }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
                 {% with stats = tournament.get_overall_forecasts_stats() %}
-                    {% for tournament_player in tournament.players %}
-                        <tr>
-                            <td>{{ tournament_player.get_full_name() }}</td>
+                    {% with number_participants = tournament.participants.count() %}
+                        {% for tournament_player in tournament.players %}
+                            <tr>
+                                <td>{{ tournament_player.get_full_name() }}</td>
 
-                            {% for round in range(tournament.number_rounds, 0, -1) %}
-                                {% with number_forecasts = stats[tournament_player][round] %}
-                                    {% if number_forecasts %}
-                                    <td class="victory">{{ number_forecasts }}</td>
-                                    {% else %}
-                                    <td></td>
-                                    {% endif %}
-                                {% endwith %}
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
+                                {% for round in range(tournament.number_rounds, 0, -1) %}
+                                    {% with number_forecasts = stats[tournament_player][round] %}
+                                        {% if number_forecasts %}
+                                        <td class="victory">{{ number_forecasts }} ({{ (100 * number_forecasts / number_participants) | int }} %)</td>
+                                        {% else %}
+                                        <td></td>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    {% endwith %}
                 {% endwith %}
             </tbody>
         </table>
