@@ -68,7 +68,7 @@ def view_player(player_id):
                            player = player)
 
 
-@bp.route("/")
+@bp.route("/all")
 @manager_required
 def view_players():
     title = "Joueurs"

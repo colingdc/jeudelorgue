@@ -91,7 +91,7 @@ def view_tournament(tournament_id):
                            tournament = tournament)
 
 
-@bp.route("/")
+@bp.route("/all")
 @login_required
 def view_tournaments():
     title = "Tournois"

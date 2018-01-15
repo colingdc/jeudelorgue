@@ -256,7 +256,9 @@ class Tournament(db.Model):
         names = ["F", "DF", "QF", "HF"]
         if self.number_rounds > 4:
             names += ["T" + str(i) for i in range(self.number_rounds - 4, 0, -1)]
-        return names[::-1]
+            return names[::-1]
+        else:
+            return names[:self.number_rounds][::-1]
 
     def get_score_per_round(self):
         return {round: 2 ** (self.number_rounds - round)
@@ -404,8 +406,12 @@ class Player(db.Model):
                                   self.last_name.upper())
 
     def get_draw_name(self):
-        return u"{} {}".format(self.first_name[0] + ".",
-                                  self.last_name.upper())
+        if self.first_name:
+            return u"{} {}".format(self.first_name[0] + ".",
+                                      self.last_name.upper())
+        else:
+            return self.last_name.upper()
+
 
     def get_full_name_surname_first(self):
         return u"{}, {}".format(self.last_name.upper(), self.first_name)
