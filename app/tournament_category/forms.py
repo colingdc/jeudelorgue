@@ -48,7 +48,7 @@ class EditCategoryForm(FlaskForm):
         rv = FlaskForm.validate(self)
         if not rv:
             return False
-        if (self.name.data != self.category.name
+        if (self.name.data != self.category["name"]
             and (TournamentCategory.query.filter_by(name = self.name.data).first())):
             self.name.errors.append(CATEGORY_ALREADY_EXISTS)
             return False

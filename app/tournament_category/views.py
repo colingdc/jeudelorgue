@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, request, flash, url_for, current_app
-
+import datetime
 from . import bp
 from .forms import CreateCategoryForm, EditCategoryForm
 from .. import db
@@ -33,8 +33,8 @@ def create_category():
 @manager_required
 def edit_category(category_id):
     category = TournamentCategory.query.get_or_404(category_id)
-    title = category.get_full_name()
-    form = EditcategoryForm(request.form)
+    title = category.name
+    form = EditCategoryForm(request.form)
     if request.method == "GET":
         form.name.data = category.name
         form.number_rounds.data = category.number_rounds
@@ -63,12 +63,24 @@ def view_category(category_id):
                            category = category)
 
 
+@bp.route("/<category_id>/delete")
+@manager_required
+def delete_category(category_id):
+    category = TournamentCategory.query.get_or_404(category_id)
+    category.deleted_at = datetime.datetime.now()
+    db.session.add(category)
+    db.session.commit()
+    flash(u"La catégorie {} a été supprimé".format(category.name), "info")
+    return redirect(url_for(".view_categories"))
+
+
 @bp.route("/all")
 @manager_required
 def view_categories():
-    title = "Joueurs"
+    title = "Catégories de tournois"
     page = request.args.get("page", 1, type = int)
     pagination = (TournamentCategory.query.order_by(TournamentCategory.name)
+                  .filter(TournamentCategory.deleted_at.is_(None))
                   .paginate(page, per_page = current_app.config["CATEGORIES_PER_PAGE"], error_out = False))
     return render_template("tournament_category/view_categories.html", title = title,
                            pagination = pagination)
