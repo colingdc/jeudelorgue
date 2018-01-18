@@ -119,7 +119,7 @@
                                             {{ participant.user.username }}</a>
                                         </th>
                                         <th>{{ participant.score }}</th>
-                                        <th>{{ participant.risk_coefficient }}</th>
+                                        <th>{{ participant.risk_coefficient | int }}</th>
                                         {% if current_tournament.is_finished() %}
                                             <th>{{ participant.points }}</th>
                                         {% endif %}

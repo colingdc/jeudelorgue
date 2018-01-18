@@ -380,17 +380,19 @@ class Participant(db.Model):
         return score
 
     def get_risk_coefficient(self):
-        score_per_round = self.tournament.get_score_per_round()
+        if self.tournament.participants.count() < 2:
+            return 0
 
+        score_per_round = self.tournament.get_score_per_round()
         my_forecasts = self.forecasts
         coeffs = {forecast.match.id: 0 for forecast in my_forecasts}
         other_participants_forecasts = [p.forecasts for p in self.tournament.participants if p.id != self.id]
 
         for other_participant_forecasts in other_participants_forecasts:
             for my_forecast, other_participant_forecast in zip(my_forecasts.order_by(Forecast.match_id), other_participant_forecasts.order_by(Forecast.match_id)):
-                coeffs[my_forecast.match.id] = (my_forecast.winner_id == other_participant_forecast.winner_id) * score_per_round[my_forecast.match.round]
+                coeffs[my_forecast.match.id] += (my_forecast.winner_id != other_participant_forecast.winner_id) * score_per_round[my_forecast.match.round]
 
-        return sum(coeffs.values())
+        return sum(coeffs.values()) / (self.tournament.participants.count() - 1)
 
 
 class Player(db.Model):
