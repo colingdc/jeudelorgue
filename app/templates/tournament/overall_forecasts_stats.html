@@ -23,11 +23,18 @@
         <h3 class="panel-title">Pronostics globaux</h3>
     </div>
 
+
     <div class="panel-body">
+        <div class="btn-group" role="group">
+            <button id="btn-nb-players" type="button" class="btn btn-success">
+            En nombre de joueurs</button>
+            <button id="btn-pct-players" type="button" class="btn btn-secondary">En pourcentage</button>
+        </div>
+
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>Joueur</th>
+                    <th style="width:40%">Joueur</th>
                     {% for name in tournament.get_round_names() %}
                     <th style="text-align: center;">{{ name }}</th>
                     {% endfor %}
@@ -43,7 +50,8 @@
                                 {% for round in range(tournament.number_rounds, 0, -1) %}
                                     {% with number_forecasts = stats[tournament_player][round] %}
                                         {% if number_forecasts %}
-                                        <td class="victory">{{ number_forecasts }} ({{ (100 * number_forecasts / number_participants) | int }} %)</td>
+                                        <td class="victory nb-players">{{ number_forecasts }}</td>
+                                        <td class="victory pct-players" hidden="hidden">{{ (100 * number_forecasts / number_participants) | int }} %</td>
                                         {% else %}
                                         <td></td>
                                         {% endif %}
@@ -59,4 +67,37 @@
     </div>
 </div>
 
+{% endblock %}
+
+
+{% block extrajs %}
+<script>
+
+$("#btn-nb-players").click(function () {
+    $("#btn-nb-players").addClass("btn-success").removeClass("btn-secondary");
+    $("#btn-pct-players").addClass("btn-secondary").removeClass("btn-success");
+    $(".pct-players").each(function(){
+        $(this)[0].hidden = true;
+    })
+    $(".nb-players").each(function(){
+        $(this)[0].hidden = false;
+    })
+});
+
+
+$("#btn-pct-players").click(function () {
+    $("#btn-pct-players").addClass("btn-success").removeClass("btn-secondary");
+    $("#btn-nb-players").addClass("btn-secondary").removeClass("btn-success");
+    $(".nb-players").each(function(){
+        $(this)[0].hidden = true;
+    })
+    $(".pct-players").each(function(){
+        $(this)[0].hidden = false;
+    })
+});
+
+
+
+
+</script>
 {% endblock %}
