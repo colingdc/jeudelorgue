@@ -1,9 +1,15 @@
 td {
   text-align: center;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #404040 !important;
 }
 
 th {
   text-align: center;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-top: 2px solid #404040 !important;
 }
 
 td.victory {
@@ -12,4 +18,16 @@ td.victory {
 
 td.defeat {
   background-color: rgba(255, 0, 0, 0.3);
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.thick-border-bottom {
+  border-bottom: 2px solid #404040 !important;
+}
+
+.thin-border-bottom {
+  border-bottom: none !important;
 }
