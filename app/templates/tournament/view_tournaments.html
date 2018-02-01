@@ -33,7 +33,7 @@
                         <td><a href="{{ url_for('tournament.view_tournament', tournament_id = tournament.id) }}">{{ tournament.name }}</a></td>
                         <td>{{ tournament.participants.all() | length }}</td>
 
-                        {% with winner = tournament.participants.first() %}
+                        {% with winner = tournament.participants_sorted().first() %}
                             {% if tournament.is_finished() and winner %}
                                 <td><a href="{{ url_for('main.view_user', user_id = winner.user.id) }}">{{ winner.user.username }}</a></td>
                             {% else %}
