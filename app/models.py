@@ -464,6 +464,15 @@ class TournamentPlayer(db.Model):
             full_name += u"Qualifié " + str(self.id)
         return full_name
 
+    def is_eliminated(self):
+        matches = (Match.query
+                   .filter(or_(Match.tournament_player1_id == self.id,
+                                         Match.tournament_player2_id == self.id))
+                   .filter(Match.winner_id.isnot(None))
+                   .filter(Match.winner_id != self.id)
+                   )
+        return matches.count() > 0
+
 
 class Match(db.Model):
     __tablename__ = "matches"

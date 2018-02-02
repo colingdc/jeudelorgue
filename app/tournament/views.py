@@ -328,11 +328,17 @@ def update_tournament_draw(tournament_id):
 
         for match in matches:
             winner_id = results[str(match.id)]
+            next_match = match.get_next_match()
             if winner_id == "None":
                 match.winner_id = None
+                if next_match:
+                    if match.position % 2 == 0:
+                        next_match.tournament_player1_id = None
+                    else:
+                        next_match.tournament_player2_id = None
+                    db.session.add(next_match)
             else:
                 match.winner_id = winner_id
-                next_match = match.get_next_match()
                 if next_match:
                     if match.position % 2 == 0:
                         next_match.tournament_player1_id = winner_id
