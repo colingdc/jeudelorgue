@@ -28,7 +28,7 @@
 
                 {% if not current_user.is_registered_to_tournament(tournament.id) %}
                     {% if tournament.is_open_to_registration() %}
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <a class="btn btn-success"
                                href="{{ url_for('.register', tournament_id=tournament.id) }}">
                             <span class="fa fa-user-plus"></span>
@@ -41,7 +41,7 @@
 
                     {% with participant = current_user.get_participant(tournament.id) %}
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <a class="btn btn-primary"
                                href="{{ url_for('.view_participant_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
                             <span class="fa fa-eye"></span>
@@ -50,7 +50,7 @@
                         </div>
 
                         {% if participant.has_filled_draw() %}
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <a class="btn btn-primary"
                                    href="{{ url_for('.edit_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
                             <span class="fa fa-pencil"></span>
@@ -59,7 +59,7 @@
                             </div>
 
                         {% else %}
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <a class="btn btn-primary"
                                    href="{{ url_for('.fill_my_draw', tournament_id=tournament.id, participant_id=participant.id) }}">
                             <span class="fa fa-pencil"></span>
@@ -74,13 +74,23 @@
                 {% endif %}
 
                 {% if tournament.is_draw_created() %}
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <a class="btn btn-primary"
                            href="{{ url_for('.view_tournament_draw', tournament_id=tournament.id) }}">
                         <span class="fa fa-sitemap"></span>
                             Voir le tableau
                         </a>
                     </div>
+                {% if tournament.number_rounds > 4 %}
+                    <div class="col-md-6">
+                        <a class="btn btn-primary"
+                           href="{{ url_for('.view_tournament_draw_last16', tournament_id=tournament.id) }}">
+                        <span class="fa fa-sitemap"></span>
+                            Voir le tableau à partir des huitièmes
+                        </a>
+                    </div>
+                {% endif %}
+
                 {% endif %}
 
             </div>
@@ -240,7 +250,12 @@
                                     </th>
                                     <th>
                                         <a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>
-                                        Voir</a>
+                                        Entier</a>
+                                        {% if tournament.number_rounds > 4 %}
+                                        /
+                                        <a href= '{{ url_for(".view_participant_draw_last16", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>
+                                        A partir des 8èmes</a>
+                                        {% endif %}
                                     </th>
                                     <th>{{ participant.score }}</th>
                                     <th>{{ participant.risk_coefficient | int }}</th>
