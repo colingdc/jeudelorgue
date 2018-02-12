@@ -233,11 +233,17 @@ class Tournament(db.Model):
     def get_matches_first_round(self):
         return [m for m in self.matches if m.round == self.number_rounds]
 
+    def get_matches_first_round_last16(self):
+        return [m for m in self.matches if m.round == 4]
+
     def get_matches_by_round(self):
         return [{"round": i,
                  "matches": self.matches.filter(Match.round == i).all(),
                  "first_round": i == self.number_rounds}
                 for i in range(self.number_rounds, 0, -1)]
+
+    def get_matches_by_round_last16(self):
+        return [rd for rd in self.get_matches_by_round() if rd["round"] <= 5]
 
     def is_draw_created(self):
         return TournamentPlayer.query.filter(TournamentPlayer.tournament_id == self.id).first() is not None
@@ -259,6 +265,11 @@ class Tournament(db.Model):
             return names[::-1]
         else:
             return names[:self.number_rounds][::-1]
+
+    def get_round_names_last16(self):
+        names = ["F", "DF", "QF", "HF"]
+        return names[::-1]
+
 
     def get_score_per_round(self):
         if self.number_rounds < 7:

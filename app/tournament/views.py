@@ -470,6 +470,30 @@ def view_participant_draw(tournament_id, participant_id):
                            participant = participant)
 
 
+@bp.route("/<tournament_id>/draw/<participant_id>/last16")
+@login_required
+def view_participant_draw_last16(tournament_id, participant_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    if tournament.number_rounds <= 4:
+        redirect(url_for("view_participant_draw", tournament_id = tournament_id, participant_id = participant_id))
+
+    participant = Participant.query.get_or_404(participant_id)
+
+    if tournament.are_draws_private():
+        if participant.user_id != current_user.id:
+            return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"Tableau"
+
+    return render_template("tournament/view_participant_draw_last16.html",
+                           title = title,
+                           tournament = tournament,
+                           participant = participant)
+
+
 @bp.route("/<tournament_id>/stats/tournament_players", methods = ["GET", "POST"])
 @login_required
 def tournament_player_stats(tournament_id):
