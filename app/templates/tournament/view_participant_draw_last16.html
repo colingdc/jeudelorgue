@@ -24,7 +24,7 @@
 
     <div class="panel-body" style ="overflow-x:scroll">
         <main id="round-names">
-            {% for round in tournament.get_matches_by_round_last16() %}
+            {% for round in tournament.get_matches_by_round_last_rounds(4) %}
                 <div class="round">
                     <div class="round-name">
                         {{ tournament.get_round_names_last16()[loop.index - 1] }}
@@ -41,7 +41,7 @@
         <main id="tournament">
 
 
-            {% for round in tournament.get_matches_by_round_last16() %}
+            {% for round in tournament.get_matches_by_round_last_rounds(5) %}
 
                 {% set outer_loop = loop %}
                 {% if loop.index < loop.length %}

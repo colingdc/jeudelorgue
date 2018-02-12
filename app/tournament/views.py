@@ -294,7 +294,6 @@ def edit_tournament_draw(tournament_id):
                                tournament = tournament)
 
 
-
 @bp.route("/<tournament_id>/draw")
 @login_required
 def view_tournament_draw(tournament_id):
@@ -304,6 +303,22 @@ def view_tournament_draw(tournament_id):
     title = u"Tableau du tournoi"
 
     return render_template("tournament/view_tournament_draw.html",
+                           title = title,
+                           tournament = tournament)
+
+
+@bp.route("/<tournament_id>/draw/last16")
+@login_required
+def view_tournament_draw_last16(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    if tournament.number_rounds <=4:
+        return redirect(url_for("view_tournament_draw", tournament_id = tournament_id))
+    title = u"Tableau du tournoi"
+
+    return render_template("tournament/view_tournament_draw_last16.html",
                            title = title,
                            tournament = tournament)
 

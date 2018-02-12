@@ -10,7 +10,7 @@ main {
   display:flex;
   flex-direction:column;
   justify-content:center;
-  min-width:160px;
+  min-width:180px;
   max-width:180px;
   list-style:none;
   padding:0;

@@ -24,10 +24,10 @@
 
     <div class="panel-body" style ="overflow-x:scroll">
         <main id="round-names">
-            {% for round in tournament.get_matches_by_round() %}
+            {% for round in tournament.get_matches_by_round_last_rounds(4) %}
                 <div class="round">
                     <div class="round-name">
-                        {{ tournament.get_round_names()[loop.index - 1] }}
+                        {{ tournament.get_round_names_last16()[loop.index - 1] }}
                     </div>
                 </div>
             {% endfor %}
@@ -40,8 +40,9 @@
 
         <main id="tournament">
 
-            {% for round in tournament.get_matches_by_round() %}
+            {% for round in tournament.get_matches_by_round_last_rounds(4) %}
 
+                {% set outer_loop = loop %}
                 <div class="round">
 
                     <div class="spacer">
@@ -51,7 +52,7 @@
                     {% for match in round["matches"] %}
 
                         <div id="player-{{ match.position }}-0"
-                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}">
+                            class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
                             {% if match.tournament_player1_id %}
                                 {{ match.tournament_player1.get_full_name() | truncate(25) }}
                             {% else %}
@@ -64,7 +65,7 @@
                         </div>
 
                         <div id="player-{{ match.position }}-1"
-                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}">
+                            class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
                             {% if match.tournament_player2_id %}
                                 {{ match.tournament_player2.get_full_name() | truncate(25) }}
                             {% else %}

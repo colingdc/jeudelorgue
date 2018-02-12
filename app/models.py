@@ -242,8 +242,8 @@ class Tournament(db.Model):
                  "first_round": i == self.number_rounds}
                 for i in range(self.number_rounds, 0, -1)]
 
-    def get_matches_by_round_last16(self):
-        return [rd for rd in self.get_matches_by_round() if rd["round"] <= 5]
+    def get_matches_by_round_last_rounds(self, rounds):
+        return [rd for rd in self.get_matches_by_round() if rd["round"] <= rounds]
 
     def is_draw_created(self):
         return TournamentPlayer.query.filter(TournamentPlayer.tournament_id == self.id).first() is not None
