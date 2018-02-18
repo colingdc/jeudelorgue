@@ -6,6 +6,8 @@ INVALID_EMAIL_ADDRESS = u"Cette adresse n'est pas valide"
 MISSING_FIELD = u"Ce champ est obligatoire"
 INVALID_PASSWORD = u"Votre mot de passe doit contenir au moins 8 caractères"
 
+OLD_ACCOUNT_PASSWORD_CHANGE = u"Afin de valider la création de votre nouveau compte et d'accéder aux fonctionnalités du site, merci de changer votre mot de passe"
+
 VALIDATION = u"Valider"
 
 INCORRECT_CREDENTIALS = u"Le nom d'utilisateur ou le mot de passe est incorrect"

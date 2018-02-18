@@ -17,9 +17,10 @@ class User(UserMixin, db.Model):
     deleted_at = db.Column(db.DateTime, default = None)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     confirmed = db.Column(db.Boolean, default = False)
+    is_old_account = db.Column(db.Boolean, default = False)
     username = db.Column(db.String(64), index = True, unique = True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    email = db.Column(db.String(120), index = True, unique = True)
+    email = db.Column(db.String(120), index = True)
     password_hash = db.Column(db.String(128))
     annual_points = db.Column(db.Integer)
     year_to_date_points = db.Column(db.Integer)
@@ -90,7 +91,7 @@ class User(UserMixin, db.Model):
         return True
 
     @staticmethod
-    def insert_user(email, role_name, username = None, confirmed = True, password = "test1234"):
+    def insert_user(email, role_name = "User", username = None, confirmed = True, password = "test1234", is_old_account = False):
         role = Role.query.filter_by(name = role_name).first()
         if role is None:
             print("This role does not exist")
@@ -100,10 +101,17 @@ class User(UserMixin, db.Model):
             user = User(email = email,
                         role = role,
                         confirmed = confirmed,
+                        is_old_account = is_old_account,
                         username = username,
                         password = password)
-            db.session.add(user)
-            db.session.commit()
+            try:
+                db.session.add(user)
+                db.session.commit()
+                print("Import successful")
+            except Exception as e:
+                print("\n")
+                print(str(e))
+                db.session.rollback()
 
 
     def get_id(self):
@@ -344,6 +352,24 @@ class Tournament(db.Model):
     def get_recent_tournaments(cls, number_tournaments):
         return cls.query.order_by(cls.started_at.desc()).limit(number_tournaments)
 
+    @staticmethod
+    def insert_tournament(name, started_at, ended_at, category_name, status = TournamentStatus.FINISHED):
+        category = TournamentCategory.query.filter_by(name = category_name).first()
+        if category is None:
+            print("This category does not exist")
+        else:
+            tournament = Tournament(name = name,
+                                    started_at = started_at,
+                                    ended_at = ended_at,
+                                    category = category,
+                                    status = status)
+            try:
+                db.session.add(tournament)
+                db.session.commit()
+            except Exception as e:
+                print("\n")
+                print(str(e))
+                db.session.rollback()
 
 
 class TournamentCategory(db.Model):

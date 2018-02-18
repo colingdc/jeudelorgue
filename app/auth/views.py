@@ -9,7 +9,7 @@ from ..models import User
 from ..models import db
 from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
 from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
-from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN
+from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN, OLD_ACCOUNT_PASSWORD_CHANGE
 from ..email import send_email
 
 
@@ -82,6 +82,10 @@ def login():
         session["username"] = user.username
         flash(LOGIN_SUCCESSFUL, "success")
 
+        if user.is_old_account:
+            flash(OLD_ACCOUNT_PASSWORD_CHANGE, "info")
+            return redirect(url_for(".change_password"))
+
         # Redirect the user to the page he initially wanted to access
         if session.get("next"):
             next_page = session.get("next")
@@ -138,6 +142,8 @@ def change_password():
     if form.validate_on_submit():
         if current_user.verify_password(form.old_password.data):
             current_user.password = form.password.data
+            if current_user.is_old_account and current_user.confirmed is False:
+                current_user.confirmed = True
             db.session.add(current_user)
             flash("Votre mot de passe a été mis à jour", "success")
             return redirect(url_for("main.index"))

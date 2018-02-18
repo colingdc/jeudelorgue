@@ -5,6 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 from app import create_app, db
 from app.models import *
 from instance import INSTANCE
+import pandas as pd
 import os
 
 COV = None
@@ -57,6 +58,51 @@ def test(coverage = False):
         COV.html_report(directory = covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
+
+
+@manager.command
+def import_accounts(filename):
+    df = pd.read_csv(filename)
+    df.fillna("", inplace = True)
+    for i, row in df.iterrows():
+        print("-" * 50)
+        print("Importing user #{} : {}".format(i + 1, row["username"]))
+        User.insert_user(email = row["email"],
+                         username = row["username"],
+                         password = row["password"],
+                         role_name = "User",
+                         confirmed = False,
+                         is_old_account = True)
+
+
+@manager.command
+def import_tournaments(filename):
+    df = pd.read_csv(filename)
+    df.fillna("", inplace = True)
+    for i, row in df.iterrows():
+        print("-" * 50)
+        print("Importing tournament #{} : {}".format(i + 1, row["name"]))
+        Tournament.insert_tournament(name = row["name"],
+                                    started_at = row["started_at"],
+                                    ended_at = row["ended_at"],
+                                    category = row["category"])
+
+
+@manager.command
+def import_participants(filename):
+    df = pd.read_csv(filename)
+    df.fillna("", inplace = True)
+    for i, row in df.iterrows():
+        user = User.query.filter_by(username = row["username"]).first()
+        tournament = Tournament.query.filter_by(name = row["tournament"]).first()
+        participant = Participant(user_id = user.id,
+                                  tournament_id = tournament.id,
+                                  score = row["score"],
+                                  risk_coefficient = row["risk_coefficient"],
+                                  points = row["points"],
+                                  ranking = row["ranking"])
+        db.session.add(participant)
+    db.session.commit()
 
 
 if __name__ == "__main__":

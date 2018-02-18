@@ -19,10 +19,10 @@ class Config:
     MAIL_SUBJECT_PREFIX = '[Jeu de L-orgue]'
     MAIL_SENDER = 'Le Jeu de L-orgue <jeudelorgue@gmail.com>'
     ADMIN_JDL = os.environ.get('ADMIN_JDL')
-    TOURNAMENTS_PER_PAGE = 10
-    PLAYERS_PER_PAGE = 10
-    USERS_PER_PAGE = 5
-    CATEGORIES_PER_PAGE = 10
+    TOURNAMENTS_PER_PAGE = 25
+    PLAYERS_PER_PAGE = 25
+    USERS_PER_PAGE = 25
+    CATEGORIES_PER_PAGE = 25
     SLOW_DB_QUERY_TIME = 0.5
     BABEL_DEFAULT_LOCALE = "fr"
 
