@@ -146,7 +146,7 @@ class User(UserMixin, db.Model):
         return sum(participation.points for participation in self.annual_participations if participation.points is not None)
 
     def get_year_to_date_points(self):
-        return sum(participation.points for participation in self.annual_participations if participation.points is not None)
+        return sum(participation.points for participation in self.year_to_date_participations if participation.points is not None)
 
     def participants_sorted(self):
         return (self.participants.order_by(Participant.created_at.desc()))
@@ -215,6 +215,7 @@ class Tournament(db.Model):
     created_at = db.Column(db.DateTime, default = datetime.datetime.now)
     deleted_at = db.Column(db.DateTime, default = None)
 
+    old_website_id = db.Column(db.Integer, default = None)
     name = db.Column(db.String(64))
     started_at = db.Column(db.DateTime)
     ended_at = db.Column(db.DateTime, default = None)
@@ -296,7 +297,7 @@ class Tournament(db.Model):
         return score
 
     def participants_sorted(self):
-        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient))
+        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc()))
 
     def get_tournament_player_stats(self, tournament_player):
         # Get the tournament player's first round match
@@ -353,12 +354,13 @@ class Tournament(db.Model):
         return cls.query.order_by(cls.started_at.desc()).limit(number_tournaments)
 
     @staticmethod
-    def insert_tournament(name, started_at, ended_at, category_name, status = TournamentStatus.FINISHED):
+    def insert_tournament(name, started_at, ended_at, category_name, old_website_id = None, status = TournamentStatus.FINISHED):
         category = TournamentCategory.query.filter_by(name = category_name).first()
         if category is None:
             print("This category does not exist")
         else:
             tournament = Tournament(name = name,
+                                    old_website_id = old_website_id,
                                     started_at = started_at,
                                     ended_at = ended_at,
                                     category = category,
@@ -366,6 +368,7 @@ class Tournament(db.Model):
             try:
                 db.session.add(tournament)
                 db.session.commit()
+                print("Import successful")
             except Exception as e:
                 print("\n")
                 print(str(e))
@@ -399,6 +402,8 @@ class Participant(db.Model):
     points = db.Column(db.Integer, default = 0)
     ranking = db.Column(db.Integer, default = None)
 
+    old_website_id = db.Column(db.Integer, default = None)
+
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     forecasts = db.relationship("Forecast", backref = "participant", lazy = "dynamic")
@@ -430,6 +435,9 @@ class Participant(db.Model):
                 coeffs[my_forecast.match.id] += (my_forecast.winner_id != other_participant_forecast.winner_id) * score_per_round[my_forecast.match.round]
 
         return sum(coeffs.values()) / (self.tournament.participants.count() - 1)
+
+    def get_old_website_draw_url(self):
+        return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(self.tournament.old_website_id, self.old_website_id)
 
 
 class Player(db.Model):

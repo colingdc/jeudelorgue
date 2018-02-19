@@ -83,9 +83,10 @@ def import_tournaments(filename):
         print("-" * 50)
         print("Importing tournament #{} : {}".format(i + 1, row["name"]))
         Tournament.insert_tournament(name = row["name"],
-                                    started_at = row["started_at"],
-                                    ended_at = row["ended_at"],
-                                    category = row["category"])
+                                     started_at = datetime.datetime.strptime(row["started_at"], "%Y-%m-%d"),
+                                     ended_at = datetime.datetime.strptime(row["ended_at"], "%Y-%m-%d"),
+                                     category_name = row["category"],
+                                     old_website_id = row["id"])
 
 
 @manager.command
@@ -93,15 +94,28 @@ def import_participants(filename):
     df = pd.read_csv(filename)
     df.fillna("", inplace = True)
     for i, row in df.iterrows():
-        user = User.query.filter_by(username = row["username"]).first()
-        tournament = Tournament.query.filter_by(name = row["tournament"]).first()
-        participant = Participant(user_id = user.id,
-                                  tournament_id = tournament.id,
-                                  score = row["score"],
-                                  risk_coefficient = row["risk_coefficient"],
-                                  points = row["points"],
-                                  ranking = row["ranking"])
-        db.session.add(participant)
+        if row["filled"] and row["compte"]:
+            user = User.query.filter_by(username = row["username"]).first()
+            tournament = Tournament.query.filter_by(old_website_id = row["tournament_id"]).first()
+            participant = Participant(user_id = user.id,
+                                      old_website_id = row["id"],
+                                      tournament_id = tournament.id,
+                                      score = row["score"],
+                                      risk_coefficient = row["risk_coefficient"],
+                                      points = row["points"] + row["bonus"],
+                                      ranking = row["ranking"])
+            db.session.add(participant)
+            print(tournament.name, user.username)
+    db.session.commit()
+
+
+@manager.command
+def compute_all_rankings():
+    for user in User.query.all():
+        user.annual_points = user.get_annual_points()
+        user.year_to_date_points = user.get_year_to_date_points()
+        db.session.add(user)
+        print(user.username)
     db.session.commit()
 
 
