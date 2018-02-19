@@ -199,7 +199,7 @@ class Role(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return '<Role %r>' % self.name
+        return self.name
 
 
 class TournamentStatus:

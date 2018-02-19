@@ -3,7 +3,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from . import bp
-from ..decorators import admin_required
+from ..decorators import admin_required, manager_required
 from ..models import User, Role, Tournament, Participant, TournamentStatus
 from .. import db
 from ..texts import PROFILE_UPDATED
@@ -41,6 +41,18 @@ def view_user(user_id):
                   .filter(Tournament.status == TournamentStatus.FINISHED)
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
     return render_template("main/user.html", title = title, user = user,
+                           pagination = pagination)
+
+
+@bp.route("/user/all")
+@manager_required
+def view_users():
+    title = "Utilisateurs"
+    page = request.args.get("page", 1, type = int)
+    pagination = (User.query.order_by(User.username)
+                  .filter(User.deleted_at == None)
+                  .paginate(page, per_page = current_app.config["USERS_PER_PAGE"], error_out = False))
+    return render_template("main/view_users.html", title = title,
                            pagination = pagination)
 
 
