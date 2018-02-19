@@ -243,12 +243,12 @@
                         {% for participant in tournament.participants_sorted() %}
                             {% if not tournament.are_draws_private() %}
                                 <tr>
-                                    <th>{{ loop.index }}</th>
-                                    <th>
+                                    <td>{{ loop.index }}</td>
+                                    <td>
                                         <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                         {{ participant.user.username }}</a>
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         {% if tournament.old_website_id %}
                                         <a target="_blank" href= '{{ participant.get_old_website_draw_url() }}'>Voir le tableau</a>
                                         {% else %}
@@ -260,23 +260,23 @@
                                         A partir des 8èmes</a>
                                         {% endif %}
                                         {% endif %}
-                                    </th>
-                                    <th>{{ participant.score }}</th>
-                                    <th>{{ participant.risk_coefficient | int }}</th>
+                                    </td>
+                                    <td>{{ participant.score }}</td>
+                                    <td>{{ participant.risk_coefficient | int }}</td>
                                     {% if tournament.is_finished() %}
-                                        <th>{{ participant.points }}</th>
+                                        <td>{{ participant.points }}</td>
                                     {% endif %}
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <th>-</th>
-                                    <th>
+                                    <td>-</td>
+                                    <td>
                                         <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                         {{ participant.user.username }}</a>
-                                    </th>
-                                    <th>-</th>
-                                    <th>-</th>
-                                    <th>-</th>
+                                    </td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

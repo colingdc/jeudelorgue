@@ -23,7 +23,10 @@
                 {% for user in pagination.items %}
                     <tr>
                         <td>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</td>
-                        <td>{{ user.username }}</td>
+                        <td>
+                            <a href= '{{ url_for("main.view_user", user_id = user.id, _external = True) }}'>
+                                {{ user.username }}</a>
+                        </td>
                         <td>
                             {% if user.annual_points is none %}
                                 0
