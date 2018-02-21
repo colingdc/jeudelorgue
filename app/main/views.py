@@ -39,6 +39,7 @@ def view_user(user_id):
     pagination = (user.participants_sorted()
                   .join(Tournament, Tournament.id == Participant.tournament_id)
                   .filter(Tournament.status == TournamentStatus.FINISHED)
+                  .order_by(Tournament.started_at.desc())
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
     return render_template("main/user.html", title = title, user = user,
                            pagination = pagination)
