@@ -67,11 +67,12 @@ def import_players(filename):
     df = pd.read_csv(filename)
     df.fillna("", inplace = True)
     for i, row in df.iterrows():
-        print("-" * 50)
-        player = Player(first_name = row["first_name"],
-                        last_name = row["last_name"])
-        db.session.add(player)
-        print(row["last_name"])
+        if Player.query.filter(Player.first_name == row["first_name"]).filter(Player.last_name == row["last_name"]).first() is None:
+            player = Player(first_name = row["first_name"],
+                            last_name = row["last_name"])
+            db.session.add(player)
+            print("-" * 50)
+            print(row["last_name"])
     db.session.commit()
 
 
