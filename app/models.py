@@ -291,6 +291,10 @@ class Tournament(db.Model):
         score_per_round = self.get_score_per_round()
         score = 0
         for match in self.matches:
+            if match.tournament_player1 and match.tournament_player1.player and match.tournament_player1.player.last_name == "Bye":
+                continue
+            if match.tournament_player2 and match.tournament_player2.player and match.tournament_player2.player.last_name == "Bye":
+                continue
             if match.winner_id:
                 match_score = score_per_round[match.round]
                 score += match_score
@@ -416,6 +420,10 @@ class Participant(db.Model):
         score = 0
         for forecast in self.forecasts:
             result = forecast.match
+            if result.tournament_player1 and result.tournament_player1.player and result.tournament_player1.player.last_name == "Bye":
+                continue
+            if result.tournament_player2 and result.tournament_player2.player and result.tournament_player2.player.last_name == "Bye":
+                continue
             if result.winner_id:
                 match_score = (result.winner_id == forecast.winner_id) * score_per_round[result.round]
                 score += match_score
@@ -471,6 +479,38 @@ class Player(db.Model):
         return [(p.id, p.get_full_name_surname_first())
         for p in cls.query.filter(cls.deleted_at.is_(None))
         .order_by(cls.last_name, cls.first_name).all()]
+
+    @classmethod
+    def get_closest_player(cls, player_name):
+        if "[" in player_name:
+            player_name = player_name[:player_name.find("[")] + player_name[1 + player_name.find("]"):]
+            player_name = player_name.strip()
+        last_name = player_name.split(". ")[-1].lower().replace("-", " ")
+        first_name_initial = player_name.split(". ")[0]
+        closest_player = cls.query.filter(func.lower(cls.last_name) == last_name).filter(cls.first_name.like(first_name_initial + "%")).first()
+        return closest_player
+
+    @staticmethod
+    def get_seed(player_name):
+        if "[" in player_name:
+            between_brackets = player_name[1 + player_name.find("["): player_name.find("]")]
+            try:
+                seed = int(between_brackets)
+                return seed
+            except ValueError:
+                return None
+        return None
+
+    @staticmethod
+    def get_status(player_name):
+        if "[" in player_name:
+            between_brackets = player_name[1 + player_name.find("["): player_name.find("]")]
+            try:
+                seed = int(between_brackets)
+                return None
+            except ValueError:
+                return between_brackets
+        return None
 
 
 class TournamentPlayer(db.Model):
@@ -552,12 +592,20 @@ class Match(db.Model):
     def get_next_match(self):
         if self.round == 1:
             return None
-        else:
-            match = (Match.query
-                     .filter(Match.tournament_id == self.tournament_id)
-                     .filter(Match.position == self.position // 2)
-                     .first())
-            return match
+        match = (Match.query
+                 .filter(Match.tournament_id == self.tournament_id)
+                 .filter(Match.position == self.position // 2)
+                 .first())
+        return match
+
+    def get_previous_matches(self):
+        if self.round == self.tournament.number_rounds:
+            return None
+        matches = (Match.query
+                 .filter(Match.tournament_id == self.tournament_id)
+                 .filter(or_(Match.position == 2 * self.position, Match.position == 2 * self.position + 1))
+                 .all())
+        return matches
 
 
 class Forecast(db.Model):

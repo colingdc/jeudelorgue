@@ -109,4 +109,4 @@ instance.py
 run.sh
 
 # csv files used to migrate data
-*.csv
+*.csv*

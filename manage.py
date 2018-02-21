@@ -5,7 +5,9 @@ from flask_migrate import Migrate, MigrateCommand
 from app import create_app, db
 from app.models import *
 from instance import INSTANCE
+from math import log, floor
 import pandas as pd
+import time
 import os
 
 COV = None
@@ -61,6 +63,19 @@ def test(coverage = False):
 
 
 @manager.command
+def import_players(filename):
+    df = pd.read_csv(filename)
+    df.fillna("", inplace = True)
+    for i, row in df.iterrows():
+        print("-" * 50)
+        player = Player(first_name = row["first_name"],
+                        last_name = row["last_name"])
+        db.session.add(player)
+        print(row["last_name"])
+    db.session.commit()
+
+
+@manager.command
 def import_accounts(filename):
     df = pd.read_csv(filename)
     df.fillna("", inplace = True)
@@ -87,6 +102,7 @@ def import_tournaments(filename):
                                      ended_at = datetime.datetime.strptime(row["ended_at"], "%Y-%m-%d"),
                                      category_name = row["category"],
                                      old_website_id = row["id"])
+        time.sleep(1)
 
 
 @manager.command
@@ -117,6 +133,87 @@ def compute_all_rankings():
         db.session.add(user)
         print(user.username)
     db.session.commit()
+
+
+@manager.command
+def import_tournament_draws(filename):
+    bye = Player.query.filter(Player.last_name == "Bye").filter(Player.deleted_at.is_(None)).first()
+    df = pd.read_csv(filename)
+    df.fillna("", inplace = True)
+    for i, group in df.groupby("tournament_id"):
+        print("-" * 50)
+        print("Tournament #", i)
+        tournament = Tournament.query.filter(Tournament.old_website_id == i).first()
+        print(tournament.name)
+
+        for pos in range(1, 2 ** tournament.number_rounds):
+            match = Match(position = pos,
+                          tournament_id = tournament.id,
+                          round = floor(log(pos) / log(2)) + 1)
+            db.session.add(match)
+        db.session.commit()
+
+        for match_id, row in group.iterrows():
+            r = row["round"]
+
+            position = 2 ** (tournament.number_rounds - r) + (row["position"] - 1) // 2
+
+            if "bye" in row["player_name"].lower():
+                player = bye
+                player_id = player.id
+            elif Player.get_closest_player(row["player_name"]):
+                player = Player.get_closest_player(row["player_name"])
+                player_id = player.id
+            else:
+                player = None
+                player_id = None
+
+            seed = Player.get_seed(row["player_name"])
+            status = Player.get_status(row["player_name"])
+
+            if r == 1:
+
+                t = TournamentPlayer(player_id = player_id,
+                                     seed = seed,
+                                     status = status,
+                                     position = (1 + row["position"]) % 2,
+                                     tournament_id = tournament.id)
+                # Add tournament player
+                db.session.add(t)
+                db.session.commit()
+
+                match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
+
+                if row["position"] % 2 == 1:
+                    match.tournament_player1_id = t.id
+                else:
+                    match.tournament_player2_id = t.id
+
+                db.session.add(match)
+                db.session.commit()
+
+            elif r <= tournament.number_rounds:
+                match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
+                t = TournamentPlayer.query.filter(TournamentPlayer.tournament_id == tournament.id).filter(TournamentPlayer.player_id == player_id).first()
+                if row["position"] % 2 == 1:
+                    match.tournament_player1_id = t.id
+                else:
+                    match.tournament_player2_id = t.id
+                for previous_match in match.get_previous_matches():
+                    previous_match.winner_id = t.id
+                db.session.add(match)
+                db.session.add(previous_match)
+                db.session.commit()
+
+            else:
+                match = Match.query.filter(Match.position == 1).filter(Match.tournament_id == tournament.id).first()
+                t = TournamentPlayer.query.filter(TournamentPlayer.tournament_id == tournament.id).filter(TournamentPlayer.player_id == player_id).first()
+                match.winner_id = t.id
+                for previous_match in match.get_previous_matches():
+                    previous_match.winner_id = t.id
+                db.session.add(match)
+                db.session.add(previous_match)
+                db.session.commit()
 
 
 if __name__ == "__main__":
