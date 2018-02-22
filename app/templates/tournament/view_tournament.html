@@ -231,7 +231,11 @@
                         <tr>
                             <th>#</th>
                             <th>Participant</th>
-                            <th>Tableau</th>
+                            {% if tournament.are_draws_private() %}
+                                <th>Tableau complet</th>
+                            {% else %}
+                                <th>Tableau</th>
+                            {% endif %}
                             <th>Score / {{ tournament.get_current_maximal_score() }}</th>
                             <th>Coefficient de risque</th>
                             {% if tournament.is_finished() %}
@@ -274,7 +278,7 @@
                                         <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                         {{ participant.user.username }}</a>
                                     </td>
-                                    <td>-</td>
+                                    <td>{% if participant.has_completely_filled_draw() %}Oui{% else %}<span class="text-danger bg-danger">Non{% endif %}</span></td>
                                     <td>-</td>
                                     <td>-</td>
                                 </tr>
