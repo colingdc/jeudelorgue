@@ -110,3 +110,4 @@ run.sh
 
 # csv files used to migrate data
 *.csv*
+*.sql
