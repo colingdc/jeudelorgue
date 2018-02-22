@@ -47,7 +47,7 @@ def create_tournament():
 @manager_required
 def edit_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
-    title = u"Tournoi {}".format(tournament.name)
+    title = tournament.name
     form = EditTournamentForm(request.form)
 
     categories = TournamentCategory.get_all_categories()
@@ -86,7 +86,7 @@ def view_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
         abort(404)
-    title = u"Tournoi {}".format(tournament.name)
+    title = tournament.name
     return render_template("tournament/view_tournament.html", title = title,
                            tournament = tournament)
 
@@ -182,7 +182,7 @@ def create_tournament_draw(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
         abort(404)
-    title = u"Créer le tableau du tournoi"
+    title = u"{} - Créer le tableau".format(tournament.name)
 
     matches = tournament.get_matches_first_round()
 
@@ -229,7 +229,8 @@ def create_tournament_draw(tournament_id):
         flash("Le tableau du tournoi {} a été créé".format(tournament.name), "info")
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
     else:
-        return render_template("tournament/create_tournament_draw.html", title = title,
+        return render_template("tournament/create_tournament_draw.html",
+                               title = title,
                                form = form,
                                tournament = tournament)
 
@@ -397,7 +398,7 @@ def fill_my_draw(tournament_id, participant_id):
     if not tournament.is_open_to_registration():
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
-    title = u"Remplir mon tableau"
+    title = u"{} - Remplir mon tableau".format(tournament.name)
 
     if participant.has_filled_draw():
         return redirect(url_for(".edit_my_draw", tournament_id = tournament_id, participant_id = participant_id))
@@ -446,7 +447,7 @@ def edit_my_draw(tournament_id, participant_id):
     if not tournament.is_open_to_registration():
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
-    title = u"Modifier mon tableau"
+    title = u"{} - Modifier mon tableau".format(tournament.name)
     form = FillTournamentDrawForm()
 
     if form.validate_on_submit():
@@ -489,7 +490,7 @@ def view_participant_draw(tournament_id, participant_id):
         if participant.user_id != current_user.id:
             return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
-    title = u"Tableau"
+    title = u"{} - Tableau de {}".format(tournament.name, participant.user.username)
 
     return render_template("tournament/view_participant_draw.html",
                            title = title,
@@ -513,7 +514,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
         if participant.user_id != current_user.id:
             return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
-    title = u"Tableau"
+    title = u"{} - Tableau de {}".format(tournament.name, participant.user.username)
 
     return render_template("tournament/view_participant_draw_last16.html",
                            title = title,
@@ -531,7 +532,7 @@ def tournament_player_stats(tournament_id):
     if tournament.are_draws_private():
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
-    title = u"Pronostics par joueur"
+    title = u"{} - Pronostics par joueur ATP".format(tournament.name)
     form = TournamentPlayerStatsForm()
 
     tournament_players = [(-1, "Choisir un joueur...")] + [(p.id, p.get_full_name()) for p in tournament.players]
@@ -558,7 +559,7 @@ def overall_forecasts_stats(tournament_id):
     if tournament.are_draws_private():
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
-    title = u"Pronostics globaux"
+    title = u"{} - Pronostics globaux".format(tournament.name)
 
 
     return render_template("tournament/overall_forecasts_stats.html",

@@ -7,7 +7,7 @@
 {{ super() }}
 
 <title>
-    {% block title %}{% if title %}{{ title }} - {% endif %}Le jeu de L-orgue{% endblock %}
+    {% block title %}Le jeu de L-orgue{% if title %} - {{ title }}{% endif %}{% endblock %}
 </title>
 
 <meta charset="utf-8">

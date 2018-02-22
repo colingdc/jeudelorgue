@@ -138,6 +138,7 @@ def resend_confirmation():
 @bp.route("/change-password", methods = ["GET", "POST"])
 @login_required
 def change_password():
+    title = "Changement de mot de passe"
     form = ChangePasswordForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.old_password.data):
@@ -150,7 +151,7 @@ def change_password():
         else:
             form.old_password.errors.append("Mot de passe incorrect")
     return render_template("auth/change_password.html",
-                           form = form)
+                           form = form, title = title)
 
 
 @bp.route("/reset", methods = ["GET", "POST"])
@@ -158,6 +159,7 @@ def reset_password_request():
     if not current_user.is_anonymous:
         return redirect(url_for("main.index"))
     form = PasswordResetRequestForm()
+    title = "Changement de mot de passe"
     if form.validate_on_submit():
         user = User.query.filter_by(email = form.email.data).first()
         if user:
@@ -171,7 +173,7 @@ def reset_password_request():
                   "info")
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password_request.html",
-                           form = form)
+                           form = form, title = title)
 
 
 @bp.route("/reset/<token>", methods = ["GET", "POST"])
@@ -179,6 +181,7 @@ def reset_password(token):
     if not current_user.is_anonymous:
         return redirect(url_for("main.index"))
     form = PasswordResetForm()
+    title = "Changement de mot de passe"
     if form.validate_on_submit():
         user = User.query.filter_by(email = form.email.data).first()
         if user is None:
@@ -189,5 +192,5 @@ def reset_password(token):
         else:
             return redirect(url_for("main.index"))
     return render_template("auth/reset_password.html",
-                           form = form, token = token)
+                           form = form, token = token, title = title)
 

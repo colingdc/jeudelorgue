@@ -11,7 +11,7 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title">Editer le tableau du tournoi</h3>
+        <h3 class="panel-title">{{ tournament.name }} - Editer le tableau</h3>
     </div>
 
     <form action="{{ url_for('tournament.edit_tournament_draw', tournament_id=tournament.id) }}"
