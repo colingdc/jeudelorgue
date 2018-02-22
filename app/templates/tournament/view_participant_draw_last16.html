@@ -19,7 +19,7 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title">Tableau de {{ participant.user.username }} (à partir des huitièmes) - Classement : {{ participant.ranking }} / {{ tournament.participants.count() }} (Score : {{ participant.score }}/{{ tournament.get_current_maximal_score() }})</h3>
+        <h3 class="panel-title">Tableau de {{ participant.user.username }} (à partir des huitièmes) - Classement : {{ participant.ranking or "-" }} / {{ tournament.participants.count() }} (Score : {{ participant.score }}/{{ tournament.get_current_maximal_score() }})</h3>
     </div>
 
     <div class="panel-body" style ="overflow-x:scroll">
@@ -69,7 +69,7 @@
                                                 {% else %}
                                                     incorrect_forecast
                                                 {% endif %}
-                                            {% elif forecast.winner.is_eliminated() %}
+                                            {% elif forecast.winner and forecast.winner.is_eliminated() %}
                                                 incorrect_forecast
                                             {% endif %}"
                                             tournament_player_id="{{ forecast.winner_id }}"
@@ -118,7 +118,7 @@
                                         {% else %}
                                             incorrect_forecast
                                         {% endif %}
-                                    {% elif forecast.winner.is_eliminated() %}
+                                    {% elif forecast.winner and forecast.winner.is_eliminated() %}
                                         incorrect_forecast
                                     {% endif %}"
                                     tournament_player_id="{{ match.winner_id }}"

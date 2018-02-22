@@ -75,7 +75,7 @@
                             tournament_player_id="{{ match.tournament_player1_id }}"
                             match_position_id="{{ match.position }}"
                             match_id="{{ match.id }}"
-                            {% if not match.tournament_player1.is_bye() %}
+                            {% if match.tournament_player1_id and not match.tournament_player1.is_bye() %}
                                 onclick="fill_next_round(event, {{ match.position }}, 0)"
                             {% endif %}>
                             {% if match.tournament_player1_id %}
@@ -94,8 +94,8 @@
                             tournament_player_id="{{ match.tournament_player2_id }}"
                             match_position_id="{{ match.position }}"
                             match_id="{{ match.id }}"
-                            {% if not match.tournament_player1.is_bye() %}
-                                onclick="fill_next_round(event, {{ match.position }}, 0)"
+                            {% if match.tournament_player2_id and not match.tournament_player2.is_bye() %}
+                                onclick="fill_next_round(event, {{ match.position }}, 1)"
                             {% endif %}>
                             {% if match.tournament_player2_id %}
                                 {{ match.tournament_player2.get_full_name() | truncate(25) }}

@@ -417,6 +417,10 @@ class Participant(db.Model):
     def has_filled_draw(self):
         return len(self.forecasts.all()) > 0
 
+
+    def has_completely_filled_draw(self):
+        pass
+
     def get_score(self):
         score_per_round = self.tournament.get_score_per_round()
         score = 0

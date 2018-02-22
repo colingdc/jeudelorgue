@@ -72,7 +72,7 @@
                 <tr>
                     <th>#</th>
                     <th>Participant</th>
-                    <th>Score</th>
+                    <th>Score / {{ tournament.get_current_maximal_score() }}</th>
                     {% for name in tournament.get_round_names() %}
                     <th>{{ name }}</th>
                     {% endfor %}
@@ -80,8 +80,9 @@
             </thead>
             <tbody>
                 {% with stats = tournament.get_tournament_player_stats(tournament_player) %}
+                    {% set number_participants = tournament.participants_sorted().count() %}
                     {% for participant in tournament.participants_sorted() %}
-                        <tr>
+                        <tr class="{% if loop.index == number_participants %}thick-border-bottom {% endif %}">
                             <td>{{ loop.index }}</td>
                             <td><a href="{{ url_for('tournament.view_participant_draw', tournament_id = tournament.id, participant_id = participant.id) }}">
                             {{ participant.user.username }}</a>
