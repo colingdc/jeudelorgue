@@ -560,6 +560,9 @@ class TournamentPlayer(db.Model):
                    )
         return matches.count() > 0
 
+    def is_bye(self):
+        return self.player and self.player.last_name == "Bye"
+
 
 class Match(db.Model):
     __tablename__ = "matches"
