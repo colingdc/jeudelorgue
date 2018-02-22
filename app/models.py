@@ -130,6 +130,7 @@ class User(UserMixin, db.Model):
     def year_to_date_participations(self):
         participations = (self.participants
                           .join(Tournament, Tournament.id == Participant.tournament_id)
+                          .filter(Tournament.deleted_at.is_(None))
                           .filter(func.year(Tournament.started_at) == datetime.datetime.now().year)
                           .filter(Tournament.started_at <= datetime.datetime.now()))
         return participations
@@ -138,6 +139,7 @@ class User(UserMixin, db.Model):
     def annual_participations(self):
         participations = (self.participants
                           .join(Tournament, Tournament.id == Participant.tournament_id)
+                          .filter(Tournament.deleted_at.is_(None))
                           .filter(Tournament.started_at >= datetime.datetime.now() - relativedelta(years = 1))
                           .filter(Tournament.started_at <= datetime.datetime.now()))
         return participations
