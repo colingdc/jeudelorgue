@@ -29,6 +29,8 @@ REGISTERED_TO_TOURNAMENT = u"Vous êtes inscrit au tournoi, vous pouvez désorma
 REGISTRATION_NOT_OPEN = u"Les inscriptions à ce tournoi ne sont pas ouvertes"
 TOURNAMENT_CLOSED = u"Le tournoi a été cloturé"
 
+DRAW_FILLED_COMPLETELY = "Votre tableau est complet !"
+DRAW_NOT_FILLED_COMPLETELY = "Attention, votre tableau est incomplet, n'oubliez pas de le compléter avant la fermeture des inscriptions"
 
 ALREADY_REGISTERED = u"Vous êtes déjà inscrit à ce tournoi"
 

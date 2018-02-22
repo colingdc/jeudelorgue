@@ -12,7 +12,7 @@ from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
-                     ALREADY_REGISTERED, TOURNAMENT_CLOSED)
+                     ALREADY_REGISTERED, TOURNAMENT_CLOSED, DRAW_FILLED_COMPLETELY, DRAW_NOT_FILLED_COMPLETELY)
 
 
 @bp.route("/create", methods = ["GET", "POST"])
@@ -417,6 +417,12 @@ def fill_my_draw(tournament_id, participant_id):
                                     participant_id = participant_id)
             db.session.add(forecast)
         db.session.commit()
+
+        if participant.has_completely_filled_draw():
+            flash(DRAW_FILLED_COMPLETELY, "success")
+        else:
+            flash(DRAW_NOT_FILLED_COMPLETELY, "warning")
+
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
     else:
@@ -455,6 +461,11 @@ def edit_my_draw(tournament_id, participant_id):
                 current_forecast.winner_id = winner_id
             db.session.add(current_forecast)
         db.session.commit()
+
+        if participant.has_completely_filled_draw():
+            flash(DRAW_FILLED_COMPLETELY, "success")
+        else:
+            flash(DRAW_NOT_FILLED_COMPLETELY, "warning")
 
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
