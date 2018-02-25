@@ -140,22 +140,28 @@ def compute_all_rankings():
 def import_tournament_draws(filename):
     bye = Player.query.filter(Player.last_name == "Bye").filter(Player.deleted_at.is_(None)).first()
     df = pd.read_csv(filename)
+    df = df.dropna(subset = ["player_name"])
     df.fillna("", inplace = True)
+
+    df = df[df["username"] == ""]
+    df = df[df["tournament_id"] == 10]
+
     for i, group in df.groupby("tournament_id"):
         print("-" * 50)
         print("Tournament #", i)
         tournament = Tournament.query.filter(Tournament.old_website_id == i).first()
         print(tournament.name)
 
-        for pos in range(1, 2 ** tournament.number_rounds):
-            match = Match(position = pos,
-                          tournament_id = tournament.id,
-                          round = floor(log(pos) / log(2)) + 1)
-            db.session.add(match)
-        db.session.commit()
+        # for pos in range(1, 2 ** tournament.number_rounds):
+        #     match = Match(position = pos,
+        #                   tournament_id = tournament.id,
+        #                   round = floor(log(pos) / log(2)) + 1)
+        #     db.session.add(match)
+        # db.session.commit()
 
         for match_id, row in group.iterrows():
             r = row["round"]
+            print(r, row["player_name"], row["username"])
 
             position = 2 ** (tournament.number_rounds - r) + (row["position"] - 1) // 2
 
@@ -173,35 +179,39 @@ def import_tournament_draws(filename):
             status = Player.get_status(row["player_name"])
 
             if r == 1:
+                pass
+                # t = TournamentPlayer(player_id = player_id,
+                #                      seed = seed,
+                #                      status = status,
+                #                      position = (1 + row["position"]) % 2,
+                #                      tournament_id = tournament.id)
+                # # Add tournament player
+                # db.session.add(t)
+                # db.session.commit()
 
-                t = TournamentPlayer(player_id = player_id,
-                                     seed = seed,
-                                     status = status,
-                                     position = (1 + row["position"]) % 2,
-                                     tournament_id = tournament.id)
-                # Add tournament player
-                db.session.add(t)
-                db.session.commit()
+                # match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
 
-                match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
+                # if row["position"] % 2 == 1:
+                #     match.tournament_player1_id = t.id
+                # else:
+                #     match.tournament_player2_id = t.id
 
-                if row["position"] % 2 == 1:
-                    match.tournament_player1_id = t.id
-                else:
-                    match.tournament_player2_id = t.id
-
-                db.session.add(match)
-                db.session.commit()
+                # db.session.add(match)
+                # db.session.commit()
 
             elif r <= tournament.number_rounds:
                 match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
                 t = TournamentPlayer.query.filter(TournamentPlayer.tournament_id == tournament.id).filter(TournamentPlayer.player_id == player_id).first()
+
                 if row["position"] % 2 == 1:
                     match.tournament_player1_id = t.id
                 else:
                     match.tournament_player2_id = t.id
-                for previous_match in match.get_previous_matches():
-                    previous_match.winner_id = t.id
+
+
+                for i_previous, previous_match in enumerate(match.get_previous_matches()):
+                    if row["position"] % 2 == 1 - i_previous:
+                        previous_match.winner_id = t.id
                 db.session.add(match)
                 db.session.add(previous_match)
                 db.session.commit()
@@ -209,12 +219,60 @@ def import_tournament_draws(filename):
             else:
                 match = Match.query.filter(Match.position == 1).filter(Match.tournament_id == tournament.id).first()
                 t = TournamentPlayer.query.filter(TournamentPlayer.tournament_id == tournament.id).filter(TournamentPlayer.player_id == player_id).first()
+                print(match.id, t.id)
                 match.winner_id = t.id
-                for previous_match in match.get_previous_matches():
-                    previous_match.winner_id = t.id
                 db.session.add(match)
-                db.session.add(previous_match)
                 db.session.commit()
+
+
+@manager.command
+def import_participant_draws(filename):
+    df = pd.read_csv(filename)
+
+    df = df.dropna(subset = ["username"])
+    df.fillna("", inplace = True)
+
+    for (tournament_id, username), group in df.groupby(["tournament_id", "username"]):
+        tournament = Tournament.query.filter(Tournament.old_website_id == tournament_id).first()
+        print(tournament.name, username)
+        participant = (Participant.query.filter(Participant.tournament_id == tournament.id)
+                       .join(User, User.id == Participant.user_id)
+                       .filter(User.username == username)).first()
+        if participant is None:
+            print(username, "not recognized")
+            continue
+
+        for match_id, row in group.iterrows():
+            r = row["round"]
+
+            position = 2 ** (tournament.number_rounds - r + 1) + (row["position"] - 1)
+
+            player = Player.get_closest_player(row["player_name"])
+            tournament_player_id = None
+            if player:
+                tournament_player = TournamentPlayer.query.filter(TournamentPlayer.tournament_id == tournament.id).filter(TournamentPlayer.player_id == player.id).first()
+                if tournament_player:
+                    tournament_player_id = tournament_player.id
+
+
+            if r <= tournament.number_rounds:
+                match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
+
+                forecast = Forecast(match_id = match.id,
+                                    winner_id = tournament_player_id,
+                                    participant_id = participant.id)
+
+                db.session.add(forecast)
+
+            else:
+                match = Match.query.filter(Match.position == 1).filter(Match.tournament_id == tournament.id).first()
+                forecast = Forecast(match_id = match.id,
+                    winner_id = tournament_player_id,
+                    participant_id = participant.id)
+
+                db.session.add(forecast)
+
+        db.session.commit()
 
 
 if __name__ == "__main__":
