@@ -13,6 +13,7 @@
 
     <div id="collapse1" class="panel-collapse collapse in">
         <div class="panel-body">
+
             {% if not current_user.is_registered_to_tournament(tournament.id) %}
                 {% if tournament.is_open_to_registration() %}
 
@@ -23,6 +24,23 @@
                     <p>Date limite d'inscription : {{ tournament.started_at | datetime("long") }}</p>
                 {% endif %}
             {% endif %}
+
+            <div class="row">
+                {% if tournament.tournament_topic_url %}
+                    <div class="col-md-6">
+                        <a class="btn btn-info" href="{{ tournament.tournament_topic_url }}">
+                        <span class="fa fa-comments"></span>
+                        Topic du tournoi</a>
+                    </div>
+                {% endif %}
+                {% if tournament.jeudelorgue_topic_url %}
+                    <div class="col-md-6">
+                        <a class="btn btn-info" href="{{ tournament.jeudelorgue_topic_url }}">
+                        <span class="fa fa-comments"></span>
+                        Topic du jeu de L-orgue</a>
+                    </div>
+                {% endif %}
+            </div>
 
             <div class="row">
 

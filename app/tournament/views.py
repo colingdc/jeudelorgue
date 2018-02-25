@@ -27,7 +27,10 @@ def create_tournament():
     if form.validate_on_submit():
         tournament = Tournament(name = form.name.data,
                                 started_at = form.start_date.data,
-                                category_id = form.category.data)
+                                category_id = form.category.data,
+                                tournament_topic_url = form.tournament_topic_url.data,
+                                jeudelorgue_topic_url = form.jeudelorgue_topic_url.data,
+                                )
         db.session.add(tournament)
         db.session.commit()
         for i in range(1, 2 ** tournament.number_rounds):
@@ -57,9 +60,13 @@ def edit_tournament(tournament_id):
         form.name.data = tournament.name
         form.category.data = tournament.category_id
         form.start_date.data = tournament.started_at
+        form.tournament_topic_url.data = tournament.tournament_topic_url
+        form.jeudelorgue_topic_url.data = tournament.jeudelorgue_topic_url
     if form.validate_on_submit():
         tournament.name = form.name.data
         tournament.started_at = form.start_date.data
+        tournament.tournament_topic_url = form.tournament_topic_url.data
+        tournament.jeudelorgue_topic_url = form.jeudelorgue_topic_url.data
         db.session.add(tournament)
         db.session.commit()
         flash(u"Le tournoi {} a été mis à jour".format(form.name.data), "info")

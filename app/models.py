@@ -219,6 +219,9 @@ class Tournament(db.Model):
 
     old_website_id = db.Column(db.Integer, default = None)
     name = db.Column(db.String(64))
+    tournament_topic_url = db.Column(db.String(64))
+    jeudelorgue_topic_url = db.Column(db.String(64))
+    name = db.Column(db.String(64))
     started_at = db.Column(db.DateTime)
     ended_at = db.Column(db.DateTime, default = None)
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)

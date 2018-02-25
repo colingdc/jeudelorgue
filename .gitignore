@@ -111,3 +111,6 @@ run.sh
 # csv files used to migrate data
 *.csv*
 *.sql
+
+# List of fontawesome icons
+fa.txt

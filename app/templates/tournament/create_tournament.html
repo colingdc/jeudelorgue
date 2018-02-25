@@ -37,7 +37,6 @@
                             Voir les catégories de tournoi existantes
                         </a>
 
-
                         <div class="form-group {% if form.name.errors %} has-error {% endif %}">
                             {{form.name.label()}}
                             <div>
@@ -45,6 +44,24 @@
                             </div>
                             <p class="help-block">
                                 {{ form.name.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.tournament_topic_url.errors %} has-error {% endif %}">
+                            {{form.tournament_topic_url.label()}}
+                            <div>
+                                {{form.tournament_topic_url(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.tournament_topic_url.errors[0] }}
+                        </div>
+
+                        <div class="form-group {% if form.jeudelorgue_topic_url.errors %} has-error {% endif %}">
+                            {{form.jeudelorgue_topic_url.label()}}
+                            <div>
+                                {{form.jeudelorgue_topic_url(class="form-control")}}
+                            </div>
+                            <p class="help-block">
+                                {{ form.jeudelorgue_topic_url.errors[0] }}
                         </div>
 
                         <div class="form-group {% if form.category.errors %} has-error {% endif %}">

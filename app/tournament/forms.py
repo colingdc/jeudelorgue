@@ -8,6 +8,10 @@ from wtforms.validators import DataRequired, InputRequired, Optional
 class CreateTournamentForm(FlaskForm):
     name = StringField('Nom',
                        validators = [DataRequired(message = "Ce champ est obligatoire")])
+    tournament_topic_url = StringField('Lien du topic du tournoi sur JVC',
+                                       validators = [Optional()])
+    jeudelorgue_topic_url = StringField('Lien du topic du jeu de L-orgue sur JVC',
+                                       validators = [Optional()])
     category = SelectField(u'Catégorie', coerce = int)
     start_date = DateTimeField(u'Date de début',
                                format = "%d/%m/%Y %H:%M",
@@ -18,6 +22,10 @@ class CreateTournamentForm(FlaskForm):
 class EditTournamentForm(FlaskForm):
     name = StringField('Nom',
                        validators = [DataRequired(message = "Ce champ est obligatoire")])
+    tournament_topic_url = StringField('Lien du topic du tournoi sur JVC',
+                                       validators = [Optional()])
+    jeudelorgue_topic_url = StringField('Lien du topic du jeu de L-orgue sur JVC',
+                                       validators = [Optional()])
     category = SelectField(u'Catégorie', coerce = int,
                            validators = [Optional()])
     start_date = DateTimeField(u'Date de début',
