@@ -217,7 +217,6 @@ def import_tournament_draws(filename):
             else:
                 match = Match.query.filter(Match.position == 1).filter(Match.tournament_id == tournament.id).first()
                 t = TournamentPlayer.query.filter(TournamentPlayer.tournament_id == tournament.id).filter(TournamentPlayer.player_id == player_id).first()
-                print(match.id, t.id)
                 match.winner_id = t.id
                 db.session.add(match)
                 db.session.commit()
