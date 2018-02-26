@@ -224,11 +224,13 @@ def import_tournament_draws(filename):
 
 
 @manager.command
-def import_participant_draws(filename):
+def import_participant_draws(filename, tournament_id):
     df = pd.read_csv(filename)
 
     df = df.dropna(subset = ["username"])
     df.fillna("", inplace = True)
+
+    df = df[df["tournament_id"] == int(tournament_id)]
 
     for (tournament_id, username), group in df.groupby(["tournament_id", "username"]):
         tournament = Tournament.query.filter(Tournament.old_website_id == tournament_id).first()
