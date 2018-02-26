@@ -54,7 +54,7 @@
                         <div id="player-{{ match.position }}-0"
                             class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
                             {% if match.tournament_player1_id %}
-                                {{ match.tournament_player1.get_full_name() | truncate(25) }}
+                                {{ match.tournament_player1.get_full_name() | truncate(35) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -67,7 +67,7 @@
                         <div id="player-{{ match.position }}-1"
                             class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
                             {% if match.tournament_player2_id %}
-                                {{ match.tournament_player2.get_full_name() | truncate(25) }}
+                                {{ match.tournament_player2.get_full_name() | truncate(35) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -87,7 +87,7 @@
                 <div id="player-0-1"
                     class="game game-player">
                     {% if tournament.get_last_match().winner %}
-                        {{ tournament.get_last_match().winner.get_full_name() | truncate(25) }}
+                        {{ tournament.get_last_match().winner.get_full_name() | truncate(35) }}
                     {% else %}
                         &nbsp;
                     {% endif %}

@@ -77,7 +77,7 @@
                             match_id="{{ match.id }}"
                             onclick="fill_next_round(event, {{ match.position }}, 0)">
                             {% if match.tournament_player1_id %}
-                                {{ match.tournament_player1.get_full_name() | truncate(25) }}
+                                {{ match.tournament_player1.get_full_name() | truncate(35) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -94,7 +94,7 @@
                             match_id="{{ match.id }}"
                             onclick="fill_next_round(event, {{ match.position }}, 1)">
                             {% if match.tournament_player2_id %}
-                                {{ match.tournament_player2.get_full_name() | truncate(25) }}
+                                {{ match.tournament_player2.get_full_name() | truncate(35) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -116,7 +116,7 @@
                     tournament_player_id="{{ tournament.get_last_match().winner_id }}"
                     onclick="fill_next_round(event, 0, 1)">
                     {% if tournament.get_last_match().winner %}
-                        {{ tournament.get_last_match().winner.get_full_name() | truncate(25) }}
+                        {{ tournament.get_last_match().winner.get_full_name() | truncate(35) }}
                     {% else %}
                         &nbsp;
                     {% endif %}

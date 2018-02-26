@@ -53,7 +53,7 @@
                             match_position_id="{{ match.position }}"
                             match_id="{{ match.id }}">
                             {% if match.tournament_player1_id %}
-                                {{ match.tournament_player1.get_full_name() | truncate(25) }}
+                                {{ match.tournament_player1.get_full_name() | truncate(35) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -69,7 +69,7 @@
                             match_position_id="{{ match.position }}"
                             match_id="{{ match.id }}">
                             {% if match.tournament_player2_id %}
-                                {{ match.tournament_player2.get_full_name() | truncate(25) }}
+                                {{ match.tournament_player2.get_full_name() | truncate(35) }}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -118,7 +118,7 @@
                                             title="{% if match.winner and (match.winner_id != forecast.winner.id) %}
                                                     Vainqueur réel : {{ match.winner.get_full_name() | truncate(25) }}
                                                 {% endif %}">
-                                                {{ forecast.winner.get_full_name() | truncate(25) }}
+                                                {{ forecast.winner.get_full_name() | truncate(35) }}
                                         </div>
 
                                     {% else %}
@@ -163,7 +163,7 @@
                                             Vainqueur réel : {{ match.winner.get_full_name() | truncate(25) }}
                                             {% endif %}">
                                     {% if forecast.winner %}
-                                        {{ forecast.winner.get_full_name() | truncate(25) }}
+                                        {{ forecast.winner.get_full_name() | truncate(35) }}
                                     {% else %}
                                         &nbsp;
                                     {% endif %}

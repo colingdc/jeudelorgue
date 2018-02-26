@@ -78,7 +78,7 @@
                                             title="{% if match.winner and (match.winner_id != forecast.winner.id) %}
                                                     Vainqueur réel : {{ match.winner.get_full_name() | truncate(25) }}
                                                 {% endif %}">
-                                                {{ forecast.winner.get_full_name() | truncate(25) }}
+                                                {{ forecast.winner.get_full_name() | truncate(35) }}
                                         </div>
 
                                     {% else %}
@@ -126,7 +126,7 @@
                                             Vainqueur réel : {{ match.winner.get_full_name() | truncate(25) }}
                                             {% endif %}">
                                     {% if forecast.winner %}
-                                        {{ forecast.winner.get_full_name() | truncate(25) }}
+                                        {{ forecast.winner.get_full_name() | truncate(35) }}
                                     {% else %}
                                         &nbsp;
                                     {% endif %}
