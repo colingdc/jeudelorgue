@@ -144,7 +144,6 @@ def import_tournament_draws(filename):
     df.fillna("", inplace = True)
 
     df = df[df["username"] == ""]
-    df = df[df["tournament_id"] == 10]
 
     for i, group in df.groupby("tournament_id"):
         print("-" * 50)
@@ -161,7 +160,6 @@ def import_tournament_draws(filename):
 
         for match_id, row in group.iterrows():
             r = row["round"]
-            print(r, row["player_name"], row["username"])
 
             position = 2 ** (tournament.number_rounds - r) + (row["position"] - 1) // 2
 
