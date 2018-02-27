@@ -305,6 +305,20 @@ class Tournament(db.Model):
                 score += match_score
         return score
 
+
+    def get_current_maximal_score_simulator(self, scenario):
+        score_per_round = self.get_score_per_round()
+        score = 0
+        for match in self.matches:
+            if match.tournament_player1 and match.tournament_player1.player and match.tournament_player1.player.last_name == "Bye":
+                continue
+            if match.tournament_player2 and match.tournament_player2.player and match.tournament_player2.player.last_name == "Bye":
+                continue
+            if scenario.get(match.id):
+                match_score = score_per_round[match.round]
+                score += match_score
+        return score
+
     def participants_sorted(self):
         return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc()))
 
@@ -435,6 +449,25 @@ class Participant(db.Model):
             if result.winner_id:
                 match_score = (result.winner_id == forecast.winner_id) * score_per_round[result.round]
                 score += match_score
+        return score
+
+
+    def get_score_simulator(self, scenario):
+        """
+        scenario : dict containing hypothetical match results
+        (match_id: winner_id)
+        """
+        score_per_round = self.tournament.get_score_per_round()
+        score = 0
+
+        for forecast in self.forecasts:
+            result = forecast.match
+            if result.tournament_player1 and result.tournament_player1.player and result.tournament_player1.player.last_name == "Bye":
+                continue
+            if result.tournament_player2 and result.tournament_player2.player and result.tournament_player2.player.last_name == "Bye":
+                continue
+            match_score = (scenario[forecast.match.id] == forecast.winner_id) * score_per_round[result.round]
+            score += match_score
         return score
 
     def get_risk_coefficient(self):

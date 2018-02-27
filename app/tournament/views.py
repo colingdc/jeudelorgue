@@ -582,3 +582,59 @@ def current_tournament():
         return redirect(url_for(".view_tournament", tournament_id = tournament.id))
     else:
         return redirect(url_for(".view_tournaments"))
+
+
+
+@bp.route("/<tournament_id>/scenario_simulator", methods = ["GET", "POST"])
+@login_required
+def scenario_simulator(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    if tournament.are_draws_private():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"{} - Simulateur de scénarios".format(tournament.name)
+
+    form = FillTournamentDrawForm()
+
+    if request.method == "GET":
+        scenario = {match.id: match.winner_id or "None" for match in tournament.matches}
+        form.forecast.data = json.dumps(scenario)
+        scenario = {int(k): (int(v) if v != "None" else None) for k, v in scenario.items()}
+
+        scores = [(participant, participant.get_score_simulator(scenario), participant.risk_coefficient) for participant in tournament.participants]
+        scores = sorted(scores, key = lambda x: ( -x[1], -x[2]))
+
+        simulated_matches = {match_id: None if winner_id is None else TournamentPlayer.query.get(winner_id) for match_id, winner_id in scenario.items()}
+
+    if form.validate_on_submit():
+        try:
+            results = json.loads(form.forecast.data)
+        except json.decoder.JSONDecodeError:
+            return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+        scenario = {int(k): (int(v) if v != "None" else None) for k, v in results.items()}
+
+        scores = [(participant, participant.get_score_simulator(scenario), participant.risk_coefficient) for participant in tournament.participants]
+        scores = sorted(scores, key = lambda x: (-x[1], -x[2]))
+
+        simulated_matches = {match_id: None if winner_id is None else TournamentPlayer.query.get(winner_id) for match_id, winner_id in scenario.items()}
+
+        return render_template("tournament/scenario_simulator.html",
+                       title = title,
+                       tournament = tournament,
+                       form = form,
+                       scenario = scenario,
+                       scores = scores,
+                       simulated_matches = simulated_matches)
+
+    else:
+        return render_template("tournament/scenario_simulator.html",
+                               title = title,
+                               tournament = tournament,
+                               form = form,
+                               scenario = scenario,
+                               scores = scores,
+                               simulated_matches = simulated_matches)
+
