@@ -40,3 +40,21 @@ function update_json() {
     $("#forecast").attr("value", JSON.stringify(res));
 
 }
+
+function show_real_winners() {
+    $(".to_hide").each(function() {
+        $(this).hide()
+        })
+    $(".to_show").each(function() {
+        $(this).show()
+        })
+}
+
+function hide_real_winners() {
+    $(".to_show").each(function() {
+        $(this).hide()
+        })
+    $(".to_hide").each(function() {
+        $(this).show()
+        })
+}

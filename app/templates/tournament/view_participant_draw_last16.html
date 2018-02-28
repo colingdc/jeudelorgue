@@ -40,10 +40,10 @@
 
         <main id="tournament">
 
-
             {% for round in tournament.get_matches_by_round_last_rounds(5) %}
 
                 {% set outer_loop = loop %}
+                {% set first_round = "first-round" if outer_loop.index == 1 else "" %}
                 {% if loop.index < loop.length %}
 
                     <div class="round">
@@ -58,36 +58,63 @@
                                 {% with forecast = match.get_forecast(participant.id) %}
                                     {% if forecast.winner %}
 
-                                        <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
-                                            class="game game-player match
-                                            {% if outer_loop.index == 1 %}
-                                                first-round
-                                            {% endif %}
-                                            {% if match.winner_id %}
-                                                {% if match.winner_id == forecast.winner_id %}
-                                                    correct_forecast
-                                                {% else %}
-                                                    incorrect_forecast
-                                                {% endif %}
-                                            {% elif forecast.winner and forecast.winner.is_eliminated() %}
-                                                incorrect_forecast
-                                            {% endif %}"
-                                            tournament_player_id="{{ forecast.winner_id }}"
-                                            match_position_id="{{ next_match.position }}"
-                                            match_id="{{ next_match.id }}"
-                                            title="{% if match.winner and (match.winner_id != forecast.winner.id) %}
-                                                    Vainqueur réel : {{ match.winner.get_full_name() | truncate(25) }}
-                                                {% endif %}">
-                                                {{ forecast.winner.get_full_name() | truncate(35) }}
-                                        </div>
+                                        {% if match.winner and (match.winner_id != forecast.winner.id) %}
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                class="game game-player incorrect_forecast to_hide {{ first_round }}"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                onmouseenter="show_real_winners()"
+                                                match_id="{{ next_match.id }}">
+                                                    {{ forecast.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                style="display: none"
+                                                class="game game-player to_show {{ first_round }}"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                onmouseleave="hide_real_winners()"
+                                                match_id="{{ next_match.id }}">
+                                                    {{ match.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                        {% elif match.winner_id == forecast.winner.id %}
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                class="game game-player correct_forecast {{ first_round }}"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                match_id="{{ next_match.id }}">
+                                                    {{ forecast.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                        {% elif forecast.winner and forecast.winner.is_eliminated() %}
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                class="game game-player incorrect_forecast to_hide {{ first_round }}"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                onmouseenter="show_real_winners()"
+                                                match_id="{{ next_match.id }}">
+                                                    {{ forecast.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                style="display: none"
+                                                class="game game-player to_show {{ first_round }}"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                onmouseleave="hide_real_winners()"
+                                                match_id="{{ next_match.id }}">
+                                            </div>
+                                        {% else %}
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                class="game game-player {{ first_round }}"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                match_id="{{ next_match.id }}">
+                                                    {{ forecast.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                        {% endif %}
 
                                     {% else %}
 
                                         <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
-                                            class="game game-player match
-                                            {% if outer_loop.index == 1 %}
-                                                first-round
-                                            {% endif %}"
+                                            class="game game-player {{ first_round }}"
                                             tournament_player_id="None"
                                             match_position_id="{{ next_match.position }}"
                                             match_id="{{ next_match.id }}">
@@ -109,28 +136,50 @@
 
                     {% with match = round["matches"][0] %}
                         {% with forecast = match.get_forecast(participant.id) %}
+
                             <div class="round last-round">
-                                <div id="player-0-1"
-                                    class="game game-player
-                                    {% if match.winner_id %}
-                                        {% if match.winner_id == forecast.winner_id %}
-                                            correct_forecast
-                                        {% else %}
-                                            incorrect_forecast
-                                        {% endif %}
-                                    {% elif forecast.winner and forecast.winner.is_eliminated() %}
-                                        incorrect_forecast
-                                    {% endif %}"
-                                    tournament_player_id="{{ match.winner_id }}"
-                                    title="{% if match.winner and (match.winner_id != forecast.winner.id) %}
-                                            Vainqueur réel : {{ match.winner.get_full_name() | truncate(25) }}
-                                            {% endif %}">
-                                    {% if forecast.winner %}
-                                        {{ forecast.winner.get_full_name() | truncate(35) }}
-                                    {% else %}
-                                        &nbsp;
-                                    {% endif %}
-                                </div>
+                                {% if match.winner and (match.winner_id != forecast.winner.id) %}
+                                    <div id="player-0-1"
+                                        class="game game-player incorrect_forecast to_hide"
+                                        tournament_player_id="{{ forecast.winner_id }}"
+                                        onmouseenter="show_real_winners()">
+                                            {{ forecast.winner.get_full_name() | truncate(35) }}
+                                    </div>
+                                    <div id="player-0-1"
+                                        style="display: none"
+                                        class="game game-player to_show"
+                                        tournament_player_id="{{ forecast.winner_id }}"
+                                        onmouseleave="hide_real_winners()">
+                                            {{ match.winner.get_full_name() | truncate(35) }}
+                                    </div>
+                                {% elif match.winner_id == forecast.winner.id %}
+                                    <div id="player-0-1"
+                                        class="game game-player correct_forecast"
+                                        tournament_player_id="{{ forecast.winner_id }}">
+                                            {{ forecast.winner.get_full_name() | truncate(35) }}
+                                    </div>
+                                {% elif forecast.winner and forecast.winner.is_eliminated() %}
+                                    <div id="player-0-1"
+                                        class="game game-player incorrect_forecast to_hide"
+                                        tournament_player_id="{{ forecast.winner_id }}"
+                                        onmouseenter="show_real_winners()">
+                                            {{ forecast.winner.get_full_name() | truncate(35) }}
+                                    </div>
+                                    <div id="player-0-1"
+                                        style="display: none"
+                                        class="game game-player to_show"
+                                        tournament_player_id="{{ forecast.winner_id }}"
+                                        onmouseleave="hide_real_winners()">
+                                    </div>
+                                {% else %}
+                                    <div id="player-0-1"
+                                        class="game game-player"
+                                        tournament_player_id="{{ forecast.winner_id }}"
+                                        match_position_id="{{ next_match.position }}">
+                                            {{ forecast.winner.get_full_name() | truncate(35) }}
+                                    </div>
+                                {% endif %}
+
                             </div>
                         {% endwith %}
                     {% endwith %}
@@ -145,3 +194,6 @@
 
 {% endblock %}
 
+{% block extrajs %}
+    <script src="{{ url_for('static', filename='js/draw.js') }}"></script>
+{% endblock %}
