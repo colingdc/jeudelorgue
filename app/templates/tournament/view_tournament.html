@@ -235,22 +235,16 @@
 
             {% if not tournament.are_draws_private() %}
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                             <a class="btn btn-primary"
                             href="{{ url_for('.overall_forecasts_stats', tournament_id=tournament.id) }}">
                                 Pronostics globaux
                             </a>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                             <a class="btn btn-primary"
                             href="{{ url_for('.tournament_player_stats', tournament_id=tournament.id) }}">
                                 Pronostics par joueur
-                            </a>
-                    </div>
-                    <div class="col-md-4">
-                            <a class="btn btn-primary"
-                            href="{{ url_for('.scenario_simulator', tournament_id=tournament.id) }}">
-                                Simulateur de scénarios
                             </a>
                     </div>
                 </div>
