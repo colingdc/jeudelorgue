@@ -145,6 +145,10 @@ def change_password():
             current_user.password = form.password.data
             if current_user.is_old_account and current_user.confirmed is False:
                 current_user.confirmed = True
+                send_email(current_app.config.get("ADMIN_JDL"),
+                       "Nouvel inscrit au jeu de L'orgue depuis l'ancien site",
+                       "email/new_user",
+                       user = current_user)
             db.session.add(current_user)
             flash("Votre mot de passe a été mis à jour", "success")
             return redirect(url_for("main.index"))

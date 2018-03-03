@@ -542,7 +542,7 @@ def tournament_player_stats(tournament_id):
     title = u"{} - Pronostics par joueur ATP".format(tournament.name)
     form = TournamentPlayerStatsForm()
 
-    tournament_players = [(-1, "Choisir un joueur...")] + [(p.id, p.get_full_name()) for p in tournament.players]
+    tournament_players = [(-1, "Choisir un joueur...")] + [(p.id, p.get_full_name()) for p in tournament.players if p.player.last_name.lower() != "bye"]
     form.player_name.choices = tournament_players
 
     tournament_player = None

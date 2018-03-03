@@ -20,7 +20,8 @@ def page_not_found(e):
         response = jsonify({'error': 'not found'})
         response.status_code = 404
         return response
-    current_app.logger.error('Page not found: %s', (request.path))
+    if not request.path.endswith("robots.txt"):
+        current_app.logger.error('Page not found: %s', (request.path))
     return render_template('errors/404.html'), 404
 
 
@@ -30,7 +31,7 @@ def internal_server_error(e):
         response = jsonify({'error': 'internal server error'})
         response.status_code = 500
         return response
-    current_app.logger.error('Server Error: %s', (e))
+    current_app.logger.error('Server Error: %s, %s', (request.path, e))
     return render_template('errors/500.html'), 500
 
 
@@ -40,5 +41,5 @@ def unhandled_exception(e):
         response = jsonify({'error': 'unhandled exception'})
         response.status_code = 500
         return response
-    current_app.logger.error('Unhandled exception: %s', (e))
+    current_app.logger.error('Unhandled exception: %s, %s', (request.path, e))
     return render_template('errors/500.html'), 500
