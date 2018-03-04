@@ -10,7 +10,7 @@ from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory
+from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory, Surface
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED, TOURNAMENT_CLOSED, DRAW_FILLED_COMPLETELY, DRAW_NOT_FILLED_COMPLETELY)
 
@@ -24,10 +24,14 @@ def create_tournament():
     categories = TournamentCategory.get_all_categories()
     form.category.choices = categories
 
+    surfaces = Surface.get_all_surfaces()
+    form.surface.choices = surfaces
+
     if form.validate_on_submit():
         tournament = Tournament(name = form.name.data,
                                 started_at = form.start_date.data,
                                 category_id = form.category.data,
+                                surface_id = form.surface.data,
                                 tournament_topic_url = form.tournament_topic_url.data,
                                 jeudelorgue_topic_url = form.jeudelorgue_topic_url.data,
                                 )
@@ -56,15 +60,20 @@ def edit_tournament(tournament_id):
     categories = TournamentCategory.get_all_categories()
     form.category.choices = categories
 
+    surfaces = Surface.get_all_surfaces()
+    form.surface.choices = surfaces
+
     if request.method == "GET":
         form.name.data = tournament.name
         form.category.data = tournament.category_id
+        form.surface.data = tournament.surface_id
         form.start_date.data = tournament.started_at
         form.tournament_topic_url.data = tournament.tournament_topic_url
         form.jeudelorgue_topic_url.data = tournament.jeudelorgue_topic_url
     if form.validate_on_submit():
         tournament.name = form.name.data
         tournament.started_at = form.start_date.data
+        tournament.surface_id = form.surface.data
         tournament.tournament_topic_url = form.tournament_topic_url.data
         tournament.jeudelorgue_topic_url = form.jeudelorgue_topic_url.data
         db.session.add(tournament)
@@ -73,7 +82,7 @@ def edit_tournament(tournament_id):
         return redirect(url_for(".edit_tournament", tournament_id = tournament_id))
     else:
         return render_template("tournament/edit_tournament.html", title = title,
-                               form = form, tournament = tournament)
+                               form = form, tournament = tournament, surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/delete")
@@ -95,7 +104,7 @@ def view_tournament(tournament_id):
         abort(404)
     title = tournament.name
     return render_template("tournament/view_tournament.html", title = title,
-                           tournament = tournament)
+                           tournament = tournament, surface = tournament.surface.class_name)
 
 
 @bp.route("/all")
@@ -239,7 +248,8 @@ def create_tournament_draw(tournament_id):
         return render_template("tournament/create_tournament_draw.html",
                                title = title,
                                form = form,
-                               tournament = tournament)
+                               tournament = tournament,
+                               surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/edit", methods = ["GET", "POST"])
@@ -300,7 +310,8 @@ def edit_tournament_draw(tournament_id):
     else:
         return render_template("tournament/edit_tournament_draw.html", title = title,
                                form = form,
-                               tournament = tournament)
+                               tournament = tournament,
+                               surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw")
@@ -313,7 +324,8 @@ def view_tournament_draw(tournament_id):
 
     return render_template("tournament/view_tournament_draw.html",
                            title = title,
-                           tournament = tournament)
+                           tournament = tournament,
+                           surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/last16")
@@ -329,7 +341,8 @@ def view_tournament_draw_last16(tournament_id):
 
     return render_template("tournament/view_tournament_draw_last16.html",
                            title = title,
-                           tournament = tournament)
+                           tournament = tournament,
+                           surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/update", methods = ["GET", "POST"])
@@ -389,7 +402,8 @@ def update_tournament_draw(tournament_id):
         return render_template("tournament/update_tournament_draw.html",
                                title = title,
                                tournament = tournament,
-                               form = form)
+                               form = form,
+                               surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/<participant_id>/fill", methods = ["GET", "POST"])
@@ -438,7 +452,8 @@ def fill_my_draw(tournament_id, participant_id):
                                title = title,
                                tournament = tournament,
                                participant = participant,
-                               form = form)
+                               form = form,
+                               surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/<participant_id>/edit", methods = ["GET", "POST"])
@@ -482,7 +497,8 @@ def edit_my_draw(tournament_id, participant_id):
                                title = title,
                                tournament = tournament,
                                participant = participant,
-                               form = form)
+                               form = form,
+                               surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/<participant_id>")
@@ -502,7 +518,8 @@ def view_participant_draw(tournament_id, participant_id):
     return render_template("tournament/view_participant_draw.html",
                            title = title,
                            tournament = tournament,
-                           participant = participant)
+                           participant = participant,
+                           surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/draw/<participant_id>/last16")
@@ -526,7 +543,8 @@ def view_participant_draw_last16(tournament_id, participant_id):
     return render_template("tournament/view_participant_draw_last16.html",
                            title = title,
                            tournament = tournament,
-                           participant = participant)
+                           participant = participant,
+                           surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/stats/tournament_players", methods = ["GET", "POST"])
@@ -553,7 +571,8 @@ def tournament_player_stats(tournament_id):
                            title = title,
                            tournament = tournament,
                            form = form,
-                           tournament_player = tournament_player)
+                           tournament_player = tournament_player,
+                           surface = tournament.surface.class_name)
 
 
 @bp.route("/<tournament_id>/stats/forecasts")
@@ -571,7 +590,8 @@ def overall_forecasts_stats(tournament_id):
 
     return render_template("tournament/overall_forecasts_stats.html",
                            title = title,
-                           tournament = tournament)
+                           tournament = tournament,
+                           surface = tournament.surface.class_name)
 
 
 @bp.route("/current")
@@ -627,7 +647,8 @@ def scenario_simulator(tournament_id):
                        form = form,
                        scenario = scenario,
                        scores = scores,
-                       simulated_matches = simulated_matches)
+                       simulated_matches = simulated_matches,
+                       surface = tournament.surface.class_name)
 
     else:
         return render_template("tournament/scenario_simulator.html",
@@ -636,5 +657,6 @@ def scenario_simulator(tournament_id):
                                form = form,
                                scenario = scenario,
                                scores = scores,
-                               simulated_matches = simulated_matches)
+                               simulated_matches = simulated_matches,
+                               surface = tournament.surface.class_name)
 

@@ -274,5 +274,19 @@ def import_participant_draws(filename, tournament_id):
         db.session.commit()
 
 
+@manager.command
+def import_surfaces(filename):
+    df = pd.read_csv(filename)
+
+    for i, row in df.iterrows():
+        tournament = Tournament.query.filter(Tournament.name == row["name"]).first()
+        surface = Surface.query.filter(Surface.name == row["surface"]).first()
+
+        tournament.surface_id = surface.id
+        db.session.add(surface)
+        print(tournament.id, surface.name)
+    db.session.commit()
+
+
 if __name__ == "__main__":
     manager.run()

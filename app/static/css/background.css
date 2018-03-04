@@ -1,4 +1,37 @@
-body {
-    background: #83a4d4;
+.main-container {
     padding-top: 70px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.panel, .panel-heading, .alert {
+    border-color: #000000;
+    border-radius: 10px;
+}
+
+.navbar {
+    border-color: #000000;
+}
+
+.btn {
+    border-color: #000000;
+    border-radius: 15px;
+}
+
+
+
+.surface-clay {
+    background: #ffc875;
+}
+
+.surface-grass {
+    background: #b4ffb4;
+}
+
+.surface-hard {
+    background: #b4c8fe;
+}
+
+.default-background {
+    background: #83a4d4;
 }

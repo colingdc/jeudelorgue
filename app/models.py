@@ -2,7 +2,8 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
-from math import log, exp
+from math import log, exp, floor
+import pandas as pd
 from flask import current_app, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -227,6 +228,8 @@ class Tournament(db.Model):
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)
     category_id = db.Column(db.Integer, db.ForeignKey("tournament_categories.id"))
     category = db.relationship("TournamentCategory", foreign_keys = category_id)
+    surface_id = db.Column(db.Integer, db.ForeignKey("surfaces.id"))
+    surface = db.relationship("Surface", foreign_keys = surface_id)
 
     matches = db.relationship("Match", backref = "tournament", lazy = "dynamic")
     participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
@@ -414,6 +417,30 @@ class TournamentCategory(db.Model):
         return [(p.id, p.name) for p in cls.query.order_by(cls.name).all()]
 
 
+class Surface(db.Model):
+    __tablename__ = "surfaces"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default = None)
+
+    name = db.Column(db.String(64))
+    class_name = db.Column(db.String(64))
+
+    @classmethod
+    def get_all_surfaces(cls):
+        return [(p.id, p.name) for p in cls.query.order_by(cls.name).all()]
+
+
+    @staticmethod
+    def insert_surfaces():
+        surfaces = [("Dur", "surface-hard") ("Gazon", "surface-grass"), ("Terre battue", "surface-clay")]
+        for s, c in surfaces:
+            surface = Surface(name = s,
+                              class_name = c)
+            db.session.add(surface)
+        db.session.commit()
+
+
 class Participant(db.Model):
     __tablename__ = "participants"
     id = db.Column(db.Integer, primary_key = True)
@@ -475,15 +502,31 @@ class Participant(db.Model):
             return 0
 
         score_per_round = self.tournament.get_score_per_round()
-        my_forecasts = self.forecasts
-        coeffs = {forecast.match.id: 0 for forecast in my_forecasts}
-        other_participants_forecasts = [p.forecasts for p in self.tournament.participants if p.id != self.id]
 
-        for other_participant_forecasts in other_participants_forecasts:
-            for my_forecast, other_participant_forecast in zip(my_forecasts.order_by(Forecast.match_id), other_participant_forecasts.order_by(Forecast.match_id)):
-                coeffs[my_forecast.match.id] += (my_forecast.winner_id != other_participant_forecast.winner_id) * score_per_round[my_forecast.match.round]
+        query = (db.session.query(Forecast.winner_id.label("participant_winner_id"),
+                                  Forecast.match_id)
+                        .join(Match, Match.id == Forecast.match_id)
+                        .filter(Match.tournament_id == self.tournament.id)
+                        .filter(Forecast.participant_id == self.id)
+                        )
 
-        return sum(coeffs.values()) / (self.tournament.participants.count() - 1)
+        participant_forecasts = pd.read_sql(query.statement, query.session.bind)
+
+        query = (db.session.query(Forecast.participant_id,
+                                 Forecast.winner_id,
+                                 Forecast.match_id,
+                                 Match.round)
+                        .join(Match, Match.id == Forecast.match_id)
+                        .filter(Match.tournament_id == self.tournament.id)
+                        .filter(Forecast.participant_id != self.id)
+                        )
+
+        other_forecasts = pd.read_sql(query.statement, query.session.bind)
+        other_forecasts["match_score"] = other_forecasts["round"].apply(lambda x: score_per_round[x])
+
+        merged = other_forecasts.merge(participant_forecasts, on = "match_id", how = "left")
+        weighted_divergent_forecasts = sum(merged[merged["winner_id"] != merged["participant_winner_id"]]["match_score"])
+        return round(10 * weighted_divergent_forecasts / self.tournament.participants.count())
 
     def get_old_website_draw_url(self):
         return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(self.tournament.old_website_id, self.old_website_id)

@@ -13,6 +13,7 @@ class CreateTournamentForm(FlaskForm):
     jeudelorgue_topic_url = StringField('Lien du topic du jeu de L-orgue sur JVC',
                                        validators = [Optional()])
     category = SelectField(u'Catégorie', coerce = int)
+    surface = SelectField(u'Surface', coerce = int)
     start_date = DateTimeField(u'Date de début',
                                format = "%d/%m/%Y %H:%M",
                                validators = [InputRequired(message = "Ce champ est obligatoire")])
@@ -27,6 +28,8 @@ class EditTournamentForm(FlaskForm):
     jeudelorgue_topic_url = StringField('Lien du topic du jeu de L-orgue sur JVC',
                                        validators = [Optional()])
     category = SelectField(u'Catégorie', coerce = int,
+                           validators = [Optional()])
+    surface = SelectField(u'Surface', coerce = int,
                            validators = [Optional()])
     start_date = DateTimeField(u'Date de début',
                                format = "%d/%m/%Y %H:%M",

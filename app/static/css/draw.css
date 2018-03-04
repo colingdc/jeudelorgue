@@ -10,8 +10,8 @@ main {
   display:flex;
   flex-direction:column;
   justify-content:center;
-  min-width:140px;
-  max-width:140px;
+  min-width:200px;
+  max-width:200px;
   list-style:none;
   padding:0;
 }
@@ -65,7 +65,8 @@ div.game-player{
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 div.game-player:hover {
