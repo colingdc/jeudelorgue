@@ -433,8 +433,8 @@ class Surface(db.Model):
 
     @staticmethod
     def insert_surfaces():
-        surfaces = [("Dur", "surface-hard") ("Gazon", "surface-grass"), ("Terre battue", "surface-clay")]
-        for s, c in surfaces:
+        surfaces = [("Dur", "surface-hard"), ("Gazon", "surface-grass"), ("Terre battue", "surface-clay")]
+        for (s, c) in surfaces:
             surface = Surface(name = s,
                               class_name = c)
             db.session.add(surface)

@@ -28,8 +28,6 @@
 
 {% block body %}
 
-<div class="main-container {% if surface %}{{ surface }}{% else %}default-background{% endif %}">
-
 {% block navbar %}
 <nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
     <div class="container-fluid">
@@ -150,7 +148,7 @@
 </nav>
 {% endblock %}
 
-<div class="container-fluid">
+<div class="container-fluid main-container">
     {% for category, message in get_flashed_messages(with_categories=True) %}
         <div class="alert alert-{{ category }} alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -158,8 +156,6 @@
         </div>
     {% endfor %}
     {% block content %}{% endblock %}
-</div>
-
 </div>
 
 <script src="{{ url_for('static', filename='bower_components/moment/min/moment.min.js') }}"></script>

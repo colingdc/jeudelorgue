@@ -1,5 +1,9 @@
-.main-container {
+body {
     padding-top: 70px;
+    background: #83a4d4;
+}
+
+.main-container {
     padding-left: 100px;
     padding-right: 100px;
 }
