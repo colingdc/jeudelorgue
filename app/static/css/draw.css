@@ -4,14 +4,19 @@
 main {
   display:flex;
   flex-direction:row;
+  position: center;
+}
+
+.panel-body {
+  position: center;
 }
 
 .round {
   display:flex;
   flex-direction:column;
   justify-content:center;
-  min-width:200px;
-  max-width:200px;
+  min-width:140px;
+  max-width:140px;
   list-style:none;
   padding:0;
 }
@@ -65,7 +70,7 @@ div.game-player{
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 

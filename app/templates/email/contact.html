@@ -1,9 +1,11 @@
 <p>Bonjour,</p>
 
-<p>Vous avez un nouveau message de la part de <strong>{{ user.username }}</strong> : </p>
+<p>Vous avez un nouveau message de la part {% if user %}de <strong>{{ user.username }}</strong>{% else %}d'un utilisateur non connecté{% endif %} : </p>
 
 <p style="white-space: pre-line;">{{ message }}</p>
 
+{% if user %}
 <p>Lui répondre : {{ user.email }}</p>
+{% endif %}
 
 <em>L'équipe du Jeu de L-orgue</em>

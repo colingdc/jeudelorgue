@@ -31,8 +31,8 @@
                             <a href= '{{ url_for("tournament.view_tournament", tournament_id = participant.tournament.id, _external = True) }}'>
                             {{ participant.tournament.name }}</a>
                         </td>
-                        <td>{{ participant.ranking }} / {{ participant.tournament.participants.all() | length }}</td>
-                        <td>{{ participant.score }} / {{ participant.tournament.get_current_maximal_score() }}</td>
+                        <td>{{ participant.ranking }} / {{ participant.tournament.participants.count() }}</td>
+                        <td>{{ participant.score }} / {{ participant.tournament.maximal_score }}</td>
                         <td>{{ participant.points }}</td>
                     </tr>
                 {% endfor %}

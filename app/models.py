@@ -226,6 +226,9 @@ class Tournament(db.Model):
     started_at = db.Column(db.DateTime)
     ended_at = db.Column(db.DateTime, default = None)
     status = db.Column(db.Integer, default = TournamentStatus.CREATED)
+    maximal_score = db.Column(db.Integer)
+    current_maximal_score = db.Column(db.Integer, default = 0)
+
     category_id = db.Column(db.Integer, db.ForeignKey("tournament_categories.id"))
     category = db.relationship("TournamentCategory", foreign_keys = category_id)
     surface_id = db.Column(db.Integer, db.ForeignKey("surfaces.id"))
@@ -294,6 +297,19 @@ class Tournament(db.Model):
                     for round in range(1, self.number_rounds + 1)}
         return {round: 2 ** (self.number_rounds - round - 1) if round < self.number_rounds else 1
                 for round in range(1, self.number_rounds + 1)}
+
+    def get_maximal_score(self):
+        score_per_round = self.get_score_per_round()
+        score = 0
+        for match in self.matches:
+            if match.tournament_player1 and match.tournament_player1.player and match.tournament_player1.player.last_name == "Bye":
+                continue
+            if match.tournament_player2 and match.tournament_player2.player and match.tournament_player2.player.last_name == "Bye":
+                continue
+            match_score = score_per_round[match.round]
+            score += match_score
+        return score
+
 
     def get_current_maximal_score(self):
         score_per_round = self.get_score_per_round()

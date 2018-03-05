@@ -3,10 +3,6 @@ body {
     background: #83a4d4;
 }
 
-.main-container {
-    padding-left: 100px;
-    padding-right: 100px;
-}
 
 .panel, .panel-heading, .alert {
     border-color: #000000;
@@ -21,7 +17,6 @@ body {
     border-color: #000000;
     border-radius: 15px;
 }
-
 
 
 .surface-clay {

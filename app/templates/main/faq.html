@@ -9,7 +9,48 @@
     </div>
 
     <div class="panel-body">
+
+        <ul>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+                J'avais déjà un compte sur <a href="http://www.jeudelorgue.raidghost.com" target="_blank">l'ancien site</a>, est-ce que je peux le récupérer ?</h4>
+                <p>Si vous aviez déjà un compte sur l'ancien site, vous n'avez pas besoin de recréer un compte, vous pouvez <a href="{{ url_for('auth.login') }}">vous connecter</a> avec vos anciens identifiants (pseudo et mot de passe).</p>
+                <p>Si vous avez oublié votre mot de passe, vous pouvez le récupérer facilement sur <a href="http://www.jeudelorgue.raidghost.com" target="_blank">l'ancien site</a>.</p>
+                <p>En dernier recours, vous pouvez demander à l'admin d'activer votre compte et de vous communiquer votre mot de passe <a href="http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=olaflebataf" target="_blank">par MP sur le forum</a>.</p>
+            </li>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Comment participer à un tournoi ?</h4>
+               <p>Sur la page du tournoi, cliquez sur "M'inscrire".</p>
+            </li>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Comment remplir mon tableau ?</h4>
+               <p>Une fois inscrit au tournoi, cliquez sur "Remplir mon tableau". Pour pronostiquer de chaque match, cliquez sur le nom du joueur qui va l'emporter selon vous. Une fois que vous avez pronostiqué tous les matchs, cliquez sur "Valider".</p>
+            </li>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Qu'est ce que le coefficient de risque ?</h4>
+               <p>Le coefficient de risque est un indicateur qui sert à départager les participants en favorisant ceux qui ont pris le plus de risque, c'est-à-dire qui ont fait des pronostics différents des autres participants.</p>
+               <p>Pour un participant donné, il est calculé en faisant la somme (match par match, pondérée par le nombre de points en jeu sur le match) des participants ayant fait le même pronostic.</p>
+               <p>Plus votre coefficient de risque est faible, mieux vous serez placé en cas d'égalité.</p>
+            </li>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               Comment les points ATP sont-ils attribués ?</h4>
+               <p>Les points sont attribués à la fin du tournoi en fonction de 3 éléments :</p>
+                <ul>
+                  <li>Le nombre de points attribué au vainqueur (1000 pour un ATP 1000, 2000 pour un Grand Chelem)</li>
+                  <li>Le nombre de points attribué au dernier (5 pour un ATP 1000, 10 pour un Grand Chelem)</li>
+                  <li>Le nombre de participants au tournoi.</li>
+                </ul>
+              <p>Les points attibués aux joueurs entre la 1ère et la dernière place suivent une exponentielle décroissante.</p>
+            </li>
+
+        </ul>
+
         {% if current_user.is_manager() %}
+        <h4>FAQ du manager de tournois</h4>
         <ul>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
@@ -52,37 +93,7 @@
         </ul>
 
         {% endif %}
-        <ul>
-            <li>
-               <h4><span class="fa fa-chevron-right"></span>
-               Comment participer à un tournoi ?</h4>
-               <p>Sur la page du tournoi, cliquez sur "M'inscrire".</p>
-            </li>
-            <li>
-               <h4><span class="fa fa-chevron-right"></span>
-               Comment remplir mon tableau ?</h4>
-               <p>Une fois inscrit au tournoi, cliquez sur "Remplir mon tableau". Pour pronostiquer de chaque match, cliquez sur le nom du joueur qui va l'emporter selon vous. Une fois que vous avez pronostiqué tous les matchs, cliquez sur "Valider".</p>
-            </li>
-            <li>
-               <h4><span class="fa fa-chevron-right"></span>
-               Qu'est ce que le coefficient de risque ?</h4>
-               <p>Le coefficient de risque est un indicateur qui sert à départager les participants en favorisant ceux qui ont pris le plus de risque, c'est-à-dire qui ont fait des pronostics différents des autres participants.</p>
-               <p>Pour un participant donné, il est calculé en faisant la somme (match par match, pondérée par le nombre de points en jeu sur le match) des participants ayant fait le même pronostic.</p>
-               <p>Plus votre coefficient de risque est faible, mieux vous serez placé en cas d'égalité.</p>
-            </li>
-            <li>
-               <h4><span class="fa fa-chevron-right"></span>
-               Comment les points ATP sont-ils attribués ?</h4>
-               <p>Les points sont attribués à la fin du tournoi en fonction de 3 éléments :</p>
-                <ul>
-                  <li>Le nombre de points attribué au vainqueur (1000 pour un ATP 1000, 2000 pour un Grand Chelem)</li>
-                  <li>Le nombre de points attribué au dernier (5 pour un ATP 1000, 10 pour un Grand Chelem)</li>
-                  <li>Le nombre de participants au tournoi.</li>
-                </ul>
-              <p>Les points attibués aux joueurs entre la 1ère et la dernière place suivent une exponentielle décroissante.</p>
-            </li>
 
-        </ul>
     </div>
 </div>
 

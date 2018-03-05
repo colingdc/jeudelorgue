@@ -241,6 +241,9 @@ def create_tournament_draw(tournament_id):
             db.session.add(match)
             db.session.commit()
 
+            tournament.maximal_score = tournament.get_maximal_score()
+            db.session.add(tournament)
+            db.session.commit()
 
         flash("Le tableau du tournoi {} a été créé".format(tournament.name), "info")
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
@@ -304,6 +307,11 @@ def edit_tournament_draw(tournament_id):
             db.session.add(t1)
             db.session.add(t2)
             db.session.commit()
+
+            tournament.maximal_score = tournament.get_maximal_score()
+            db.session.add(tournament)
+            db.session.commit()
+
 
         flash("Le tableau du tournoi {} a été modifié".format(tournament.name), "info")
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
@@ -394,6 +402,10 @@ def update_tournament_draw(tournament_id):
         for rank, participant in enumerate(tournament.participants_sorted()):
             participant.ranking = rank + 1
             db.session.add(participant)
+        db.session.commit()
+
+        tournament.current_maximal_score = tournament.get_current_maximal_score()
+        db.session.add(tournament)
         db.session.commit()
 
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))

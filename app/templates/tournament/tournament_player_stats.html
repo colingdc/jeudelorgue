@@ -72,7 +72,7 @@
                 <tr>
                     <th>#</th>
                     <th>Participant</th>
-                    <th>Score / {{ tournament.get_current_maximal_score() }}</th>
+                    <th>Score / {{ tournament.current_maximal_score }}</th>
                     {% for name in tournament.get_round_names() %}
                     <th>{{ name }}</th>
                     {% endfor %}

@@ -18,7 +18,7 @@
                     <div class="form-group {% if form.username.errors %} has-error {% endif %}">
                         {{form.username.label()}}
                         <div>
-                            {{form.username(placeholder="Pseudo", class="form-control")}}
+                            {{form.username(class="form-control")}}
                         </div>
                         <p class="help-block">
                             {{ form.username.errors[0] }}
@@ -49,6 +49,7 @@
                                 Créer un compte
                             </a>
                         </span>
+                        <br>
                         <span class="pull-right">
                             Mot de passe oublié ?
                             <a href="{{ url_for('auth.reset_password_request') }}">

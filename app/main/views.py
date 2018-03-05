@@ -92,14 +92,17 @@ def edit_profile_admin(user_id):
 
 
 @bp.route("/contact", methods = ['GET', 'POST'])
-@login_required
 def contact():
     title = "Contact"
     form = ContactForm()
     if form.validate_on_submit():
         message = form.message.data
+        if current_user:
+            sender = current_user.username
+        else:
+            sender = "un utilisateur non connecté"
         send_email(to = current_app.config["ADMIN_JDL"],
-                   subject = "Nouveau message de la part de {}".format(current_user.username),
+                   subject = "Nouveau message de la part de {}".format(sender),
                    template = "email/contact",
                    message = message,
                    user = current_user)

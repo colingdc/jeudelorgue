@@ -262,7 +262,7 @@
                             {% else %}
                                 <th>Tableau</th>
                             {% endif %}
-                            <th>Score / {{ tournament.get_current_maximal_score() }}</th>
+                            <th>Score / {{ tournament.current_maximal_score }}</th>
                             <th>Coefficient de risque</th>
                             {% if tournament.is_finished() %}
                                 <th>Points ATP attribués</th>
