@@ -471,7 +471,7 @@ class Participant(db.Model):
     deleted_at = db.Column(db.DateTime, default = None)
     matches_not_forecasted = db.Column(db.Integer, default = None)
     score = db.Column(db.Integer, default = 0)
-    risk_coefficient = db.Column(db.Integer, default = 0)
+    risk_coefficient = db.Column(db.Float, default = 0)
     points = db.Column(db.Integer, default = 0)
     ranking = db.Column(db.Integer, default = None)
 
@@ -549,7 +549,7 @@ class Participant(db.Model):
 
         merged = other_forecasts.merge(participant_forecasts, on = "match_id", how = "left")
         weighted_divergent_forecasts = sum(merged[merged["winner_id"] != merged["participant_winner_id"]]["match_score"])
-        return round(10 * weighted_divergent_forecasts / self.tournament.participants.count())
+        return weighted_divergent_forecasts / self.tournament.participants.count()
 
     def get_old_website_draw_url(self):
         return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(self.tournament.old_website_id, self.old_website_id)
