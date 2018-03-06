@@ -137,13 +137,14 @@ def compute_all_rankings():
 
 
 @manager.command
-def import_tournament_draws(filename):
+def import_tournament_draws(filename, tournament_id):
     bye = Player.query.filter(Player.last_name == "Bye").filter(Player.deleted_at.is_(None)).first()
     df = pd.read_csv(filename)
     df = df.dropna(subset = ["player_name"])
     df.fillna("", inplace = True)
 
     df = df[df["username"] == ""]
+    df = df[df["tournament_id"] == int(tournament_id)]
 
     for i, group in df.groupby("tournament_id"):
         print("-" * 50)
@@ -178,24 +179,24 @@ def import_tournament_draws(filename):
 
             if r == 1:
                 pass
-                # t = TournamentPlayer(player_id = player_id,
-                #                      seed = seed,
-                #                      status = status,
-                #                      position = (1 + row["position"]) % 2,
-                #                      tournament_id = tournament.id)
-                # # Add tournament player
-                # db.session.add(t)
-                # db.session.commit()
+                t = TournamentPlayer(player_id = player_id,
+                                     seed = seed,
+                                     status = status,
+                                     position = (1 + row["position"]) % 2,
+                                     tournament_id = tournament.id)
+                # Add tournament player
+                db.session.add(t)
+                db.session.commit()
 
-                # match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
+                match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
 
-                # if row["position"] % 2 == 1:
-                #     match.tournament_player1_id = t.id
-                # else:
-                #     match.tournament_player2_id = t.id
+                if row["position"] % 2 == 1:
+                    match.tournament_player1_id = t.id
+                else:
+                    match.tournament_player2_id = t.id
 
-                # db.session.add(match)
-                # db.session.commit()
+                db.session.add(match)
+                db.session.commit()
 
             elif r <= tournament.number_rounds:
                 match = Match.query.filter(Match.position == position).filter(Match.tournament_id == tournament.id).first()
