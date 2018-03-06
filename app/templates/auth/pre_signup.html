@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="alert alert-warning">
+    <p>Si vous aviez déjà un compte sur <a href="http://www.jeudelorgue.raidghost.com" target="_blank">l'ancien site</a>, vous n'avez pas besoin de recréer un compte, vous pouvez <a href="{{ url_for('auth.login') }}">vous connecter</a> avec vos anciens identifiants (pseudo et mot de passe).</p>
+    <p>Si vous avez oublié votre mot de passe, vous pouvez le récupérer facilement sur <a href="http://www.jeudelorgue.raidghost.com" target="_blank">l'ancien site</a>.</p>
+    <p>En dernier recours, vous pouvez demander à l'admin d'activer votre compte et de vous communiquer votre mot de passe <a href="http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=olaflebataf" target="_blank">par MP sur le forum</a>.</p>
+
+</div>
+
+<div class="jumbotron bg-primary">
+
+    <div class="text-center">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-success" role="button">
+                    J'avais déjà un compte sur l'ancien site</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-success" role="button">
+                    Je suis nouveau et je souhaite créer un nouveau compte</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -13,6 +13,11 @@ from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN, OLD_ACCOUNT_P
 from ..email import send_email
 
 
+@bp.route("/pre_signup")
+def pre_signup():
+    title = "Inscription"
+    return render_template("auth/pre_signup.html", title = title)
+
 @bp.route("/signup", methods = ["GET", "POST"])
 def signup():
     title = "Inscription"
