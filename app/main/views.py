@@ -55,7 +55,7 @@ def view_users():
                   .filter(User.deleted_at == None)
                   .paginate(page, per_page = current_app.config["USERS_PER_PAGE"], error_out = False))
     return render_template("main/view_users.html", title = title,
-                           pagination = pagination)
+                           pagination = pagination, page_start_index = (page - 1) * current_app.config["USERS_PER_PAGE"])
 
 @bp.route("/user/validated")
 @manager_required
@@ -67,7 +67,7 @@ def view_validated_users():
                   .filter(User.confirmed)
                   .paginate(page, per_page = current_app.config["USERS_PER_PAGE"], error_out = False))
     return render_template("main/view_users.html", title = title,
-                           pagination = pagination)
+                           pagination = pagination, page_start_index = (page - 1) * current_app.config["USERS_PER_PAGE"])
 
 
 @bp.route("/faq")

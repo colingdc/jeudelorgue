@@ -16,20 +16,24 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Pseudo</th>
                     {% if current_user.is_administrator() %}<th>Email</th>{% endif %}
                     <th>Role</th>
                     <th>Compte confirmé</th>
+                    <th>Ancien compte</th>
                     <th>Tournois joués</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in pagination.items %}
                     <tr>
+                        <td>{{ page_start_index + loop.index }}</td>
                         <td><a href="{{ url_for('main.view_user', user_id = user.id) }}">{{ user.username }}</a></td>
                         {% if current_user.is_administrator() %}<td>{{ user.email }}</td>{% endif %}
                         <td>{{ user.role }}</td>
                         <td>{% if user.confirmed %}Oui{% else %}Non{% endif %}</td>
+                        <td>{% if user.is_old_account %}Oui{% else %}Non{% endif %}</td>
                         <td>{{ user.participants.count() }}</td>
                     </tr>
                 {% endfor %}
