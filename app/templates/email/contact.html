@@ -1,10 +1,10 @@
 <p>Bonjour,</p>
 
-<p>Vous avez un nouveau message de la part {% if user %}de <strong>{{ user.username }}</strong>{% else %}d'un utilisateur non connecté{% endif %} : </p>
+<p>Vous avez un nouveau message de la part {% if not user.is_anonymous() %}de <strong>{{ user.username }}</strong>{% else %}d'un utilisateur non connecté{% endif %} : </p>
 
 <p style="white-space: pre-line;">{{ message }}</p>
 
-{% if user %}
+{% if not user.is_anonymous() %}
 <p>Lui répondre : {{ user.email }}</p>
 {% endif %}
 

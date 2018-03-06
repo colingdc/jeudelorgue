@@ -39,6 +39,10 @@ class User(UserMixin, db.Model):
             if self.role is None:
                 self.role = Role.query.filter_by(default = True).first()
 
+
+    def is_anonymous(self):
+        return False
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -164,6 +168,9 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_manager(self):
         return False
+
+    def is_anonymous(self):
+        return True
 
 
 login_manager.anonymous_user = AnonymousUser
