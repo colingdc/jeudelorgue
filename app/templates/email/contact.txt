@@ -7,3 +7,15 @@ Vous avez un nouveau message de la part de {{ user.username }} :
 Lui répondre : {{ user.email }}
 
 L'équipe du Jeu de L-orgue
+
+Bonjour,
+
+Vous avez un nouveau message de la part {% if not user.is_anonymous() %}de {{ user.username }}{% else %}d'un utilisateur non connecté{% endif %} :
+
+{{ message }}
+
+{% if not user.is_anonymous() %}
+Lui répondre : {{ user.email }}
+{% endif %}
+
+L'équipe du Jeu de L-orgue
