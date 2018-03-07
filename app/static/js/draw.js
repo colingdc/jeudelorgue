@@ -45,11 +45,6 @@ function fill_next_round(event, match_position, player_position) {
     update_json();
 }
 
-match_position=3
-player_position=0
-origin_id = "#player-" + match_position + "-" + player_position;
-other_player_id = "#player-" + match_position + "-1"
-other_tournament_player_id = $(other_player_id).attr("tournament_player_id")
 
 function update_json() {
     var res = {};
