@@ -218,16 +218,33 @@ def create_tournament_draw(tournament_id):
         p.player2_name.choices = player_names
 
     if form.validate_on_submit():
+        qualifier_count = 0
         for match, p in zip(matches, form.player):
-            t1 = TournamentPlayer(player_id = p.data["player1_name"] if p.data["player1_name"] >= 0 else None,
+            if p.data["player1_name"] >= 0:
+                player_id = p.data["player1_name"]
+                qualifier_id = None
+            else:
+                player_id = None
+                qualifier_count += 1
+                qualifier_id = qualifier_count
+            t1 = TournamentPlayer(player_id = player_id,
                                   seed = p.data["player1_seed"],
                                   status = p.data["player1_status"],
                                   position = 0,
+                                  qualifier_id = qualifier_id,
                                   tournament_id = tournament_id)
-            t2 = TournamentPlayer(player_id = p.data["player2_name"] if p.data["player2_name"] >= 0 else None,
+            if p.data["player2_name"] >= 0:
+                player_id = p.data["player2_name"]
+                qualifier_id = None
+            else:
+                player_id = None
+                qualifier_count += 1
+                qualifier_id = qualifier_count
+            t2 = TournamentPlayer(player_id = player_id,
                                   seed = p.data["player2_seed"],
                                   status = p.data["player2_status"],
                                   position = 1,
+                                  qualifier_id = qualifier_id,
                                   tournament_id = tournament_id)
 
             # Add tournament players
@@ -292,16 +309,35 @@ def edit_tournament_draw(tournament_id):
             p.player2_seed.data = match.tournament_player2.seed
 
     if form.validate_on_submit():
+        qualifier_count = 0
         for match, p in zip(matches, form.player):
+            if p.data["player1_name"] >= 0:
+                player_id = p.data["player1_name"]
+                qualifier_id = None
+            else:
+                player_id = None
+                qualifier_count += 1
+                qualifier_id = qualifier_count
+
             t1 = match.tournament_player1
-            t1.player_id = p.data["player1_name"] if p.data["player1_name"] >= 0 else None
+            t1.player_id = player_id
             t1.seed = p.data["player1_seed"]
             t1.status = p.data["player1_status"]
+            t1.qualifier_id = qualifier_id
+
+            if p.data["player2_name"] >= 0:
+                player_id = p.data["player2_name"]
+                qualifier_id = None
+            else:
+                player_id = None
+                qualifier_count += 1
+                qualifier_id = qualifier_count
 
             t2 = match.tournament_player2
-            t2.player_id = p.data["player2_name"] if p.data["player2_name"] >= 0 else None
+            t2.player_id = player_id
             t2.seed = p.data["player2_seed"]
             t2.status = p.data["player2_status"]
+            t2.qualifier_id = qualifier_id
 
             # Add tournament players
             db.session.add(t1)

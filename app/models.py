@@ -629,6 +629,7 @@ class TournamentPlayer(db.Model):
 
     seed = db.Column(db.Integer)
     status = db.Column(db.String(8))
+    qualifier_id = db.Column(db.Integer)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     position = db.Column(db.Integer)
@@ -653,7 +654,7 @@ class TournamentPlayer(db.Model):
         if self.player:
             full_name += self.player.get_draw_name()
         else:
-            full_name += u"Qualifié " + str(self.id)
+            full_name += u"Qualifié " + str(self.qualifier_id)
         return full_name
 
     def is_eliminated(self):
