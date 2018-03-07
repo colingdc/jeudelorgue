@@ -167,6 +167,7 @@
                                 <div id="player-0-1"
                                     class="game game-player"
                                     tournament_player_id="{{ match.winner_id }}"
+                                    match_position_id="0"
                                     onclick="fill_next_round(event, 0, 1)">
                                     {% if forecast.winner %}
                                         {{ forecast.winner.get_full_name() | truncate(35) }}
