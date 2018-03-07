@@ -87,7 +87,7 @@ def login():
         session["username"] = user.username
         flash(LOGIN_SUCCESSFUL, "success")
 
-        if user.is_old_account:
+        if user.is_old_account and not user.confirmed:
             flash(OLD_ACCOUNT_PASSWORD_CHANGE, "info")
             return redirect(url_for(".change_password"))
 

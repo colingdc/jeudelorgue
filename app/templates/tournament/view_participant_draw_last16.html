@@ -174,8 +174,7 @@
                                     {% else %}
                                         <div id="player-0-1"
                                             class="game game-player"
-                                            tournament_player_id="{{ forecast.winner_id }}"
-                                            match_position_id="{{ next_match.position }}">
+                                            tournament_player_id="{{ forecast.winner_id }}">
                                                 {{ forecast.winner.get_full_name() | truncate(35) }}
                                         </div>
                                     {% endif %}
@@ -184,8 +183,7 @@
                                 <div class="round last-round">
                                     <div id="player-0-1"
                                         class="game game-player"
-                                        tournament_player_id="None"
-                                        match_position_id="{{ next_match.position }}">
+                                        tournament_player_id="None">
                                     </div>
                                 </div>
                             {% endif %}
