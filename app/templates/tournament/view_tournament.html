@@ -269,13 +269,13 @@
                         <tr>
                             <th>#</th>
                             <th>Participant</th>
+                            <th>Score / {{ tournament.current_maximal_score }}</th>
+                            <th>Coefficient de risque</th>
                             {% if tournament.are_draws_private() %}
                                 <th>Tableau complet</th>
                             {% else %}
                                 <th>Tableau</th>
                             {% endif %}
-                            <th>Score / {{ tournament.current_maximal_score }}</th>
-                            <th>Coefficient de risque</th>
                             {% if tournament.is_finished() %}
                                 <th>Points ATP attribués</th>
                             {% endif %}
@@ -285,11 +285,13 @@
                         {% for participant in tournament.participants_sorted() %}
                             {% if not tournament.are_draws_private() %}
                                 <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td>
+                                    <th>{{ loop.index }}</th>
+                                    <th>
                                         <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                         {{ participant.user.username }}</a>
-                                    </td>
+                                    </th>
+                                    <td>{{ participant.score }}</td>
+                                    <td>{{ participant.risk_coefficient | int }}</td>
                                     <td>
                                         <a href= '{{ url_for(".view_participant_draw", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>
                                         Entier</a>
@@ -301,8 +303,6 @@
                                         <a target="_blank" href= '{{ participant.get_old_website_draw_url() }}'> / Sur l'ancien site</a>
                                         {% endif %}
                                     </td>
-                                    <td>{{ participant.score }}</td>
-                                    <td>{{ participant.risk_coefficient | int }}</td>
                                     {% if tournament.is_finished() %}
                                         <td>{{ participant.points }}</td>
                                     {% endif %}
