@@ -305,6 +305,10 @@ class Tournament(db.Model):
         return {round: 2 ** (self.number_rounds - round - 1) if round < self.number_rounds else 1
                 for round in range(1, self.number_rounds + 1)}
 
+    def get_risk_coefficient_per_round(self):
+        return {round: 2 ** (self.number_rounds - round)
+                    for round in range(1, self.number_rounds + 1)}
+
     def get_maximal_score(self):
         score_per_round = self.get_score_per_round()
         score = 0
@@ -524,7 +528,7 @@ class Participant(db.Model):
         if self.tournament.participants.count() < 2:
             return 0
 
-        score_per_round = self.tournament.get_score_per_round()
+        score_per_round = self.tournament.get_risk_coefficient_per_round()
 
         query = (db.session.query(Forecast.winner_id.label("participant_winner_id"),
                                   Forecast.match_id)
