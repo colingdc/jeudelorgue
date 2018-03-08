@@ -25,6 +25,7 @@ class Config:
     CATEGORIES_PER_PAGE = 100
     SLOW_DB_QUERY_TIME = 0.5
     BABEL_DEFAULT_LOCALE = "fr"
+    WTF_CSRF_TIME_LIMIT = 3600 * 6
 
     @staticmethod
     def init_app(app):

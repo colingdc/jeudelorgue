@@ -25,6 +25,16 @@ def page_not_found(e):
     return render_template('errors/404.html'), 404
 
 
+@bp.app_errorhandler(400)
+def forbidden(e):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'bad request'})
+        response.status_code = 400
+        return response
+    current_app.logger.error('Bad request: %s', (request.path))
+    return render_template('errors/500.html'), 400
+
+
 @bp.app_errorhandler(500)
 def internal_server_error(e):
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
