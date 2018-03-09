@@ -103,11 +103,18 @@
                                             </div>
                                         {% else %}
                                             <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
-                                                class="game game-player {{ first_round }}"
+                                                class="game game-player {{ first_round }} to_hide"
                                                 tournament_player_id="{{ forecast.winner_id }}"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">
                                                     {{ forecast.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                style="display: none"
+                                                class="game game-player {{ first_round }} to_show"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                match_id="{{ next_match.id }}">
                                             </div>
                                         {% endif %}
 
@@ -173,9 +180,14 @@
                                         </div>
                                     {% else %}
                                         <div id="player-0-1"
-                                            class="game game-player"
+                                            class="game game-player to_hide"
                                             tournament_player_id="{{ forecast.winner_id }}">
                                                 {{ forecast.winner.get_full_name() | truncate(35) }}
+                                        </div>
+                                        <div id="player-0-1"
+                                            style="display: none"
+                                            class="game game-player to_show"
+                                            tournament_player_id="{{ forecast.winner_id }}">
                                         </div>
                                     {% endif %}
                                 </div>

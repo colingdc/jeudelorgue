@@ -114,11 +114,11 @@
                                 {% if not current_tournament.are_draws_private() %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
-                                        <td>
+                                        <th>
                                             <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                             {{ participant.user.username }}</a>
-                                        </td>
-                                        <td>{{ participant.score }}</td>
+                                        </th>
+                                        <th>{{ participant.score }}</th>
                                         <td>{{ participant.risk_coefficient | int }}</td>
                                         {% if current_tournament.is_finished() %}
                                             <td>{{ participant.points }}</td>
