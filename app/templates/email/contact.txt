@@ -14,8 +14,8 @@ Vous avez un nouveau message de la part {% if not user.is_anonymous() %}de {{ us
 
 {{ message }}
 
-{% if not user.is_anonymous() %}
-Lui répondre : {{ user.email }}
+{% if email %}
+Il a souhaité recevoir une réponse à l'adresse suivante : {{ email }}
+{% else %}
+Il n'a pas spécifié d'adresse email de contact. Adresse par défaut : {{ user.email }}
 {% endif %}
-
-L'équipe du Jeu de L-orgue

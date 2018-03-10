@@ -118,6 +118,7 @@ def contact():
                    subject = "Nouveau message de la part de {}".format(sender),
                    template = "email/contact",
                    message = message,
+                   email = form.email.data,
                    user = current_user)
         flash(u"Votre message a bien été envoyé.", "info")
         return redirect(url_for(".contact"))

@@ -4,8 +4,8 @@
 
 <p style="white-space: pre-line;">{{ message }}</p>
 
-{% if not user.is_anonymous() %}
-<p>Lui répondre : {{ user.email }}</p>
+{% if email %}
+<p>Il a souhaité recevoir une réponse à l'adresse suivante : {{ email }}</p>
+{% else %}
+<p>Il n'a pas spécifié d'adresse email de contact. Adresse par défaut : {{ user.email }}</p>
 {% endif %}
-
-<em>L'équipe du Jeu de L-orgue</em>

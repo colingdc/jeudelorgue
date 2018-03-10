@@ -2,7 +2,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SubmitField, SelectField, TextAreaField
-from wtforms.validators import DataRequired, Email, Length, ValidationError
+from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
 from ..texts import VALIDATION, EMAIL_ALREADY_TAKEN, USERNAME_ALREADY_TAKEN
 from ..models import User, Role
 
@@ -34,5 +34,8 @@ class EditProfileAdminForm(FlaskForm):
 
 
 class ContactForm(FlaskForm):
-    message = TextAreaField("Message", validators = [DataRequired(), Length(max = 1000)])
+    email = StringField(u'Email (si vous souhaitez recevoir une réponse)', validators = [Optional(),
+                                               Length(1, 64),
+                                               Email()])
+    message = TextAreaField("Message *", validators = [DataRequired(), Length(max = 1000)])
     submit = SubmitField(VALIDATION)
