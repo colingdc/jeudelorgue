@@ -111,6 +111,7 @@
                                             <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
                                                 class="game game-player {{ first_round }} to_hide"
                                                 tournament_player_id="{{ forecast.winner_id }}"
+                                                onmouseenter="show_real_winners()"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">
                                                     {{ forecast.winner.get_full_name() | truncate(35) }}
@@ -119,6 +120,7 @@
                                                 style="display: none"
                                                 class="game game-player {{ first_round }} to_show"
                                                 tournament_player_id="{{ forecast.winner_id }}"
+                                                onmouseleave="hide_real_winners()"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">
                                             </div>
