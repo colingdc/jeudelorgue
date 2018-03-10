@@ -722,6 +722,10 @@ class Match(db.Model):
                  .all())
         return matches
 
+    def has_bye(self):
+         return ((self.tournament_player1.player and self.tournament_player1.player.last_name == "Bye")
+            or (self.tournament_player2.player and self.tournament_player2.player.last_name == "Bye"))
+
 
 class Forecast(db.Model):
     __tablename__ = "forecasts"

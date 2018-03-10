@@ -101,7 +101,15 @@
                                 {% with forecast = match.get_forecast(participant.id) %}
                                     {% if forecast and forecast.winner %}
 
-                                        {% if match.winner and (match.winner_id != forecast.winner.id) %}
+                                        {% if match.has_bye() %}
+                                            <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
+                                                class="game game-player match"
+                                                tournament_player_id="{{ forecast.winner_id }}"
+                                                match_position_id="{{ next_match.position }}"
+                                                match_id="{{ next_match.id }}">
+                                                    {{ forecast.winner.get_full_name() | truncate(35) }}
+                                            </div>
+                                        {% elif match.winner and (match.winner_id != forecast.winner.id) %}
                                             <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
                                                 class="game game-player incorrect_forecast match to_hide"
                                                 tournament_player_id="{{ forecast.winner_id }}"
