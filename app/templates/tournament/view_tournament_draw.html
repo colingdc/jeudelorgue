@@ -51,7 +51,8 @@
                     {% for match in round["matches"] %}
 
                         <div id="player-{{ match.position }}-0"
-                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}">
+                            class="game game-player match {% if round['first_round'] %}first-round non-forecasted
+                            {% elif match.get_previous_match(0).has_bye() %}non-forecasted{% endif %}">
                             {% if match.tournament_player1_id %}
                                 {{ match.tournament_player1.get_full_name() | truncate(35) }}
                             {% else %}
@@ -64,7 +65,8 @@
                         </div>
 
                         <div id="player-{{ match.position }}-1"
-                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}">
+                            class="game game-player match {% if round['first_round'] %}first-round non-forecasted
+                            {% elif match.get_previous_match(1).has_bye() %}non-forecasted{% endif %}">
                             {% if match.tournament_player2_id %}
                                 {{ match.tournament_player2.get_full_name() | truncate(35) }}
                             {% else %}

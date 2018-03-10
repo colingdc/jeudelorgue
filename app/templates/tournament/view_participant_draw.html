@@ -23,6 +23,10 @@
     </div>
 
     <div class="panel-body" style ="overflow-x:scroll">
+        <div class="alert alert-info">
+            <p>Astuce : pour comparer ce tableau de pronostics avec le tableau réel, passez la souris sur un pronostic incorrect (case rouge)</p>
+        </div>
+
         <main id="round-names">
             {% for round in tournament.get_matches_by_round() %}
                 <div class="round">
@@ -48,7 +52,7 @@
 
                     {% for match in matches %}
                         <div id="player-{{ match.position }}-0"
-                            class="game game-player match first-round"
+                            class="game game-player match first-round non-forecasted"
                             tournament_player_id="{{ match.tournament_player1_id }}"
                             match_position_id="{{ match.position }}"
                             match_id="{{ match.id }}">
@@ -64,7 +68,7 @@
                         </div>
 
                         <div id="player-{{ match.position }}-1"
-                            class="game game-player match first-round"
+                            class="game game-player match first-round non-forecasted"
                             tournament_player_id="{{ match.tournament_player2_id }}"
                             match_position_id="{{ match.position }}"
                             match_id="{{ match.id }}">
@@ -103,7 +107,7 @@
 
                                         {% if match.has_bye() %}
                                             <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
-                                                class="game game-player match"
+                                                class="game game-player match non-forecasted"
                                                 tournament_player_id="{{ forecast.winner_id }}"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">

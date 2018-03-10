@@ -713,6 +713,15 @@ class Match(db.Model):
                  .first())
         return match
 
+    def get_previous_match(self, position):
+        if self.round == self.tournament.number_rounds:
+            return None
+        match = (Match.query
+                 .filter(Match.tournament_id == self.tournament_id)
+                 .filter(Match.position == 2 * self.position + position)
+                 .first())
+        return match
+
     def get_previous_matches(self):
         if self.round == self.tournament.number_rounds:
             return None

@@ -23,6 +23,10 @@
     </div>
 
     <div class="panel-body" style ="overflow-x:scroll">
+        <div class="alert alert-info">
+            <p>Astuce : pour comparer ce tableau de pronostics avec le tableau réel, passez la souris sur un pronostic incorrect (case rouge)</p>
+        </div>
+
         <main id="round-names">
             {% for round in tournament.get_matches_by_round_last_rounds(4) %}
                 <div class="round">
