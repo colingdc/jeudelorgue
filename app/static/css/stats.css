@@ -31,3 +31,7 @@ table {
 .thin-border-bottom {
   border-bottom: none !important;
 }
+
+.bold-value {
+  font-weight: bold;
+}
