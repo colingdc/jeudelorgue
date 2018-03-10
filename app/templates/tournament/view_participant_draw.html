@@ -24,7 +24,7 @@
 
     <div class="panel-body" style ="overflow-x:scroll">
         <div class="alert alert-info">
-            <p>Astuce : pour comparer ce tableau de pronostics avec le tableau réel, passez la souris sur un pronostic incorrect (case rouge)</p>
+            <p>Astuce : pour comparer ce tableau de pronostics avec le tableau réel, passez la souris sur une des cases.</p>
         </div>
 
         <main id="round-names">
@@ -55,6 +55,8 @@
                             class="game game-player match first-round non-forecasted"
                             tournament_player_id="{{ match.tournament_player1_id }}"
                             match_position_id="{{ match.position }}"
+                            onmouseenter="show_real_winners()"
+                            onmouseleave="hide_real_winners()"
                             match_id="{{ match.id }}">
                             {% if match.tournament_player1_id %}
                                 {{ match.tournament_player1.get_full_name() | truncate(35) }}
@@ -71,6 +73,8 @@
                             class="game game-player match first-round non-forecasted"
                             tournament_player_id="{{ match.tournament_player2_id }}"
                             match_position_id="{{ match.position }}"
+                            onmouseenter="show_real_winners()"
+                            onmouseleave="hide_real_winners()"
                             match_id="{{ match.id }}">
                             {% if match.tournament_player2_id %}
                                 {{ match.tournament_player2.get_full_name() | truncate(35) }}
@@ -110,6 +114,8 @@
                                                 class="game game-player match non-forecasted"
                                                 tournament_player_id="{{ forecast.winner_id }}"
                                                 match_position_id="{{ next_match.position }}"
+                                                onmouseenter="show_real_winners()"
+                                                onmouseleave="hide_real_winners()"
                                                 match_id="{{ next_match.id }}">
                                                     {{ forecast.winner.get_full_name() | truncate(35) }}
                                             </div>
@@ -135,6 +141,8 @@
                                             <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
                                                 class="game game-player match correct_forecast"
                                                 tournament_player_id="{{ forecast.winner_id }}"
+                                                onmouseenter="show_real_winners()"
+                                                onmouseleave="hide_real_winners()"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">
                                                     {{ forecast.winner.get_full_name() | truncate(35) }}
@@ -160,6 +168,7 @@
                                             <div id="player-{{ next_match.position }}-{{ loop.cycle(0, 1) }}"
                                                 class="game game-player match to_hide"
                                                 tournament_player_id="{{ forecast.winner_id }}"
+                                                onmouseenter="show_real_winners()"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">
                                                     {{ forecast.winner.get_full_name() | truncate(35) }}
@@ -168,6 +177,7 @@
                                                 style="display: none"
                                                 class="game game-player match to_show"
                                                 tournament_player_id="{{ forecast.winner_id }}"
+                                                onmouseleave="hide_real_winners()"
                                                 match_position_id="{{ next_match.position }}"
                                                 match_id="{{ next_match.id }}">
                                             </div>
@@ -218,6 +228,8 @@
                                     {% elif match.winner_id == forecast.winner.id %}
                                         <div id="player-0-1"
                                             class="game game-player correct_forecast"
+                                            onmouseenter="show_real_winners()"
+                                            onmouseleave="hide_real_winners()"
                                             tournament_player_id="{{ forecast.winner_id }}">
                                                 {{ forecast.winner.get_full_name() | truncate(35) }}
                                         </div>
@@ -237,12 +249,14 @@
                                     {% else %}
                                         <div id="player-0-1"
                                             class="game game-player to_hide"
+                                            onmouseenter="show_real_winners()"
                                             tournament_player_id="{{ forecast.winner_id }}">
                                                 {{ forecast.winner.get_full_name() | truncate(35) }}
                                         </div>
                                         <div id="player-0-1"
                                             style="display: none"
                                             class="game game-player to_show"
+                                            onmouseleave="hide_real_winners()"
                                             tournament_player_id="{{ forecast.winner_id }}">
                                         </div>
                                     {% endif %}
