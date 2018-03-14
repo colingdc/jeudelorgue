@@ -504,17 +504,14 @@ class Participant(db.Model):
 
     def get_score(self):
         score_per_round = self.tournament.get_score_per_round()
-        score = 0
-        for forecast in self.forecasts:
-            result = forecast.match
-            if result.tournament_player1 and result.tournament_player1.player and result.tournament_player1.player.last_name == "Bye":
-                continue
-            if result.tournament_player2 and result.tournament_player2.player and result.tournament_player2.player.last_name == "Bye":
-                continue
-            if result.winner_id:
-                match_score = (result.winner_id == forecast.winner_id) * score_per_round[result.round]
-                score += match_score
-        return score
+        number_byes = sum(1 for p in self.tournament.players if p.player and p.player.last_name == "Bye")
+
+        matches = {m.id: (m.winner_id, m.round) for m in Match.query.filter(Match.tournament_id == self.tournament.id)}
+        forecasts = {f.match_id: f.winner_id for f in self.forecasts if f.winner_id}
+
+        score = sum((matches[match_id][0] == winner_id) * score_per_round[matches[match_id][1]] for match_id, winner_id in forecasts.items())
+
+        return score - number_byes
 
 
     def get_score_simulator(self, scenario):
