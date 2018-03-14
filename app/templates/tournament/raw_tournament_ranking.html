@@ -1,0 +1,7 @@
+:fete: Classement après ... :fete:
+<br>
+<br>
+
+{% for participant in tournament.participants_sorted() %}
+    # {{ participant.user.username }} ({{ participant.score }}/{{ tournament.current_maximal_score }})<br>
+{% endfor %}

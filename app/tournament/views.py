@@ -709,3 +709,16 @@ def scenario_simulator(tournament_id):
                                simulated_matches = simulated_matches,
                                surface = tournament.surface.class_name)
 
+
+@bp.route("/<tournament_id>/ranking/raw")
+@manager_required
+def raw_tournament_ranking(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    title = u"{} - Classement brut".format(tournament.name)
+
+    return render_template("tournament/raw_tournament_ranking.html",
+                           title = title,
+                           tournament = tournament)

@@ -175,7 +175,7 @@
                         </div>
                     </div>
 
-                <h5>Inscriptions</h5>
+                <h5>Inscriptions et suivi</h5>
                     <div class="row">
                         {% if tournament.is_open_to_registration() %}
                             <div class="col-md-4">
@@ -193,6 +193,14 @@
                                    href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
                                    <span class="fa fa-unlock"></span>
                                     Ouvrir les inscriptions
+                                </a>
+                            </div>
+
+                            <div class="col-md-4">
+                                <a class="btn btn-warning"
+                                   href="{{ url_for('.raw_tournament_ranking', tournament_id=tournament.id) }}">
+                                   <span class="fa fa-list"></span>
+                                    Voir le classement brut
                                 </a>
                             </div>
 
