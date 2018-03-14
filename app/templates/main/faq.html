@@ -18,16 +18,25 @@
                 <p>Si vous avez oublié votre mot de passe, vous pouvez le récupérer facilement sur <a href="http://www.jeudelorgue.raidghost.com" target="_blank">l'ancien site</a>.</p>
                 <p>En dernier recours, vous pouvez demander à l'admin d'activer votre compte et de vous communiquer votre mot de passe <a href="http://www.jeuxvideo.com/messages-prives/nouveau.php?all_dest=olaflebataf" target="_blank">par MP sur le forum</a>.</p>
             </li>
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Comment participer à un tournoi ?</h4>
-               <p>Sur la page du tournoi, cliquez sur "M'inscrire".</p>
+               <p>Sur la page du tournoi, cliquez sur "M'inscrire". Si ce bouton n'est pas présent, les inscriptions sont fermées ou ne sont pas encore ouvertes.</p>
             </li>
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Comment remplir mon tableau ?</h4>
-               <p>Une fois inscrit au tournoi, cliquez sur "Remplir mon tableau". Pour pronostiquer de chaque match, cliquez sur le nom du joueur qui va l'emporter selon vous. Une fois que vous avez pronostiqué tous les matchs, cliquez sur "Valider".</p>
+               <p>Une fois inscrit au tournoi, cliquez sur "Remplir mon tableau". Pour pronostiquer chaque match, cliquez sur le nom du joueur qui va l'emporter selon vous. Une fois que vous avez pronostiqué tous les matchs, cliquez sur "Valider".</p>
             </li>
+            <br>
+            <li>
+               <h4><span class="fa fa-chevron-right"></span>
+               C'est super long de remplir un tableau, je peux le faire en plusieurs fois ?</h4>
+               <p>Oui, vous pouvez remplir une partie du tableau, valider, puis revenir plus tard pour compléter le reste.</p>
+            </li>
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Qu'est ce que le coefficient de risque ?</h4>
@@ -35,22 +44,28 @@
                <p>Pour un participant donné, il est calculé en faisant la somme (match par match, pondérée par le nombre de points en jeu sur le match) des participants ayant fait un pronostic différent.</p>
                <p>Plus votre coefficient de risque est élevé, mieux vous serez placé en cas d'égalité.</p>
             </li>
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Comment les points ATP sont-ils attribués ?</h4>
                <p>Les points sont attribués à la fin du tournoi en fonction de 3 éléments :</p>
                 <ul>
-                  <li>Le nombre de points attribué au vainqueur (1000 pour un ATP 1000, 2000 pour un Grand Chelem)</li>
-                  <li>Le nombre de points attribué au dernier (50 pour un ATP 1000, 100 pour un Grand Chelem)</li>
-                  <li>Le nombre de participants au tournoi.</li>
+                  <li><span class="fa fa-chevron-right"></span> Le nombre de points attribué au vainqueur (1000 pour un ATP 1000, 2000 pour un Grand Chelem)</li>
+                  <li><span class="fa fa-chevron-right"></span> Le nombre de points attribué au dernier (10)</li>
+                  <li><span class="fa fa-chevron-right"></span> Le nombre de participants au tournoi.</li>
                 </ul>
-              <p>Les points attibués aux joueurs entre la 1ère et la dernière place suivent une exponentielle décroissante.</p>
+
+              <p>Les points attibués aux joueurs dans un Grand Chelem sont calculés avec <a href="http://image.noelshack.com/fichiers/2018/10/2/1520370404-formule.png">cette formule</a>. En ATP 1000, le 180 est remplacé par 90 et le 200 par 100.</p>
+              <p>90 % environ du total de points est calculé en fonction du classement obtenu dans le JDL en question, suivant une exponentielle (la première partie de la formule ci-dessus).</p>
+              <p>10 % environ du total de points est calculé en fonction du score obtenu dans le JDL en question, suivant une fonction affine (deuxième partie de la formule).</p>
             </li>
 
         </ul>
 
         {% if current_user.is_manager() %}
-        <h4>FAQ du manager de tournois</h4>
+        <br>
+        <h3>FAQ du manager de tournois</h4>
+        <br>
         <ul>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
@@ -59,7 +74,7 @@
                Renseignez un nom et une catégorie de tournoi, et une date de début pour le tournoi (date limite d'inscription). </p>
                <p>Cette date est uniquement indicative, pour le moment la fermeture des inscriptions se fait à la main par le manager du tournoi.</p>
             </li>
-
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Comment créer le tableau du tournoi ?</h4>
@@ -68,14 +83,14 @@
                <p>Si un joueur du tableau n'est pas disponible dans la liste, vous pouvez cliquer sur "Ajouter un joueur". La page permettant de créer un joueur s'ouvre dans un nouvel onglet. Créer alors tous les joueurs nécessaires.</p>
                <p>Une fois que c'est fait, revenez à l'onglet de création du tableau. Cliquez sur "Valider" en bas de la page pour sauvegarder l'état actuel du tableau. Vous êtes redirigé vers la page du tournoi. Cliquez alors sur "Modifier le tableau de départ", vous pourrez continuer à remplir le tableau, les joueurs que vous avez créés apparaitront dans la liste de joueurs disponibles.</p>
             </li>
-
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Comment gérer les qualifiés ?</h4>
                <p>Si certains joueurs du tableau de sont pas encore connus, laissez le champ "Joueur" vide. Le nom sera automatiquement remplacé par "Qualifié N".  </p>
                <p>Une fois le nom d'un qualifié connu, vous pourrez modifier le tableau de départ en conséquence. La modification sera prise en compte dans les tableaux des participants ayant déjà fait un pronostic.</p>
             </li>
-
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Une fois le tournoi lancé, comment rentrer les résutats des matchs ?</h4>
@@ -83,7 +98,7 @@
                <p>Cliquez sur le nom d'un joueur pour le faire avancer au tour suivant.</p>
                <p>Si vous avez cliqué par erreur sur un joueur, pas de panique, control-cliquez sur le nom du vainqueur pour effacer le contenu de la case.</p>
             </li>
-
+            <br>
             <li>
                <h4><span class="fa fa-chevron-right"></span>
                Que faire à la fin du tournoi ?</h4>

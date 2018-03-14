@@ -389,13 +389,21 @@ class Tournament(db.Model):
         return stats
 
     def distribute_points(self):
-        participants = self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient, Participant.created_at)
-        alpha = self.category.maximal_score
-        if self.participants.count() > 1:
-            beta = (log(self.category.minimal_score) - log(self.category.maximal_score)) / log(self.participants.count())
-        else:
-            beta = 1
-        scores = {participant: round(alpha * (rank + 1) ** beta) for rank, participant in enumerate(participants)}
+        participants = self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(), Participant.created_at)
+        number_participants = participants.count()
+        if number_participants < 0:
+            return {participants.first(): self.category.maximal_score}
+
+        def ranking_score(rank):
+            return self.category.minimal_score * (0.9 * self.category.maximal_score / self.category.minimal_score) ** ((number_participants - rank - 1.) / (number_participants - 1.))
+
+        maximal_score = participants.first().score
+        minimal_score = participants.all()[-1].score
+
+        def score_score(score):
+            return 0.1 * self.category.maximal_score * (score - minimal_score) / (maximal_score - minimal_score)
+
+        scores = {participant: round(ranking_score(rank) + score_score(participant.score)) for rank, participant in enumerate(participants)}
         return scores
 
     @classmethod
