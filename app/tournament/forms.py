@@ -61,4 +61,7 @@ class FillTournamentDrawForm(FlaskForm):
 
 
 class TournamentPlayerStatsForm(FlaskForm):
-    player_name = SelectField("Joueur", coerce = int)
+    player_name = SelectField("Ordre du tableau", coerce = int)
+
+class TournamentPlayerAlphabeticStatsForm(FlaskForm):
+    player_name = SelectField(u"Ordre alphabétique", coerce = int)

@@ -434,6 +434,9 @@ class Tournament(db.Model):
                 print("\n")
                 print(str(e))
                 db.session.rollback()
+    @property
+    def players_alphabetic(self):
+        return self.players.join(Player, Player.id == TournamentPlayer.player_id).order_by(Player.last_name, Player.first_name)
 
 
 class TournamentCategory(db.Model):

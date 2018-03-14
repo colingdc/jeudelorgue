@@ -7,7 +7,7 @@ from math import log, floor
 import json
 
 from . import bp
-from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm
+from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm, TournamentPlayerAlphabeticStatsForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory, Surface
@@ -607,19 +607,29 @@ def tournament_player_stats(tournament_id):
         return redirect(url_for(".view_tournament", tournament_id = tournament_id))
 
     title = u"{} - Pronostics par joueur ATP".format(tournament.name)
-    form = TournamentPlayerStatsForm()
 
+    form = TournamentPlayerStatsForm()
     tournament_players = [(-1, "Choisir un joueur...")] + [(p.id, p.get_full_name()) for p in tournament.players if p.player.last_name.lower() != "bye"]
     form.player_name.choices = tournament_players
 
-    tournament_player = None
+    form_alphabetic = TournamentPlayerAlphabeticStatsForm()
+    tournament_players_alphabetic = [(-1, "Choisir un joueur...")] + [(p.id, p.player.get_full_name_surname_first()) for p in tournament.players_alphabetic if p.player.last_name.lower() != "bye"]
+    form_alphabetic.player_name.choices = tournament_players_alphabetic
+
     if form.validate_on_submit():
         tournament_player = TournamentPlayer.query.get(form.player_name.data)
+
+    elif form_alphabetic.validate_on_submit():
+        tournament_player = TournamentPlayer.query.get(form_alphabetic.player_name.data)
+
+    else:
+        tournament_player = None
 
     return render_template("tournament/tournament_player_stats.html",
                            title = title,
                            tournament = tournament,
                            form = form,
+                           form_alphabetic = form_alphabetic,
                            tournament_player = tournament_player,
                            surface = tournament.surface.class_name)
 
