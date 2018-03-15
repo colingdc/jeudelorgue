@@ -159,10 +159,10 @@ class User(UserMixin, db.Model):
         return (self.participants.order_by(Participant.created_at.desc()))
 
     def get_titles(self):
-        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(Participant.ranking == 1).filter(Tournament.deleted_at.is_(None))
+        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(Tournament.status == TournamentStatus.FINISHED).filter(Participant.ranking == 1).filter(Tournament.deleted_at.is_(None))
 
     def get_best_tournament_rank(self):
-        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).order_by(Participant.ranking).first()
+        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(Tournament.status == TournamentStatus.FINISHED).order_by(Participant.ranking).first()
 
 
 class AnonymousUser(AnonymousUserMixin):
