@@ -17,7 +17,7 @@
     <form action="{{ url_for('player.edit_player', player_id=player.id) }}" class="form-horizontal" method="POST">
         {{ form.hidden_tag() }}
 
-        <div class="panel-body">
+        <div class="panel-body" style ="overflow-x:scroll">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
 
