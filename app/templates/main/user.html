@@ -10,10 +10,31 @@
     </div>
 
     <div class="panel-body">
-        <p>Membre depuis le {{ user.created_at | datetime }}</p>
         {% if current_user.id == user.id or current_user.is_administrator() %}
-            <p>Email : {{ user.email }}</p>
+            <p>Mon email : {{ user.email }}</p>
         {% endif %}
+        {% if current_user.id == user.id %}
+             <a href="{{ url_for('auth.change_password') }}">
+                <span class="fa fa-lock" aria-hidden="true"></span>
+                Modifier mon mot de passe
+            </a>
+        {% endif %}
+
+        <br>
+
+        <h4>Palmarès</h4>
+        {% with best_rank = user.get_best_tournament_rank() %}
+            {% if best_rank %}
+            <p>Meilleur classement en tournoi : #{{ best_rank.ranking }} (<a href= '{{ url_for("tournament.view_tournament", tournament_id = best_rank.tournament.id, _external = True) }}'>{{ best_rank.tournament.name }}</a>)</p>
+            {% endif %}
+        {% endwith %}
+        {% with titles = user.get_titles() %}
+            <p>{{ titles.count() }} {% if titles.count() <= 1 %}titre{% else %}titres{% endif %} {% if titles.count() > 0 %}
+            ({% for t in titles %}{% if loop.index > 1 %}, {% endif %}<a href= '{{ url_for("tournament.view_tournament", tournament_id = t.tournament.id, _external = True) }}'>{{ t.tournament.name }}</a>{% endfor %})
+            {% endif %}</p>
+        {% endwith %}
+
+        <br>
 
         <table class="table table-striped table-bordered table-hover">
             <thead>
