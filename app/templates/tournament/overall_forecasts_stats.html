@@ -47,7 +47,7 @@
                             {% set outer_loop = loop %}
 
                             <tr>
-                                <td class="{% if outer_loop.index == tournament.players.count() %}thick-border-bottom {% endif %}">{{ tournament_player.get_full_name() }}</td>
+                                <td class="{% if outer_loop.index == tournament.players.count() %}thick-border-bottom {% endif %}"><a href="{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament_player.id) }}">{{ tournament_player.get_full_name() }}</a></td>
 
                                 {% for round in range(tournament.number_rounds, 0, -1) %}
                                     {% with number_forecasts = stats[tournament_player][round] %}

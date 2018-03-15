@@ -616,7 +616,12 @@ def tournament_player_stats(tournament_id):
     tournament_players_alphabetic = [(-1, "Choisir un joueur...")] + [(p.id, p.player.get_full_name_surname_first()) for p in tournament.players_alphabetic if p.player.last_name.lower() != "bye"]
     form_alphabetic.player_name.choices = tournament_players_alphabetic
 
-    if form.validate_on_submit():
+    tournament_player_id = request.args.get("tournament_player_id")
+
+    if tournament_player_id:
+        tournament_player = TournamentPlayer.query.get(tournament_player_id)
+
+    elif form.validate_on_submit():
         tournament_player = TournamentPlayer.query.get(form.player_name.data)
 
     elif form_alphabetic.validate_on_submit():
