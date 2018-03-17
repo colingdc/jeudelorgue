@@ -50,7 +50,7 @@
                     </div>
 
                     {% for match in round["matches"] %}
-
+                        <a href="{% if match.tournament_player1_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player1_id) }}{% else %}#{% endif %}">
                         <div id="player-{{ match.position }}-0"
                             class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
                             {% if match.tournament_player1_id %}
@@ -64,6 +64,7 @@
                             &nbsp;
                         </div>
 
+                        <a href="{% if match.tournament_player2_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player2_id) }}{% else %}#{% endif %}">
                         <div id="player-{{ match.position }}-1"
                             class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
                             {% if match.tournament_player2_id %}
@@ -83,7 +84,7 @@
                 {% endfor %}
 
             <div class="round last-round">
-
+                <a href="{% if tournament.get_last_match().winner_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament.get_last_match().winner_id) }}{% else %}#{% endif %}">
                 <div id="player-0-1"
                     class="game game-player">
                     {% if tournament.get_last_match().winner %}

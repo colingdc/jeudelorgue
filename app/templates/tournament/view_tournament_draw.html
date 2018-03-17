@@ -50,6 +50,7 @@
 
                     {% for match in round["matches"] %}
 
+                        <a href="{% if match.tournament_player1_id and not match.tournament_player1.is_bye() %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player1_id) }}{% else %}#{% endif %}">
                         <div id="player-{{ match.position }}-0"
                             class="game game-player match {% if round['first_round'] %}first-round non-forecasted
                             {% elif match.get_previous_match(0).has_bye() %}non-forecasted{% endif %}">
@@ -59,11 +60,13 @@
                                 &nbsp;
                             {% endif %}
                         </div>
+                        </a>
 
                         <div class="game game-spacer">
                             &nbsp;
                         </div>
 
+                        <a href="{% if match.tournament_player2_id and not match.tournament_player2.is_bye() %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player2_id) }}{% else %}#{% endif %}">
                         <div id="player-{{ match.position }}-1"
                             class="game game-player match {% if round['first_round'] %}first-round non-forecasted
                             {% elif match.get_previous_match(1).has_bye() %}non-forecasted{% endif %}">
@@ -73,6 +76,7 @@
                                 &nbsp;
                             {% endif %}
                         </div>
+                        </a>
 
                     <div class="spacer">
                         &nbsp;
@@ -84,7 +88,7 @@
                 {% endfor %}
 
             <div class="round last-round">
-
+                <a href="{% if tournament.get_last_match().winner %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament.get_last_match().winner_id) }}{% else %}#{% endif %}">
                 <div id="player-0-1"
                     class="game game-player">
                     {% if tournament.get_last_match().winner %}
@@ -93,6 +97,7 @@
                         &nbsp;
                     {% endif %}
                 </div>
+                </a>
             </div>
         </main>
 

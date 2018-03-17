@@ -95,3 +95,9 @@ div.game.first-round{
 #player-0-1 {
   font-weight: bold;
 }
+
+
+a {
+  color: black;
+  text-decoration: none; /* no underline */
+}
