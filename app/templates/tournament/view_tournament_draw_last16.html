@@ -84,7 +84,7 @@
                 {% endfor %}
 
             <div class="round last-round">
-                <a href="{% if tournament.get_last_match().winner_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament.get_last_match().winner_id) }}{% else %}#{% endif %}">
+                <a href="{% if tournament.get_last_match().winner_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament.get_last_match().winner) }}{% else %}#{% endif %}">
                 <div id="player-0-1"
                     class="game game-player">
                     {% if tournament.get_last_match().winner %}

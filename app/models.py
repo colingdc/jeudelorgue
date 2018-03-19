@@ -27,6 +27,8 @@ class User(UserMixin, db.Model):
     year_to_date_points = db.Column(db.Integer)
 
     participants = db.relationship("Participant", backref = "user", lazy = "dynamic")
+    rankings = db.relationship("Ranking", backref = "user", lazy = "dynamic")
+
 
     def __repr__(self):
         return "<User %r>" % self.username
@@ -250,6 +252,8 @@ class Tournament(db.Model):
     matches = db.relationship("Match", backref = "tournament", lazy = "dynamic")
     participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
     players = db.relationship("TournamentPlayer", backref = "tournament", lazy = "dynamic")
+    rankings = db.relationship("Ranking", backref = "tournament", lazy = "dynamic")
+
 
     def is_open_to_registration(self):
         return self.status == TournamentStatus.REGISTRATION_OPEN
@@ -397,7 +401,7 @@ class Tournament(db.Model):
     def distribute_points(self):
         participants = self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(), Participant.created_at)
         number_participants = participants.count()
-        if number_participants < 0:
+        if number_participants == 1:
             return {participants.first(): self.category.maximal_score}
 
         def ranking_score(rank):
@@ -761,3 +765,84 @@ class Forecast(db.Model):
     match_id = db.Column(db.Integer, db.ForeignKey('matches.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     participant_id = db.Column(db.Integer, db.ForeignKey('participants.id'))
+
+
+class Ranking(db.Model):
+    __tablename__ = "rankings"
+    id = db.Column(db.Integer, primary_key = True)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime)
+
+    annual_points = db.Column(db.Integer)
+    annual_ranking = db.Column(db.Integer)
+    annual_number_tournaments = db.Column(db.Integer)
+
+    year_to_date_points = db.Column(db.Integer)
+    year_to_date_ranking = db.Column(db.Integer)
+    year_to_date_number_tournaments = db.Column(db.Integer)
+
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    @staticmethod
+    def compute_historical_rankings(tournament = None):
+        participations = (Participant.query
+                          .join(Tournament, Tournament.id == Participant.tournament_id)
+                          .filter(Tournament.deleted_at.is_(None))
+                          .filter(Tournament.status == TournamentStatus.FINISHED)
+                          )
+
+        if tournament is None:
+            tournament = Tournament.query.order_by(Tournament.started_at.desc()).first()
+
+        participations = participations.filter(Tournament.started_at <= tournament.started_at)
+        participations = participations.with_entities(Participant.user_id, Participant.points, Tournament.started_at)
+
+        df = pd.read_sql(participations.statement, participations.session.bind)
+        df["number_tournaments"] = 1
+
+        annual_points = df[df["started_at"] > tournament.started_at - relativedelta(years = 1)].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
+        annual_points["rank"] = range(1, len(annual_points) + 1)
+        year_to_date_points = df[df["started_at"].dt.year == tournament.started_at.year].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
+        year_to_date_points["rank"] = range(1, len(year_to_date_points) + 1)
+
+        print("Computing annual points and rankings")
+        for _, row in annual_points.iterrows():
+            r = Ranking.query.filter(Ranking.tournament_id == tournament.id).filter(Ranking.user_id == row["user_id"]).first()
+            if r is None:
+                r = Ranking(user_id = row["user_id"], tournament_id = tournament.id)
+            r.annual_points = row["points"]
+            r.annual_ranking = row["rank"]
+            r.annual_number_tournaments = row["number_tournaments"]
+            db.session.add(r)
+
+        print("Computing year to date points and rankings")
+        for _, row in year_to_date_points.iterrows():
+            r = Ranking.query.filter(Ranking.tournament_id == tournament.id).filter(Ranking.user_id == row["user_id"]).first()
+            if r is None:
+                r = Ranking(user_id = row["user_id"], tournament_id = tournament.id)
+            r.year_to_date_points = row["points"]
+            r.year_to_date_ranking = row["rank"]
+            r.year_to_date_number_tournaments = row["number_tournaments"]
+            db.session.add(r)
+
+        db.session.commit()
+
+    @staticmethod
+    def get_historical_annual_ranking(tournament_id):
+        return (User.query
+                .join(Ranking, Ranking.user_id == User.id)
+                .filter(Ranking.tournament_id == tournament_id)
+                .filter(Ranking.annual_ranking.isnot(None))
+                .order_by(Ranking.annual_ranking)
+                .with_entities(User.id, User.username, Ranking.annual_number_tournaments, Ranking.annual_points, Ranking.annual_ranking)
+                )
+
+    @staticmethod
+    def get_historical_race_ranking(tournament_id):
+        return (User.query
+                .join(Ranking, Ranking.user_id == User.id)
+                .filter(Ranking.tournament_id == tournament_id)
+                .filter(Ranking.year_to_date_ranking.isnot(None))
+                .with_entities(User.id, User.username, Ranking.year_to_date_number_tournaments, Ranking.year_to_date_points, Ranking.year_to_date_ranking)
+                .order_by(Ranking.year_to_date_ranking))

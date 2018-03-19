@@ -30,7 +30,8 @@ def make_shell_context():
                 Player = Player,
                 Forecast = Forecast,
                 Participant = Participant,
-                TournamentCategory = TournamentCategory)
+                TournamentCategory = TournamentCategory,
+                Ranking = Ranking)
 
 
 app = create_app(INSTANCE)

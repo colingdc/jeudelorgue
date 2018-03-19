@@ -10,7 +10,7 @@ from . import bp
 from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm, TournamentPlayerAlphabeticStatsForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory, Surface
+from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory, Surface, Ranking
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED, TOURNAMENT_CLOSED, DRAW_FILLED_COMPLETELY, DRAW_NOT_FILLED_COMPLETELY)
 
@@ -167,6 +167,8 @@ def close_tournament(tournament_id):
         participant.ranking = rank + 1
         db.session.add(participant)
     db.session.commit()
+
+    Ranking.compute_historical_rankings(tournament)
 
     flash(TOURNAMENT_CLOSED, "info")
     return redirect(url_for(".view_tournament", tournament_id = tournament.id))
