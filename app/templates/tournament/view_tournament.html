@@ -318,10 +318,10 @@
                             {% else %}
                                 <tr>
                                     <td>-</td>
-                                    <td>
+                                    <th>
                                         <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                         {{ participant.user.username }}</a>
-                                    </td>
+                                    </th>
                                     <td>-</td>
                                     <td>-</td>
                                     <td>{% if participant.has_completely_filled_draw() %}Oui{% else %}<span class="text-danger bg-danger">Non{% endif %}</span></td>
