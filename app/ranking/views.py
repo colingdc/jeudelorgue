@@ -44,7 +44,7 @@ def historical_annual_ranking(tournament_id):
     pagination = (Ranking.get_historical_annual_ranking(tournament_id)
                   .paginate(page, per_page = current_app.config["USERS_PER_PAGE"], error_out = False))
     return render_template("ranking/historical_annual_ranking.html", title = title,
-                           pagination = pagination, tournament_id = tournament_id)
+                           pagination = pagination, tournament = tournament)
 
 
 @bp.route("/race/historical/<tournament_id>")
@@ -62,4 +62,4 @@ def historical_race_ranking(tournament_id):
     pagination = (Ranking.get_historical_race_ranking(tournament_id)
                   .paginate(page, per_page = current_app.config["USERS_PER_PAGE"], error_out = False))
     return render_template("ranking/historical_race_ranking.html", title = title,
-                           pagination = pagination, tournament_id = tournament_id)
+                           pagination = pagination, tournament = tournament)

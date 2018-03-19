@@ -6,7 +6,7 @@
 <div class="panel panel-default panel-table">
 
     <div class="panel-heading">
-        <h3 class="panel-title">Classement annuel</h3>
+        <h3 class="panel-title">Classement annuel après le tournoi {{ tournament.name }}</h3>
     </div>
 
     <div class="panel-body" style ="overflow-x:scroll">
@@ -45,7 +45,7 @@
 </div>
 
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, '.historical_annual_ranking', tournament_id = tournament_id) }}
+    {{ macros.pagination_widget(pagination, '.historical_annual_ranking', tournament_id = tournament.id) }}
 </div>
 
 
