@@ -23,9 +23,9 @@ def landing():
 @bp.route("/index")
 def index():
     title = "Accueil"
-    tournaments = Tournament.get_recent_tournaments(10)
+    tournaments = Tournament.get_recent_tournaments(20)
     current_tournament = Tournament.get_current_tournament()
-    race_ranking = User.query.order_by(User.year_to_date_points.desc()).limit(10)
+    race_ranking = User.query.order_by(User.year_to_date_points.desc()).limit(20)
     return render_template("main/index.html", title = title,
                            tournaments = tournaments,
                            current_tournament = current_tournament,

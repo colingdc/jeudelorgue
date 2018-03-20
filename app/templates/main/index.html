@@ -163,6 +163,32 @@
                         Voir tous les tournois
                     </a>
 
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tournoi</th>
+                                <th>Participants</th>
+                                <th>Vainqueur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tournament in tournaments %}
+                                <tr>
+                                    <td><a href="{{ url_for('tournament.view_tournament', tournament_id = tournament.id) }}">{{ tournament.name }}</a></td>
+                                    <td>{{ tournament.participants.all() | length }}</td>
+
+                                    {% with winner = tournament.participants_sorted().first() %}
+                                        {% if tournament.is_finished() and winner %}
+                                            <td><a href="{{ url_for('main.view_user', user_id = winner.user.id) }}">{{ winner.user.username }}</a></td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                    {% endwith %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
 

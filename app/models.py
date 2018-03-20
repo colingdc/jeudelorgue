@@ -418,7 +418,7 @@ class Tournament(db.Model):
 
     @classmethod
     def get_current_tournament(cls):
-        return cls.query.filter(cls.ended_at == None).order_by(cls.started_at.desc()).first()
+        return cls.query.filter(cls.status < TournamentStatus.FINISHED).order_by(cls.started_at.desc()).first()
 
     @classmethod
     def get_recent_tournaments(cls, number_tournaments):
