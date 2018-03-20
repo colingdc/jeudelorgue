@@ -106,6 +106,33 @@
 
                 {% endif %}
 
+                {% if current_user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classements<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ url_for('ranking.race_ranking') }}">
+                                <span class="fa fa-flag-checkered" aria-hidden="true"></span>
+                                Race
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('ranking.annual_ranking') }}">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                Annuel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('ranking.all_rankings') }}">
+                                <span class="fa fa-list" aria-hidden="true"></span>
+                                Historique
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {% endif %}
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}

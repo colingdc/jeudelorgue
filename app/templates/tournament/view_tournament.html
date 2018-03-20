@@ -253,19 +253,37 @@
     <div id="collapse3" class="panel-collapse collapse in">
         <div class="panel-body" style ="overflow-x:scroll">
 
+            {% if tournament.is_finished() %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="btn btn-primary"
+                        href="{{ url_for('ranking.historical_race_ranking', tournament_id=tournament.id) }}">
+                            Classement Race après ce tournoi
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-primary"
+                        href="{{ url_for('ranking.historical_annual_ranking', tournament_id=tournament.id) }}">
+                            Classement annuel après ce tournoi
+                        </a>
+                    </div>
+                </div>
+
+            {% endif %}
+
             {% if not tournament.are_draws_private() %}
                 <div class="row">
                     <div class="col-md-6">
-                            <a class="btn btn-primary"
-                            href="{{ url_for('.overall_forecasts_stats', tournament_id=tournament.id) }}">
-                                Pronostics globaux
-                            </a>
+                        <a class="btn btn-primary"
+                        href="{{ url_for('.overall_forecasts_stats', tournament_id=tournament.id) }}">
+                            Pronostics globaux
+                        </a>
                     </div>
                     <div class="col-md-6">
-                            <a class="btn btn-primary"
-                            href="{{ url_for('.tournament_player_stats', tournament_id=tournament.id) }}">
-                                Pronostics par joueur
-                            </a>
+                        <a class="btn btn-primary"
+                        href="{{ url_for('.tournament_player_stats', tournament_id=tournament.id) }}">
+                            Pronostics par joueur
+                        </a>
                     </div>
                 </div>
 
