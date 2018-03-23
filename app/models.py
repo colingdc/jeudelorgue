@@ -367,7 +367,7 @@ class Tournament(db.Model):
         return score
 
     def participants_sorted(self):
-        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc()))
+        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(), Participant.created_at))
 
     def get_tournament_player_stats(self, tournament_player):
         # Get the tournament player's first round match
