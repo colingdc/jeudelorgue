@@ -142,6 +142,11 @@ def close_registrations(tournament_id):
     db.session.commit()
 
     for participant in tournament.participants:
+        if not participant.has_filled_draw():
+            db.session.delete(participant)
+    db.session.commit()
+
+    for participant in tournament.participants:
         participant.risk_coefficient = participant.get_risk_coefficient()
         db.session.add(participant)
     db.session.commit()
