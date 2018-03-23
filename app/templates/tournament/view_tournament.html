@@ -298,7 +298,7 @@
                             <th>Score / {{ tournament.current_maximal_score }}</th>
                             <th>Coefficient de risque</th>
                             {% if tournament.are_draws_private() %}
-                                <th>Tableau complet</th>
+                                <th>Tableau rempli</th>
                             {% else %}
                                 <th>Tableau</th>
                             {% endif %}
@@ -342,7 +342,13 @@
                                     </th>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>{% if participant.has_completely_filled_draw() %}Oui{% else %}<span class="text-danger bg-danger">Non{% endif %}</span></td>
+                                    <td>
+                                        {% if participant.has_completely_filled_draw() %}Oui
+                                        {% elif participant.has_filled_draw() %}
+                                            <span class="text-danger bg-danger">Partiellement</span>
+                                        {% else %}<span class="text-danger bg-danger">Non</span>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
