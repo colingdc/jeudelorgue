@@ -138,6 +138,7 @@ class User(UserMixin, db.Model):
         participations = (self.participants
                           .join(Tournament, Tournament.id == Participant.tournament_id)
                           .filter(Tournament.deleted_at.is_(None))
+                          .filter(Tournament.status == TournamentStatus.FINISHED)
                           .filter(func.year(Tournament.started_at) == datetime.datetime.now().year)
                           .filter(Tournament.started_at <= datetime.datetime.now()))
         return participations
@@ -152,10 +153,16 @@ class User(UserMixin, db.Model):
         return participations
 
     def get_annual_points(self):
-        return sum(participation.points for participation in self.annual_participations if participation.points is not None)
+        points = sum(participation.points for participation in self.annual_participations if participation.points is not None)
+        if not points:
+            points = 0
+        return points
 
     def get_year_to_date_points(self):
-        return sum(participation.points for participation in self.year_to_date_participations if participation.points is not None)
+        points = sum(participation.points for participation in self.year_to_date_participations if participation.points is not None) or 0
+        if not points:
+            points = 0
+        return points
 
     def participants_sorted(self):
         return (self.participants.order_by(Participant.created_at.desc()))
@@ -800,6 +807,7 @@ class Ranking(db.Model):
 
         df = pd.read_sql(participations.statement, participations.session.bind)
         df["number_tournaments"] = 1
+        df = df.dropna()
 
         annual_points = df[df["started_at"] > tournament.started_at - relativedelta(years = 1)].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
         annual_points["rank"] = range(1, len(annual_points) + 1)
