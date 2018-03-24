@@ -111,15 +111,19 @@
 
                             <td>{{ participant.score }}</td>
 
-                            {% for round in range(tournament.number_rounds, 0, -1) %}
-                                {% with winner = stats[round][participant] %}
-                                    {% if winner == tournament_player %}
+                        {% set ns = namespace(has_lost = false) %}
+                        {% for round in range(tournament.number_rounds, 0, -1) %}
+                            {% with winner = stats[round][participant] %}
+                                {% if winner == tournament_player %}
                                     <td class="victory">V</td>
-                                    {% else %}
+                                {% elif not ns.has_lost %}
+                                    {% set ns.has_lost = true %}
                                     <td class="defeat">D</td>
-                                    {% endif %}
-                                {% endwith %}
-                            {% endfor %}
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
                         </tr>
                     {% endfor %}
                 {% endwith %}
