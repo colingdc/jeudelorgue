@@ -160,7 +160,7 @@ def change_password():
         else:
             form.old_password.errors.append("Mot de passe incorrect")
     return render_template("auth/change_password.html",
-                           form = form, title = title)
+                           form = form, title = title, user = current_user)
 
 
 @bp.route("/reset", methods = ["GET", "POST"])

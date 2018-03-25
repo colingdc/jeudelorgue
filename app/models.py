@@ -854,3 +854,13 @@ class Ranking(db.Model):
                 .filter(Ranking.year_to_date_ranking.isnot(None))
                 .with_entities(User.id, User.username, Ranking.year_to_date_number_tournaments, Ranking.year_to_date_points, Ranking.year_to_date_ranking)
                 .order_by(Ranking.year_to_date_ranking))
+
+    @classmethod
+    def generate_chart(cls, user_id):
+        return (Tournament.query
+                .outerjoin(cls, cls.tournament_id == Tournament.id)
+                .filter(cls.user_id == user_id)
+                .order_by(Tournament.started_at)
+                .with_entities(Tournament.id, Tournament.name, Tournament.started_at,
+                               Ranking.annual_ranking, Ranking.year_to_date_ranking)
+                )

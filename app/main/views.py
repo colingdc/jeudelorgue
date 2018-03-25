@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from . import bp
 from ..decorators import admin_required, manager_required
-from ..models import User, Role, Tournament, Participant, TournamentStatus
+from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
 from .. import db
 from ..texts import PROFILE_UPDATED
 from .forms import EditProfileAdminForm, ContactForm
@@ -44,7 +44,23 @@ def view_user(user_id):
                   .filter(Tournament.deleted_at.is_(None))
                   .order_by(Tournament.started_at.desc())
                   .paginate(page, per_page = current_app.config["TOURNAMENTS_PER_PAGE"], error_out = False))
-    return render_template("main/user.html", title = title, user = user,
+
+    rankings = Ranking.generate_chart(user_id)
+
+    series = [{"name": "Classement annuel",
+               "data": [{"x": int(t.started_at.strftime("%s")) * 1000,
+                         "y": t.annual_ranking or "null",
+                         "tournament_name": t.name}
+                        for t in rankings]},
+              {"name": "Classement Race",
+               "data": [{"x": int(t.started_at.strftime("%s")) * 1000,
+                         "y": t.year_to_date_ranking or "null",
+                         "tournament_name": t.name}
+                        for t in rankings]}]
+    # series = [{"name": "Classement annuel", "data": [("1391904000000", 12), ("1391914000000", 5), ("1391954000000", 8)]},
+    #           {"name": "Classement Race", "data": [("1391904000000", 3), ("1391914000000", 15), ("1391954000000", 2)]}]
+
+    return render_template("main/user.html", title = title, user = user, series = series,
                            pagination = pagination)
 
 
@@ -126,3 +142,13 @@ def contact():
         return redirect(url_for(".contact"))
 
     return render_template("main/contact.html", form = form, title = title)
+
+
+@bp.route("/test")
+def test(chartID = 'chart_ID', chart_type = 'bar', chart_height = 350):
+  chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
+  series = [{"name": 'Label1', "data": [1,2,3]}, {"name": 'Label2', "data": [4, 5, 6]}]
+  title = {"text": 'My Title'}
+  xAxis = {"categories": ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
+  yAxis = {"title": {"text": 'yAxis Label'}}
+  return render_template('main/test.html', chartID=chartID, chart=chart, series=series, title=title, xAxis=xAxis, yAxis=yAxis)
