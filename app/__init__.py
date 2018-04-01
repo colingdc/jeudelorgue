@@ -13,6 +13,7 @@ from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 from flask_babel import Babel
 import babel
+import os
 
 from config import config
 from .texts import OLD_ACCOUNT_PASSWORD_CHANGE
@@ -102,6 +103,18 @@ def create_app(config_name):
         if response.status_code not in (403, 404, 500) and not request.full_path.startswith("/static"):
             app.logger.info(request.full_path)
         return response
+
+
+    @app.template_filter('autoversion')
+    def autoversion_filter(filename):
+        # determining fullpath might be project specific
+        fullpath = os.path.join('app/', filename[1:])
+        try:
+          timestamp = str(os.path.getmtime(fullpath))
+        except OSError:
+            return filename
+        newfilename = "{0}?v={1}".format(filename, timestamp)
+        return newfilename
 
     from .main import bp as main_blueprint
     app.register_blueprint(main_blueprint)

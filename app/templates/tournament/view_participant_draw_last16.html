@@ -3,7 +3,7 @@
 {% block styles %}
 {{ super() }}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/draw.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/draw.css') | autoversion }}">
 
 {% endblock %}
 
@@ -257,5 +257,5 @@
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{{ url_for('static', filename='js/draw.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/draw.js') | autoversion }}"></script>
 {% endblock %}
