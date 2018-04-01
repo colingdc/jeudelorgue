@@ -8,7 +8,7 @@
         <h3 class="panel-title">Liste des catégories de tournoi</h3>
     </div>
 
-    <div class="panel-body" style ="overflow-x:scroll">
+    <div class="panel-body">
         {% if current_user.is_manager() %}
             <a class="btn btn-success"
                href="{{ url_for('.create_category') }}">
@@ -16,49 +16,51 @@
             </a>
         {% endif %}
 
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Tours</th>
-                    <th>Points attribués au vainqueur</th>
-                    <th>Points attribués au dernier</th>
-                    {% if current_user.is_manager() %}
-                        <th>Actions</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for category in pagination.items %}
+        <div class="draw">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
                     <tr>
-                        <td>{{ category.name }}</a></td>
-                        <td>{{ category.number_rounds }}</td>
-                        <td>{{ category.maximal_score }}</td>
-                        <td>{{ category.minimal_score }}</td>
+                        <th>Nom</th>
+                        <th>Tours</th>
+                        <th>Points attribués au vainqueur</th>
+                        <th>Points attribués au dernier</th>
                         {% if current_user.is_manager() %}
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a class="btn btn-warning"
-                                       href="{{ url_for('.edit_category', category_id=category.id) }}">
-                                            <span class="fa fa-pencil"></span>
-                                            Editer
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a class="btn btn-danger"
-                                       href="{{ url_for('.delete_category', category_id=category.id) }}">
-                                            <span class="fa fa-trash"></span>
-                                            Supprimer
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
+                            <th>Actions</th>
                         {% endif %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for category in pagination.items %}
+                        <tr>
+                            <td>{{ category.name }}</a></td>
+                            <td>{{ category.number_rounds }}</td>
+                            <td>{{ category.maximal_score }}</td>
+                            <td>{{ category.minimal_score }}</td>
+                            {% if current_user.is_manager() %}
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="btn btn-warning"
+                                           href="{{ url_for('.edit_category', category_id=category.id) }}">
+                                                <span class="fa fa-pencil"></span>
+                                                Editer
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a class="btn btn-danger"
+                                           href="{{ url_for('.delete_category', category_id=category.id) }}">
+                                                <span class="fa fa-trash"></span>
+                                                Supprimer
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         <div class="pagination">
             {{ macros.pagination_widget(pagination, '.view_categories') }}

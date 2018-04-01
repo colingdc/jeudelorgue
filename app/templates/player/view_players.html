@@ -9,7 +9,7 @@
         <h3 class="panel-title">Liste des joueurs</h3>
     </div>
 
-    <div class="panel-body" style ="overflow-x:scroll">
+    <div class="panel-body">
         {% if current_user.is_manager() %}
             <a class="btn btn-success"
                href="{{ url_for('.create_player') }}">
@@ -17,45 +17,47 @@
             </a>
         {% endif %}
 
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    {% if current_user.is_manager() %}
-                        <th>Actions</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for player in pagination.items %}
+        <div class="table">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
                     <tr>
-                        <td>{{ player.first_name }}</td>
-                        <td>{{ player.last_name }}</td>
+                        <th>Prénom</th>
+                        <th>Nom</th>
                         {% if current_user.is_manager() %}
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a class="btn btn-warning"
-                                       href="{{ url_for('.edit_player', player_id=player.id) }}">
-                                            <span class="fa fa-pencil"></span>
-                                            Editer
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a class="btn btn-danger"
-                                       href="{{ url_for('.delete_player', player_id=player.id) }}">
-                                            <span class="fa fa-trash"></span>
-                                            Supprimer
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
+                            <th>Actions</th>
                         {% endif %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for player in pagination.items %}
+                        <tr>
+                            <td>{{ player.first_name }}</td>
+                            <td>{{ player.last_name }}</td>
+                            {% if current_user.is_manager() %}
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="btn btn-warning"
+                                           href="{{ url_for('.edit_player', player_id=player.id) }}">
+                                                <span class="fa fa-pencil"></span>
+                                                Editer
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a class="btn btn-danger"
+                                           href="{{ url_for('.delete_player', player_id=player.id) }}">
+                                                <span class="fa fa-trash"></span>
+                                                Supprimer
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         <div class="pagination">
             {{ macros.pagination_widget(pagination, '.view_players') }}

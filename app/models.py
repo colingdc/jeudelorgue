@@ -173,6 +173,10 @@ class User(UserMixin, db.Model):
     def get_best_tournament_rank(self):
         return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(Tournament.deleted_at.is_(None)).filter(Tournament.status == TournamentStatus.FINISHED).order_by(Participant.ranking).first()
 
+    def get_current_ranking(self):
+        latest_tournament = Tournament.get_latest_finished_tournament()
+        return Ranking.query.filter(Ranking.user_id == self.id).filter(Ranking.tournament_id == latest_tournament.id).first()
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
@@ -430,6 +434,10 @@ class Tournament(db.Model):
     @classmethod
     def get_recent_tournaments(cls, number_tournaments):
         return cls.query.order_by(cls.started_at.desc()).limit(number_tournaments)
+
+    @classmethod
+    def get_latest_finished_tournament(cls):
+        return cls.query.filter(cls.status == TournamentStatus.FINISHED).order_by(cls.started_at.desc()).first()
 
     @staticmethod
     def insert_tournament(name, started_at, ended_at, category_name, old_website_id = None, status = TournamentStatus.FINISHED):

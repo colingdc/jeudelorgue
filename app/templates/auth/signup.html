@@ -9,18 +9,16 @@
 
 </div>
 
-
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Inscription</strong></h3>
+        <h3 class="panel-title">Inscription</h3>
     </div>
 
-    <form action="{{ url_for('auth.signup') }}" class="form-horizontal" method="POST">
-        {{ form.hidden_tag() }}
-
-        <div class="panel-body" style ="overflow-x:scroll">
-            <div class="row">
+    <div class="panel-body">
+        <div class="row">
+            <form action="{{ url_for('auth.signup') }}" method="POST">
+                {{ form.hidden_tag() }}
                 <div class="col-md-6 col-md-offset-3">
 
                     <div class="form-group {% if form.email.errors %} has-error {% endif %}">
@@ -61,9 +59,9 @@
                     </div>
 
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
 

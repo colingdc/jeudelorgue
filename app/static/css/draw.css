@@ -1,7 +1,12 @@
 /*
  *  Flex Layout Specifics
 */
-main {
+
+div.main {
+    overflow-x: auto;
+}
+
+div.draw {
   display:flex;
   flex-direction:row;
   position: center;

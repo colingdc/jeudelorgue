@@ -10,7 +10,7 @@
                 <h3 class="panel-title">Classement Race</h3>
             </div>
 
-            <div class="panel-body" style ="overflow-x:scroll">
+            <div class="panel-body">
 
                 <a class="btn btn-primary"
                    href="{{ url_for('ranking.race_ranking') }}">
@@ -23,34 +23,36 @@
                     Voir le classement annuel
                 </a>
 
-                <table class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Participant</th>
-                            <th>Points</th>
-                            <th>Tournois</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in race_ranking %}
+                <div class="table">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
                             <tr>
-                                <td>{{ loop.index }}</td>
-                                <td><a href= '{{ url_for("main.view_user", user_id = user.id, _external = True) }}'>{{ user.username }}</td>
-                                <td>
-                                    {% if user.year_to_date_points is none %}
-                                        0
-                                    {% else %}
-                                        {{ user.year_to_date_points }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {{ user.year_to_date_participations.count() }}
-                                </td>
+                                <th>#</th>
+                                <th>Participant</th>
+                                <th>Points</th>
+                                <th>Tournois</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for user in race_ranking %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td><a href= '{{ url_for("main.view_user", user_id = user.id, _external = True) }}'>{{ user.username }}</td>
+                                    <td>
+                                        {% if user.year_to_date_points is none %}
+                                            0
+                                        {% else %}
+                                            {{ user.year_to_date_points }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ user.year_to_date_participations.count() }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +70,7 @@
             </h3>
             </div>
 
-            <div class="panel-body" style ="overflow-x:scroll">
+            <div class="panel-body">
 
                 <a class="btn btn-primary"
                    href="{{ url_for('tournament.view_tournaments') }}">
@@ -96,53 +98,55 @@
                 {% endif %}
 
                 {% if current_tournament.participants.first() %}
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Participant</th>
-                                <th>Score / {{ current_tournament.current_maximal_score }}</th>
-                                <th>Coefficient de risque</th>
-                                {% if current_tournament.is_finished() %}
-                                    <th>Points ATP</th>
-                                {% endif %}
-                                <th>Tableau</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for participant in current_tournament.participants_sorted() %}
-                                {% if not current_tournament.are_draws_private() %}
-                                    <tr>
-                                        <td>{{ loop.index }}</td>
-                                        <th>
-                                            <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
-                                            {{ participant.user.username }}</a>
-                                        </th>
-                                        <th>{{ participant.score }}</th>
-                                        <td>{{ participant.risk_coefficient | int }}</td>
-                                        {% if current_tournament.is_finished() %}
-                                            <td>{{ participant.points }}</td>
-                                        {% endif %}
-                                        <td>
-                                            <a href= '{{ url_for("tournament.view_participant_draw", tournament_id = current_tournament.id, participant_id = participant.id, _external = True) }}'>
-                                            Voir</a>
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <th>-</th>
-                                        <th>
-                                            <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
-                                            {{ participant.user.username }}</a>
-                                        </th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="table">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Participant</th>
+                                    <th>Score / {{ current_tournament.current_maximal_score }}</th>
+                                    <th>Coefficient de risque</th>
+                                    {% if current_tournament.is_finished() %}
+                                        <th>Points ATP</th>
+                                    {% endif %}
+                                    <th>Tableau</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for participant in current_tournament.participants_sorted() %}
+                                    {% if not current_tournament.are_draws_private() %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <th>
+                                                <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
+                                                {{ participant.user.username }}</a>
+                                            </th>
+                                            <th>{{ participant.score }}</th>
+                                            <td>{{ participant.risk_coefficient | int }}</td>
+                                            {% if current_tournament.is_finished() %}
+                                                <td>{{ participant.points }}</td>
+                                            {% endif %}
+                                            <td>
+                                                <a href= '{{ url_for("tournament.view_participant_draw", tournament_id = current_tournament.id, participant_id = participant.id, _external = True) }}'>
+                                                Voir</a>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <th>-</th>
+                                            <th>
+                                                <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
+                                                {{ participant.user.username }}</a>
+                                            </th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 {% else %}
                     Aucun participant à ce tournoi pour le moment
                 {% endif %}
@@ -155,7 +159,7 @@
                     <h3 class="panel-title">Tournois passés</h3>
                 </div>
 
-                <div class="panel-body" style ="overflow-x:scroll">
+                <div class="panel-body">
 
                     <a class="btn btn-primary"
                        href="{{ url_for('tournament.view_tournaments') }}">
@@ -163,32 +167,33 @@
                         Voir tous les tournois
                     </a>
 
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Tournoi</th>
-                                <th>Participants</th>
-                                <th>Vainqueur</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for tournament in tournaments %}
+                    <div class="table">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
                                 <tr>
-                                    <td><a href="{{ url_for('tournament.view_tournament', tournament_id = tournament.id) }}">{{ tournament.name }}</a></td>
-                                    <td>{{ tournament.participants.all() | length }}</td>
-
-                                    {% with winner = tournament.participants_sorted().first() %}
-                                        {% if tournament.is_finished() and winner %}
-                                            <td><a href="{{ url_for('main.view_user', user_id = winner.user.id) }}">{{ winner.user.username }}</a></td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endwith %}
+                                    <th>Tournoi</th>
+                                    <th>Participants</th>
+                                    <th>Vainqueur</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for tournament in tournaments %}
+                                    <tr>
+                                        <td><a href="{{ url_for('tournament.view_tournament', tournament_id = tournament.id) }}">{{ tournament.name }}</a></td>
+                                        <td>{{ tournament.participants.all() | length }}</td>
 
+                                        {% with winner = tournament.participants_sorted().first() %}
+                                            {% if tournament.is_finished() and winner %}
+                                                <td><a href="{{ url_for('main.view_user', user_id = winner.user.id) }}">{{ winner.user.username }}</a></td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

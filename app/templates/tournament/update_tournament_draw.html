@@ -22,7 +22,7 @@
         <h3 class="panel-title">{{ tournament.name }} - Mettre à jour le tableau</h3>
     </div>
 
-    <div class="panel-body" style ="overflow-x:scroll">
+    <div class="panel-body">
 
         <div class="alert alert-info">
             <p>Cliquez sur le nom d'un joueur pour le faire avancer au tour suivant.</p>
@@ -45,87 +45,88 @@
             </div>
         </div>
 
-        <main id="round-names">
-            {% for round in tournament.get_matches_by_round() %}
-                <div class="round">
-                    <div class="round-name">
-                        {{ tournament.get_round_names()[loop.index - 1] }}
-                    </div>
-                </div>
-            {% endfor %}
-                <div class="round">
-                    <div class="round-name">
-                        V
-                    </div>
-                </div>
-        </main>
-
-        <main id="tournament">
-
-            {% for round in tournament.get_matches_by_round() %}
-                <div class="round">
-                    <div class="spacer">
-                        &nbsp;
-                    </div>
-
-                    {% for match in round["matches"] %}
-
-                        <div id="player-{{ match.position }}-0"
-                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}"
-                            tournament_player_id="{{ match.tournament_player1_id }}"
-                            match_position_id="{{ match.position }}"
-                            match_id="{{ match.id }}"
-                            onclick="fill_next_round(event, {{ match.position }}, 0)">
-                            {% if match.tournament_player1_id %}
-                                {{ match.tournament_player1.get_full_name() | truncate(35) }}
-                            {% else %}
-                                &nbsp;
-                            {% endif %}
+        <div class="main">
+            <div id="round-names" class="draw">
+                {% for round in tournament.get_matches_by_round() %}
+                    <div class="round">
+                        <div class="round-name">
+                            {{ tournament.get_round_names()[loop.index - 1] }}
                         </div>
-
-                        <div class="game game-spacer">
-                            &nbsp;
+                    </div>
+                {% endfor %}
+                    <div class="round">
+                        <div class="round-name">
+                            V
                         </div>
+                    </div>
+            </div>
 
-                        <div id="player-{{ match.position }}-1"
-                            class="game game-player match {% if round['first_round'] %}first-round{% endif %}"
-                            tournament_player_id="{{ match.tournament_player2_id }}"
-                            match_position_id="{{ match.position }}"
-                            match_id="{{ match.id }}"
-                            onclick="fill_next_round(event, {{ match.position }}, 1)">
-                            {% if match.tournament_player2_id %}
-                                {{ match.tournament_player2.get_full_name() | truncate(35) }}
-                            {% else %}
-                                &nbsp;
-                            {% endif %}
-                        </div>
+            <div id="tournament" class="draw">
 
+                {% for round in tournament.get_matches_by_round() %}
+                    <div class="round">
                         <div class="spacer">
                             &nbsp;
                         </div>
 
+                        {% for match in round["matches"] %}
+
+                            <div id="player-{{ match.position }}-0"
+                                class="game game-player match {% if round['first_round'] %}first-round{% endif %}"
+                                tournament_player_id="{{ match.tournament_player1_id }}"
+                                match_position_id="{{ match.position }}"
+                                match_id="{{ match.id }}"
+                                onclick="fill_next_round(event, {{ match.position }}, 0)">
+                                {% if match.tournament_player1_id %}
+                                    {{ match.tournament_player1.get_full_name() | truncate(35) }}
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </div>
+
+                            <div class="game game-spacer">
+                                &nbsp;
+                            </div>
+
+                            <div id="player-{{ match.position }}-1"
+                                class="game game-player match {% if round['first_round'] %}first-round{% endif %}"
+                                tournament_player_id="{{ match.tournament_player2_id }}"
+                                match_position_id="{{ match.position }}"
+                                match_id="{{ match.id }}"
+                                onclick="fill_next_round(event, {{ match.position }}, 1)">
+                                {% if match.tournament_player2_id %}
+                                    {{ match.tournament_player2.get_full_name() | truncate(35) }}
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </div>
+
+                            <div class="spacer">
+                                &nbsp;
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
                     {% endfor %}
 
-                </div>
-                {% endfor %}
+                <div class="round last-round">
 
-            <div class="round last-round">
-
-                <div id="player-0-1"
-                    class="game game-player"
-                    tournament_player_id="{{ tournament.get_last_match().winner_id }}"
-                    onclick="fill_next_round(event, 0, 1)">
-                    {% if tournament.get_last_match().winner %}
-                        {{ tournament.get_last_match().winner.get_full_name() | truncate(35) }}
-                    {% else %}
-                        &nbsp;
-                    {% endif %}
+                    <div id="player-0-1"
+                        class="game game-player"
+                        tournament_player_id="{{ tournament.get_last_match().winner_id }}"
+                        onclick="fill_next_round(event, 0, 1)">
+                        {% if tournament.get_last_match().winner %}
+                            {{ tournament.get_last_match().winner.get_full_name() | truncate(35) }}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </main>
-
         </div>
     </div>
+</div>
 
 {% endblock %}
 

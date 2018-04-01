@@ -34,3 +34,8 @@ body {
 .default-background {
     background: #83a4d4;
 }
+
+div .table {
+    overflow-x: auto;
+    white-space: nowrap;
+}

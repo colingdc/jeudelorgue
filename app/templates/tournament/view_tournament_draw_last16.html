@@ -22,84 +22,84 @@
         <h3 class="panel-title">{{ tournament.name }} - Tableau du tournoi à partir des huitièmes</h3>
     </div>
 
-    <div class="panel-body" style ="overflow-x:scroll">
-        <main id="round-names">
-            {% for round in tournament.get_matches_by_round_last_rounds(4) %}
-                <div class="round">
-                    <div class="round-name">
-                        {{ tournament.get_round_names_last16()[loop.index - 1] }}
-                    </div>
-                </div>
-            {% endfor %}
-                <div class="round">
-                    <div class="round-name">
-                        V
-                    </div>
-                </div>
-        </main>
-
-        <main id="tournament">
-
-            {% for round in tournament.get_matches_by_round_last_rounds(4) %}
-
-                {% set outer_loop = loop %}
-                <div class="round">
-
-                    <div class="spacer">
-                        &nbsp;
-                    </div>
-
-                    {% for match in round["matches"] %}
-                        <a href="{% if match.tournament_player1_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player1_id) }}{% else %}#{% endif %}">
-                        <div id="player-{{ match.position }}-0"
-                            class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
-                            {% if match.tournament_player1_id %}
-                                {{ match.tournament_player1.get_full_name() | truncate(35) }}
-                            {% else %}
-                                &nbsp;
-                            {% endif %}
+    <div class="panel-body">
+        <div class="main">
+            <div id="round-names" class="draw">
+                {% for round in tournament.get_matches_by_round_last_rounds(4) %}
+                    <div class="round">
+                        <div class="round-name">
+                            {{ tournament.get_round_names_last16()[loop.index - 1] }}
                         </div>
-                        </a>
+                    </div>
+                {% endfor %}
+                    <div class="round">
+                        <div class="round-name">
+                            V
+                        </div>
+                    </div>
+            </div>
+            <div id="tournament" class="draw">
 
-                        <div class="game game-spacer">
+                {% for round in tournament.get_matches_by_round_last_rounds(4) %}
+
+                    {% set outer_loop = loop %}
+                    <div class="round">
+
+                        <div class="spacer">
                             &nbsp;
                         </div>
 
-                        <a href="{% if match.tournament_player2_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player2_id) }}{% else %}#{% endif %}">
-                        <div id="player-{{ match.position }}-1"
-                            class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
-                            {% if match.tournament_player2_id %}
-                                {{ match.tournament_player2.get_full_name() | truncate(35) }}
-                            {% else %}
+                        {% for match in round["matches"] %}
+                            <a href="{% if match.tournament_player1_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player1_id) }}{% else %}#{% endif %}">
+                            <div id="player-{{ match.position }}-0"
+                                class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
+                                {% if match.tournament_player1_id %}
+                                    {{ match.tournament_player1.get_full_name() | truncate(35) }}
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </div>
+                            </a>
+
+                            <div class="game game-spacer">
                                 &nbsp;
-                            {% endif %}
+                            </div>
+
+                            <a href="{% if match.tournament_player2_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=match.tournament_player2_id) }}{% else %}#{% endif %}">
+                            <div id="player-{{ match.position }}-1"
+                                class="game game-player match {% if outer_loop.index == 1 %}first-round{% endif %}">
+                                {% if match.tournament_player2_id %}
+                                    {{ match.tournament_player2.get_full_name() | truncate(35) }}
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </div>
+                            </a>
+
+                        <div class="spacer">
+                            &nbsp;
                         </div>
-                        </a>
 
-                    <div class="spacer">
-                        &nbsp;
+                        {% endfor %}
+
                     </div>
-
                     {% endfor %}
 
-                </div>
-                {% endfor %}
-
-            <div class="round last-round">
-                <a href="{% if tournament.get_last_match().winner_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament.get_last_match().winner) }}{% else %}#{% endif %}">
-                <div id="player-0-1"
-                    class="game game-player">
-                    {% if tournament.get_last_match().winner %}
-                        {{ tournament.get_last_match().winner.get_full_name() | truncate(35) }}
-                    {% else %}
-                        &nbsp;
-                    {% endif %}
+                <div class="round last-round">
+                    <a href="{% if tournament.get_last_match().winner_id %}{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament.get_last_match().winner) }}{% else %}#{% endif %}">
+                    <div id="player-0-1"
+                        class="game game-player">
+                        {% if tournament.get_last_match().winner %}
+                            {{ tournament.get_last_match().winner.get_full_name() | truncate(35) }}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </main>
-
         </div>
     </div>
+</div>
 
 {% endblock %}
 

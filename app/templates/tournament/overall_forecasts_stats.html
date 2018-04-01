@@ -24,62 +24,63 @@
     </div>
 
 
-    <div class="panel-body" style ="overflow-x:scroll">
+    <div class="panel-body">
         <div class="btn-group" role="group">
             <button id="btn-nb-players" type="button" class="btn btn-success">
             En nombre de joueurs</button>
             <button id="btn-pct-players" type="button" class="btn btn-secondary">En %</button>
         </div>
 
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th style="width:40%">Joueur</th>
-                    {% for name in tournament.get_round_names() %}
-                    <th style="text-align: center;">{{ name }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% with stats = tournament.get_overall_forecasts_stats() %}
-                    {% with number_participants = tournament.participants.count() %}
-                        {% for tournament_player in tournament.players %}
-                            {% set outer_loop = loop %}
-
-                            <tr>
-                                <td class="{% if outer_loop.index == tournament.players.count() %}thick-border-bottom {% endif %}"><a href="{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament_player.id) }}">{{ tournament_player.get_full_name() }}</a></td>
-
-                                {% for round in range(tournament.number_rounds, 0, -1) %}
-                                    {% with number_forecasts = stats[tournament_player][round] %}
-                                        {% if number_forecasts %}
-                                            <td class="victory nb-players
-                                            {% if outer_loop.index % (2 ** (1 + tournament.number_rounds - round)) == 0 %}thick-border-bottom
-                                            {% else %}
-                                            thin-border-bottom
-                                            {% endif %}
-                                            ">{{ number_forecasts }}</td>
-                                            <td class="victory pct-players
-                                            {% if outer_loop.index % (2 ** (1 + tournament.number_rounds - round)) == 0 %}thick-border-bottom
-                                            {% else %}
-                                            thin-border-bottom
-                                            {% endif %}
-                                            " hidden="hidden">{{ (100 * number_forecasts / number_participants) | int }} %</td>
-                                        {% else %}
-                                            <td class="{% if outer_loop.index % (2 ** (1 + tournament.number_rounds - round)) == 0 %}thick-border-bottom
-                                            {% else %}
-                                            thin-border-bottom
-                                            {% endif %}
-                                            "></td>
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endfor %}
-                            </tr>
+        <div class="table">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:40%">Joueur</th>
+                        {% for name in tournament.get_round_names() %}
+                        <th style="text-align: center;">{{ name }}</th>
                         {% endfor %}
-                    {% endwith %}
-                {% endwith %}
-            </tbody>
-        </table>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% with stats = tournament.get_overall_forecasts_stats() %}
+                        {% with number_participants = tournament.participants.count() %}
+                            {% for tournament_player in tournament.players %}
+                                {% set outer_loop = loop %}
 
+                                <tr>
+                                    <td class="{% if outer_loop.index == tournament.players.count() %}thick-border-bottom {% endif %}"><a href="{{ url_for('tournament.tournament_player_stats', tournament_id=tournament.id, tournament_player_id=tournament_player.id) }}">{{ tournament_player.get_full_name() }}</a></td>
+
+                                    {% for round in range(tournament.number_rounds, 0, -1) %}
+                                        {% with number_forecasts = stats[tournament_player][round] %}
+                                            {% if number_forecasts %}
+                                                <td class="victory nb-players
+                                                {% if outer_loop.index % (2 ** (1 + tournament.number_rounds - round)) == 0 %}thick-border-bottom
+                                                {% else %}
+                                                thin-border-bottom
+                                                {% endif %}
+                                                ">{{ number_forecasts }}</td>
+                                                <td class="victory pct-players
+                                                {% if outer_loop.index % (2 ** (1 + tournament.number_rounds - round)) == 0 %}thick-border-bottom
+                                                {% else %}
+                                                thin-border-bottom
+                                                {% endif %}
+                                                " hidden="hidden">{{ (100 * number_forecasts / number_participants) | int }} %</td>
+                                            {% else %}
+                                                <td class="{% if outer_loop.index % (2 ** (1 + tournament.number_rounds - round)) == 0 %}thick-border-bottom
+                                                {% else %}
+                                                thin-border-bottom
+                                                {% endif %}
+                                                "></td>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        {% endwith %}
+                    {% endwith %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

@@ -11,98 +11,96 @@
 {% block content %}
 
 
-<div class="container">
-    <div class="panel panel-default">
+<div class="panel panel-default">
 
-        <div class="panel-heading">
-            <h3 class="panel-title">Créer un tournoi</h3>
-        </div>
+    <div class="panel-heading">
+        <h3 class="panel-title">Créer un tournoi</h3>
+    </div>
 
-        <form action="{{ url_for('tournament.create_tournament') }}" method="POST">
-            {{ form.hidden_tag() }}
+    <form action="{{ url_for('tournament.create_tournament') }}" method="POST">
+        {{ form.hidden_tag() }}
 
-            <div class="panel-body" style ="overflow-x:scroll">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
 
-                        <a class="btn btn-primary"
-                           href="{{ url_for('tournament_category.create_category') }}">
-                        <span class="fa fa-pencil"></span>
-                            Créer une nouvelle catégorie de tournoi
-                        </a>
+                    <a class="btn btn-primary"
+                       href="{{ url_for('tournament_category.create_category') }}">
+                    <span class="fa fa-pencil"></span>
+                        Créer une nouvelle catégorie de tournoi
+                    </a>
 
-                        <a class="btn btn-primary"
-                           href="{{ url_for('tournament_category.view_categories') }}">
-                        <span class="fa fa-list"></span>
-                            Voir les catégories de tournoi existantes
-                        </a>
+                    <a class="btn btn-primary"
+                       href="{{ url_for('tournament_category.view_categories') }}">
+                    <span class="fa fa-list"></span>
+                        Voir les catégories de tournoi existantes
+                    </a>
 
-                        <div class="form-group {% if form.name.errors %} has-error {% endif %}">
-                            {{form.name.label()}}
-                            <div>
-                                {{form.name(class="form-control")}}
-                            </div>
-                            <p class="help-block">
-                                {{ form.name.errors[0] }}
+                    <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                        {{form.name.label()}}
+                        <div>
+                            {{form.name(class="form-control")}}
                         </div>
-
-                        <div class="form-group {% if form.tournament_topic_url.errors %} has-error {% endif %}">
-                            {{form.tournament_topic_url.label()}}
-                            <div>
-                                {{form.tournament_topic_url(class="form-control")}}
-                            </div>
-                            <p class="help-block">
-                                {{ form.tournament_topic_url.errors[0] }}
-                        </div>
-
-                        <div class="form-group {% if form.jeudelorgue_topic_url.errors %} has-error {% endif %}">
-                            {{form.jeudelorgue_topic_url.label()}}
-                            <div>
-                                {{form.jeudelorgue_topic_url(class="form-control")}}
-                            </div>
-                            <p class="help-block">
-                                {{ form.jeudelorgue_topic_url.errors[0] }}
-                        </div>
-
-                        <div class="form-group {% if form.category.errors %} has-error {% endif %}">
-                            {{form.category.label()}}
-                            <div>
-                                {{form.category(class="form-control")}}
-                            </div>
-                            <p class="help-block">
-                                {{ form.category.errors[0] }}
-                        </div>
-
-                        <div class="form-group {% if form.surface.errors %} has-error {% endif %}">
-                            {{form.surface.label()}}
-                            <div>
-                                {{form.surface(class="form-control")}}
-                            </div>
-                            <p class="help-block">
-                                {{ form.surface.errors[0] }}
-                        </div>
-
-                        <div class="form-group {% if form.start_date.errors %} has-error {% endif %}">
-                            {{form.start_date.label()}}
-                            <div class="input-group date" id="datetimepicker">
-                                {{ form.start_date(class="form-control") }}
-                                <span class="input-group-addon">
-                                    <span class="fa fa-calendar"></span>
-                                </span>
-                            </div>
-                            <p class="help-block">
-                                {{ form.start_date.errors[0] }}
-                        </div>
-
-                        <div class="form-group">
-                            <button class="btn btn-success" type="submit">Valider</button>
-                        </div>
-
+                        <p class="help-block">
+                            {{ form.name.errors[0] }}
                     </div>
+
+                    <div class="form-group {% if form.tournament_topic_url.errors %} has-error {% endif %}">
+                        {{form.tournament_topic_url.label()}}
+                        <div>
+                            {{form.tournament_topic_url(class="form-control")}}
+                        </div>
+                        <p class="help-block">
+                            {{ form.tournament_topic_url.errors[0] }}
+                    </div>
+
+                    <div class="form-group {% if form.jeudelorgue_topic_url.errors %} has-error {% endif %}">
+                        {{form.jeudelorgue_topic_url.label()}}
+                        <div>
+                            {{form.jeudelorgue_topic_url(class="form-control")}}
+                        </div>
+                        <p class="help-block">
+                            {{ form.jeudelorgue_topic_url.errors[0] }}
+                    </div>
+
+                    <div class="form-group {% if form.category.errors %} has-error {% endif %}">
+                        {{form.category.label()}}
+                        <div>
+                            {{form.category(class="form-control")}}
+                        </div>
+                        <p class="help-block">
+                            {{ form.category.errors[0] }}
+                    </div>
+
+                    <div class="form-group {% if form.surface.errors %} has-error {% endif %}">
+                        {{form.surface.label()}}
+                        <div>
+                            {{form.surface(class="form-control")}}
+                        </div>
+                        <p class="help-block">
+                            {{ form.surface.errors[0] }}
+                    </div>
+
+                    <div class="form-group {% if form.start_date.errors %} has-error {% endif %}">
+                        {{form.start_date.label()}}
+                        <div class="input-group date" id="datetimepicker">
+                            {{ form.start_date(class="form-control") }}
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+                        <p class="help-block">
+                            {{ form.start_date.errors[0] }}
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-success" type="submit">Valider</button>
+                    </div>
+
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 {% endblock %}
