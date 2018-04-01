@@ -6,7 +6,7 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Profil de {{ user.username }}</strong></h3>
+        <h3 class="panel-title">Profil de {{ user.username }}</h3>
     </div>
 
     <div class="panel-body">
@@ -19,30 +19,16 @@
                         <h4>Classements</h4>
                         {% with current_ranking = user.get_current_ranking() %}
                             {% if current_ranking %}
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            Race : #{{ current_ranking.annual_ranking }} ({{ current_ranking.annual_points }} points)
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div>
-                                            Annuel : #{{ current_ranking.year_to_date_points }} ({{ current_ranking.year_to_date_ranking }} points)
-                                        </div>
-                                    </div>
-                                </div>
+                                <ul>
+                                    <li><span class="fa fa-chevron-right"></span><a href= '{{ url_for("ranking.annual_ranking", _external = True) }}'> Annuel</a> :
+                                    #{{ current_ranking.annual_ranking }} ({{ current_ranking.annual_points }} points)</li>
+                                    <li><span class="fa fa-chevron-right"></span><a href= '{{ url_for("ranking.race_ranking", _external = True) }}'> Race</a> :
+                                    #{{ current_ranking.year_to_date_ranking }} ({{ current_ranking.year_to_date_points }} points)</li>
+                                </ul>
                             {% else %}
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            Race : -
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div>
-                                            Annuel : -
-                                        </div>
-                                    </div>
+                                    <div class="col-md-12">Annuel : -</div>
+                                    <div class="col-md-12">Race : -</div>
                                 </div>
                             {% endif %}
                         {% endwith %}
@@ -50,30 +36,34 @@
                     </div>
                 </div>
 
+                <br>
+                <br>
+
                 <div class="row">
                     <div class="col-md-12">
 
                         <h4>Palmarès</h4>
                         <div class="row">
-                            <div class="col-md-6">
-                                {% with best_rank = user.get_best_tournament_rank() %}
-                                    {% if best_rank %}
-                                        Meilleur classement en tournoi : #{{ best_rank.ranking }} (<a href= '{{ url_for("tournament.view_tournament", tournament_id = best_rank.tournament.id, _external = True) }}'>{{ best_rank.tournament.name }}</a>)
-                                    {% else %}
-                                        Meilleur classement en tournoi : #-
-                                    {% endif %}
+                            <div class="col-md-12">
+                                {% with titles = user.get_titles() %}
+                                    <h5>{{ titles.count() }} {% if titles.count() <= 1 %}titre{% else %}titres{% endif %}</h5>
+                                    {% if titles.count() > 0 %}
+                                        <ul>
+                                            {% for t in titles %}
+                                                <li><span class="fa fa-chevron-right"></span><a href= '{{ url_for("tournament.view_tournament", tournament_id = t.tournament.id, _external = True) }}'>
+                                                {{ t.tournament.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}</p>
                                 {% endwith %}
                             </div>
-                            <div class="col-md-6">
-                                {% with titles = user.get_titles() %}
-                                    {{ titles.count() }} {% if titles.count() <= 1 %}titre{% else %}titres{% endif %} {% if titles.count() > 0 %}
-                                    <ul>
-                                        {% for t in titles %}
-                                            <li><a href= '{{ url_for("tournament.view_tournament", tournament_id = t.tournament.id, _external = True) }}'>
-                                            {{ t.tournament.name }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                    {% endif %}</p>
+                            <div class="col-md-12">
+                                {% with best_rank = user.get_best_tournament_rank() %}
+                                    {% if best_rank %}
+                                        <h5>Meilleur classement en tournoi : #{{ best_rank.ranking }} (<a href= '{{ url_for("tournament.view_tournament", tournament_id = best_rank.tournament.id, _external = True) }}'>{{ best_rank.tournament.name }}</a>)</h5>
+                                    {% else %}
+                                        <h5>Meilleur classement en tournoi : #-</h5>
+                                    {% endif %}
                                 {% endwith %}
                             </div>
                         </div>
