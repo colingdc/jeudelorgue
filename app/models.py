@@ -694,6 +694,12 @@ class TournamentPlayer(db.Model):
             full_name += u"Qualifié " + str(self.qualifier_id)
         return full_name
 
+    def get_full_name_surname_first(self):
+        if self.player:
+            return u"{}, {}".format(self.player.last_name.upper(), self.player.first_name)
+        else:
+            return u"Qualifié " + str(self.qualifier_id)
+
     def is_eliminated(self):
         matches = (Match.query
                    .filter(or_(Match.tournament_player1_id == self.id,
