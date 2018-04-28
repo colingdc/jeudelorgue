@@ -26,6 +26,7 @@
 
 {% endblock %}
 
+
 {% block body %}
 
 {% block navbar %}
@@ -181,6 +182,7 @@
 </nav>
 {% endblock %}
 
+
 <div class="container-fluid">
     {% for category, message in get_flashed_messages(with_categories=True) %}
         <div class="alert alert-{{ category }} alert-dismissible">
@@ -191,9 +193,11 @@
     {% block content %}{% endblock %}
 </div>
 
+
 <script src="{{ url_for('static', filename='bower_components/moment/min/moment.min.js') }}"></script>
 <script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 {% block extrajs %}{% endblock %}
 
