@@ -3,7 +3,7 @@
 {% block styles %}
 
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/{}.css'.format(tournament.surface.class_name)) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/{}.css'.format(tournament.surface.class_name)) | autoversion }}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 {% endblock %}
 

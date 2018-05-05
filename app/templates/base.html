@@ -20,9 +20,10 @@
 
 {{ super() }}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') | autoversion }}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') | autoversion }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') | autoversion }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') | autoversion }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') | autoversion }}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') | autoversion }}"> -->
 
 {% endblock %}
 

@@ -1,3 +1,4 @@
-body {
-    background-color: rgba(25, 145, 208, 0.7);
+.panel-default > .panel-heading {
+    /*background: rgba(108, 125, 239, 0.7)  ;*/
+    background: rgba(249, 195, 135);
 }

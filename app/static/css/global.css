@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    padding-top: 70px;
+    background: rgb(240, 240, 240);
+}
+
+
+.navbar {
+    background: rgb(41, 49, 51);
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
+    color: #ffffff;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav > li > ul > li > a:hover,
+.navbar-default .navbar-nav > li > a:hover {
+    background-color: #C0C0C0;
+    color: #4040ff;
+}
+
+.panel, .btn {
+    box-shadow: 0 0 10px grey;
+}
