@@ -1,3 +1,16 @@
-body {
-    background-color: rgba(292, 82, 32, 0.7);
+.panel-default > .panel-heading {
+    background: rgb(230, 115, 55);
+    color: #000000;
+}
+
+div.game.first-round{
+  border-left:4px solid rgb(230, 115, 55);
+}
+
+div.game-spacer{
+  border-right:4px solid rgb(230, 115, 55);
+}
+
+div.game-player{
+  border-right:4px solid rgb(230, 115, 55);
 }

@@ -33,6 +33,7 @@
 {% block navbar %}
 <nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
     <div class="container-fluid">
+
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse"
                     data-target="#navbar">
@@ -43,14 +44,44 @@
             </button>
             <a class="navbar-brand" href="{{ url_for('main.index') }}">Le jeu de L-orgue</a>
         </div>
+
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="{{ url_for('main.index') }}">
-                        <span class="fa fa-home" aria-hidden="true"></span>
-                        Accueil
-                    </a>
-                </li>
+                {% if current_user.is_authenticated %}
+                    <li>
+                        <a href="{{ url_for('tournament.view_tournaments') }}">
+                            <span class="fa fa-trophy" aria-hidden="true"></span>
+                            Tournois
+                        </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="fa fa-list-ol" aria-hidden="true"></span>
+                            Classements <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('ranking.race_ranking') }}">
+                                    <span class="fa fa-flag-checkered" aria-hidden="true"></span>
+                                    Race
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('ranking.annual_ranking') }}">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    Annuel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('ranking.all_rankings') }}">
+                                    <span class="fa fa-list" aria-hidden="true"></span>
+                                    Historique
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+
                 <li>
                     <a href="{{ url_for('main.faq') }}">
                         <span class="fa fa-question-circle" aria-hidden="true"></span>
@@ -63,9 +94,13 @@
                         Contact
                     </a>
                 </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_manager() %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-lock" aria-hidden="true"></span>
+                        Admin <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="{{ url_for('main.view_users') }}">
@@ -77,12 +112,6 @@
                             <a href="{{ url_for('main.view_validated_users') }}">
                                 <span class="fa fa-user" aria-hidden="true"></span>
                                 Liste des utilisateurs validés
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('tournament.view_tournaments') }}">
-                                <span class="fa fa-list" aria-hidden="true"></span>
-                                Tournois
                             </a>
                         </li>
                         <li>
@@ -105,43 +134,13 @@
                         </li>
                     </ul>
                 </li>
-
                 {% endif %}
 
-                {% if current_user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classements<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{{ url_for('ranking.race_ranking') }}">
-                                <span class="fa fa-flag-checkered" aria-hidden="true"></span>
-                                Race
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('ranking.annual_ranking') }}">
-                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                Annuel
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('ranking.all_rankings') }}">
-                                <span class="fa fa-list" aria-hidden="true"></span>
-                                Historique
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                {% endif %}
-
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="fa fa-user" aria-hidden="true"></span>
-                        {{ current_user.username}}<b class="caret"></b></a>
+                        {{ current_user.username}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="{{ url_for('main.view_user', user_id=current_user.id) }}">
@@ -179,6 +178,7 @@
                 {% endif %}
             </ul>
         </div>
+
     </div>
 </nav>
 {% endblock %}

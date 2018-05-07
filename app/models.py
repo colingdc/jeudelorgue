@@ -265,6 +265,8 @@ class Tournament(db.Model):
     players = db.relationship("TournamentPlayer", backref = "tournament", lazy = "dynamic")
     rankings = db.relationship("Ranking", backref = "tournament", lazy = "dynamic")
 
+    def is_created(self):
+        return self.status == TournamentStatus.CREATED
 
     def is_open_to_registration(self):
         return self.status == TournamentStatus.REGISTRATION_OPEN

@@ -11,20 +11,16 @@
         Historique des classements
     </a>
   </div>
-  <div class="btn-group" role="group">
-    <a class="btn btn-default"
-       href="{{ url_for('tournament.view_tournament', tournament_id = tournament.id) }}">
-        <span class="fa fa-trophy"></span>
-        Page du tournoi
-    </a>
-  </div>
 </div>
 
 <div class="panel panel-default panel-table">
 
     <div class="panel-heading">
-        <h3 class="panel-title">Classement annuel après le tournoi <a href= '{{ url_for("tournament.view_tournament", tournament_id = tournament.id, _external = True) }}'>
-        {{ tournament.name }}</a></h3>
+        <h3 class="panel-title">
+            <a href= '{{ url_for("ranking.all_rankings") }}'>Classement annuel</a>
+             après le tournoi
+            <a href= '{{ url_for("tournament.view_tournament", tournament_id = tournament.id) }}'>{{ tournament.name }}</a>
+        </h3>
     </div>
 
     <div class="panel-body">

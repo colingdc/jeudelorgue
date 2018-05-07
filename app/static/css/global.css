@@ -3,9 +3,44 @@
 body {
     font-family: 'Montserrat', sans-serif;
     padding-top: 70px;
-    background: rgb(240, 240, 240);
+    background: #e0e0e0;
 }
 
+@media (max-width: 1000px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display:block !important;
+    }
+}
 
 .navbar {
     background: rgb(41, 49, 51);
@@ -17,11 +52,93 @@ body {
 
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-nav > li > ul > li > a:hover,
-.navbar-default .navbar-nav > li > a:hover {
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-nav > li > ul > li > a:focus,
+.navbar-default .navbar-nav > li > a:focus {
     background-color: #C0C0C0;
-    color: #4040ff;
+    color: #8040ff;
 }
 
-.panel, .btn {
-    box-shadow: 0 0 10px grey;
+a:hover {
+  color: #8040ff;
+}
+
+.panel, .alert {
+    border-radius: 10px;
+}
+
+.table {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.btn {
+    border-radius: 10px;
+    /*margin-top: 10px;*/
+    margin-bottom: 10px;
+    display: block;
+}
+
+.panel-default > .panel-heading {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background: #8040ff;
+    color: #ffffff;
+}
+
+.panel-default > .panel-heading > h3 > a,
+.panel-default > .panel-heading > h3,
+.panel-default > .panel-heading > a {
+    color: #ffffff;
+}
+
+.panel-default > .panel-heading > h3:hover,
+.panel-default > .panel-heading > h3 > a:hover,
+.panel-default > .panel-heading > a:hover {
+    color: #ffffff;
+}
+
+/*Bootstrap button outline override*/
+.btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .1s;
+}
+
+.btn-primary.btn-outline {
+    color: #428bca;
+}
+
+.btn-secondary.btn-outline {
+    background-color: #d0d0d0;
+}
+
+.btn-success.btn-outline {
+    color: #5cb85c;
+}
+
+.btn-info.btn-outline {
+    color: #5bc0de;
+}
+
+.btn-warning.btn-outline {
+    color: #f0ad4e;
+}
+
+.btn-danger.btn-outline {
+    color: #d9534f;
+}
+
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: #fff;
+}
+
+.btn-secondary.btn-outline:hover {
+    color: #000;
+    background-color: #e0e0e0;
 }

@@ -26,6 +26,7 @@ class Config:
     SLOW_DB_QUERY_TIME = 0.5
     BABEL_DEFAULT_LOCALE = "fr"
     WTF_CSRF_TIME_LIMIT = 3600 * 6
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     @staticmethod
     def init_app(app):
