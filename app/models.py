@@ -501,7 +501,7 @@ class Surface(db.Model):
         surfaces = [("Dur", "surface-hard"),
                     ("Gazon", "surface-grass"),
                     ("Terre battue", "surface-clay")]
-        for (s, c, b) in surfaces:
+        for (s, c) in surfaces:
             surface = Surface(name = s,
                               class_name = c)
             db.session.add(surface)
