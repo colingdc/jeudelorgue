@@ -7,10 +7,14 @@ from math import log, floor
 import json
 
 from . import bp
-from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm, TournamentPlayerAlphabeticStatsForm
+from .forms import (CreateTournamentForm, EditTournamentForm,
+                    CreateTournamentDrawForm, PlayerTournamentDrawForm,
+                    FillTournamentDrawForm, TournamentPlayerStatsForm,
+                    TournamentPlayerAlphabeticStatsForm, IntermediaryRankingsForm)
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory, Surface, Ranking
+from ..models import (Tournament, TournamentStatus, Participant, Match, TournamentPlayer,
+                      Player, Forecast, TournamentCategory, Surface, Ranking)
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED, TOURNAMENT_CLOSED, DRAW_FILLED_COMPLETELY, DRAW_NOT_FILLED_COMPLETELY)
 
@@ -646,6 +650,42 @@ def tournament_player_stats(tournament_id):
                            form_alphabetic = form_alphabetic,
                            tournament_player = tournament_player,
                            surface = tournament.surface.class_name)
+
+
+@bp.route("/<tournament_id>/stats/intermediary_rankings", methods = ["GET", "POST"])
+@login_required
+def intermediary_rankings(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+    if tournament.deleted_at:
+        abort(404)
+
+    if tournament.are_draws_private():
+        return redirect(url_for(".view_tournament", tournament_id = tournament_id))
+
+    title = u"{} - Classements intermédiaires".format(tournament.name)
+
+    form = IntermediaryRankingsForm()
+    rounds = [(r_id, r_name) for r_id, r_name in zip(range(tournament.number_rounds, 0, -1), tournament.get_full_round_names())]
+    round_choices = list(rounds)
+    round_names = dict(rounds)
+
+    form.round_name.choices = [(-1, "Choisir un tour...")] + round_choices
+
+    round_id = request.args.get("round_id")
+    round_name = None
+
+
+    if round_id is None and form.validate_on_submit():
+        round_id = form.round_name.data
+        round_name = round_names[round_id]
+
+    return render_template("tournament/intermediary_rankings.html",
+                           title = title,
+                           tournament = tournament,
+                           form = form,
+                           round_name = round_name,
+                           round_id = round_id,
+                           )
 
 
 @bp.route("/<tournament_id>/stats/forecasts")

@@ -65,3 +65,6 @@ class TournamentPlayerStatsForm(FlaskForm):
 
 class TournamentPlayerAlphabeticStatsForm(FlaskForm):
     player_name = SelectField(u"Ordre alphabétique", coerce = int)
+
+class IntermediaryRankingsForm(FlaskForm):
+    round_name = SelectField(u"Voir le classement à l'issue...", coerce = int)

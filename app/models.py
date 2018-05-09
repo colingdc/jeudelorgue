@@ -317,6 +317,12 @@ class Tournament(db.Model):
         if self.number_rounds > 4:
             names += ["T" + str(i) for i in range(self.number_rounds - 4, 0, -1)]
             return names[::-1]
+
+    def get_full_round_names(self):
+        names = ["de la finale", "des demi-finales", "des quarts de finale", "des huitièmes de finale"]
+        if self.number_rounds > 4:
+            names += ["du tour " + str(i) for i in range(self.number_rounds - 4, 0, -1)]
+            return names[::-1]
         else:
             return names[:self.number_rounds][::-1]
 
