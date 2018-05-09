@@ -14,3 +14,7 @@ div.game-spacer{
 div.game-player{
   border-right:4px solid rgb(230, 115, 55);
 }
+
+div.game-player:hover {
+  background-color: rgb(230, 115, 55, 0.5);
+}

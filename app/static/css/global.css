@@ -57,11 +57,6 @@ body {
 .navbar-default .navbar-nav > li > ul > li > a:focus,
 .navbar-default .navbar-nav > li > a:focus {
     background-color: #C0C0C0;
-    color: #8040ff;
-}
-
-a:hover {
-  color: #8040ff;
 }
 
 .panel, .alert {
@@ -96,6 +91,12 @@ a:hover {
 .panel-default > .panel-heading > h3 > a:hover,
 .panel-default > .panel-heading > a:hover {
     color: #ffffff;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
 }
 
 /*Bootstrap button outline override*/

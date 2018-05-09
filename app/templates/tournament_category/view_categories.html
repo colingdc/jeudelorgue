@@ -5,15 +5,18 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Liste des catégories de tournoi</h3>
+        <h3 class="panel-title">Catégories de tournois</h3>
     </div>
 
     <div class="panel-body">
         {% if current_user.is_manager() %}
-            <a class="btn btn-success"
-               href="{{ url_for('.create_category') }}">
-                Nouvelle catégorie de tournoi
-            </a>
+            <div class="btn-group" role="group">
+                <a class="btn btn-success"
+                   href="{{ url_for('.create_category') }}">
+                   <span class="fa fa-pencil"></span>
+                    Nouvelle catégorie de tournoi
+                </a>
+            </div>
         {% endif %}
 
         <div class="draw">
@@ -38,21 +41,20 @@
                             <td>{{ category.minimal_score }}</td>
                             {% if current_user.is_manager() %}
                                 <td>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <a class="btn btn-warning"
-                                           href="{{ url_for('.edit_category', category_id=category.id) }}">
-                                                <span class="fa fa-pencil"></span>
-                                                Editer
-                                            </a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <a class="btn btn-danger"
-                                           href="{{ url_for('.delete_category', category_id=category.id) }}">
-                                                <span class="fa fa-trash"></span>
-                                                Supprimer
-                                            </a>
-                                        </div>
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-warning"
+                                       href="{{ url_for('.edit_category', category_id=category.id) }}">
+                                            <span class="fa fa-pencil"></span>
+                                            Editer
+                                        </a>
+                                    </div>
+
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-danger"
+                                       href="{{ url_for('.delete_category', category_id=category.id) }}">
+                                            <span class="fa fa-trash"></span>
+                                            Supprimer
+                                        </a>
                                     </div>
                                 </td>
                             {% endif %}

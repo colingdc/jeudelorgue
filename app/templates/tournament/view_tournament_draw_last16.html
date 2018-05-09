@@ -11,16 +11,14 @@
 
 {% block content %}
 
-<a class="btn btn-default"
-   href="{{ url_for('.view_tournament', tournament_id=tournament.id) }}">
-    <span class="fa fa-arrow-left"></span>
-    Revenir au tournoi
-</a>
-
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ tournament.name }} - Tableau du tournoi à partir des huitièmes</h3>
+        <h3 class="panel-title">
+            <a href="{{ url_for('.view_tournament', tournament_id=tournament.id) }}">
+            {{ tournament.name }}</a>
+             - Tableau du tournoi à partir des huitièmes
+        </h3>
     </div>
 
     <div class="panel-body">

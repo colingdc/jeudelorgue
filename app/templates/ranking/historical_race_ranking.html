@@ -3,17 +3,6 @@
 
 {% block content %}
 
-
-<div class="btn-group btn-group-justified" role="group" aria-label="...">
-  <div class="btn-group" role="group">
-    <a class="btn btn-default"
-       href="{{ url_for('ranking.all_rankings') }}">
-        <span class="fa fa-arrow-left"></span>
-        Historique des classements
-    </a>
-  </div>
-</div>
-
 <div class="panel panel-default panel-table">
 
     <div class="panel-heading">
@@ -58,12 +47,12 @@
                 </tbody>
             </table>
         </div>
+
+        {{ macros.pagination_widget(pagination, '.historical_race_ranking', tournament_id = tournament.id) }}
+
     </div>
 </div>
 
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.historical_race_ranking', tournament_id = tournament.id) }}
-</div>
 
 
 {% endblock %}

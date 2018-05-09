@@ -2,12 +2,6 @@
 
 {% block content %}
 
-<a class="btn btn-default"
-   href="{{ url_for('.view_categories') }}">
-    <span class="fa fa-arrow-left"></span>
-    Revenir à la liste des catégories de tournoi
-</a>
-
 <div class="panel panel-default">
 
     <div class="panel-heading">
@@ -18,6 +12,7 @@
         {{ form.hidden_tag() }}
 
         <div class="panel-body">
+
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
 

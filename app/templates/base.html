@@ -20,10 +20,8 @@
 
 {{ super() }}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') | autoversion }}"> -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') | autoversion }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') | autoversion }}">
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') | autoversion }}"> -->
 
 {% endblock %}
 
@@ -103,33 +101,35 @@
                         Admin <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
+                            <a href="{{ url_for('tournament.create_tournament') }}">
+                                <span class="fa fa-trophy" aria-hidden="true"></span>
+                                Créer un tournoi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('tournament_category.view_categories') }}">
+                                <span class="fa fa-list" aria-hidden="true"></span>
+                                Catégories de tournois
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
                             <a href="{{ url_for('main.view_users') }}">
                                 <span class="fa fa-user" aria-hidden="true"></span>
-                                Liste des utilisateurs
+                                Utilisateurs
                             </a>
                         </li>
                         <li>
                             <a href="{{ url_for('main.view_validated_users') }}">
                                 <span class="fa fa-user" aria-hidden="true"></span>
-                                Liste des utilisateurs validés
+                                Utilisateurs validés
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ url_for('tournament.create_tournament') }}">
-                                <span class="fa fa-sitemap" aria-hidden="true"></span>
-                                Créer un tournoi
-                            </a>
-                        </li>
+                        <li role="separator" class="divider"></li>
                         <li>
                             <a href="{{ url_for('player.view_players') }}">
                                 <span class="fa fa-list" aria-hidden="true"></span>
                                 Joueurs ATP
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('player.create_player') }}">
-                                <span class="fa fa-user" aria-hidden="true"></span>
-                                Créer un joueur ATP
                             </a>
                         </li>
                     </ul>
