@@ -58,10 +58,8 @@ def view_user(user_id):
                          "y": t.year_to_date_ranking or "null",
                          "tournament_name": t.name}
                         for t in rankings]}]
-    # series = [{"name": "Classement annuel", "data": [("1391904000000", 12), ("1391914000000", 5), ("1391954000000", 8)]},
-    #           {"name": "Classement Race", "data": [("1391904000000", 3), ("1391914000000", 15), ("1391954000000", 2)]}]
 
-    return render_template("main/user.html", title = title, user = user, series = series,
+    return render_template("main/view_user.html", title = title, user = user, series = series,
                            pagination = pagination)
 
 

@@ -53,6 +53,13 @@
                         <h4>Palmarès</h4>
                         <div class="row">
                             <div class="col-md-12">
+                                <h5>{{ user.all_participations.count() }} tournois joués,
+                                {{ user.year_to_date_participations.count() }} cette année</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
                                 {% with titles = user.get_titles() %}
                                     <h5>{{ titles.count() }} {% if titles.count() <= 1 %}titre{% else %}titres{% endif %}</h5>
                                     {% if titles.count() > 0 %}

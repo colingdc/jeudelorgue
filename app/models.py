@@ -128,26 +128,30 @@ class User(UserMixin, db.Model):
         return (Participant.query
                 .filter(Participant.tournament_id == tournament_id)
                 .filter(Participant.user_id == self.id)
+                .filter(Participant.deleted_at.is_(None))
                 ).first()
 
     def is_registered_to_tournament(self, tournament_id):
         return self.get_participant(tournament_id) is not None
 
     @property
-    def year_to_date_participations(self):
+    def all_participations(self):
         participations = (self.participants
                           .join(Tournament, Tournament.id == Participant.tournament_id)
                           .filter(Tournament.deleted_at.is_(None))
-                          .filter(Tournament.status == TournamentStatus.FINISHED)
+                          .filter(Tournament.status == TournamentStatus.FINISHED))
+        return participations
+
+    @property
+    def year_to_date_participations(self):
+        participations = (self.all_participations
                           .filter(func.year(Tournament.started_at) == datetime.datetime.now().year)
                           .filter(Tournament.started_at <= datetime.datetime.now()))
         return participations
 
     @property
     def annual_participations(self):
-        participations = (self.participants
-                          .join(Tournament, Tournament.id == Participant.tournament_id)
-                          .filter(Tournament.deleted_at.is_(None))
+        participations = (self.all_participations
                           .filter(Tournament.started_at >= datetime.datetime.now() - relativedelta(years = 1))
                           .filter(Tournament.started_at <= datetime.datetime.now()))
         return participations
