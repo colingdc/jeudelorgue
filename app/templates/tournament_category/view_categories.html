@@ -11,7 +11,7 @@
     <div class="panel-body">
         {% if current_user.is_manager() %}
             <div class="btn-group" role="group">
-                <a class="btn btn-success"
+                <a class="btn btn-secondary btn-outline"
                    href="{{ url_for('.create_category') }}">
                    <span class="fa fa-pencil"></span>
                     Nouvelle catégorie de tournoi

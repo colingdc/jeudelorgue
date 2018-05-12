@@ -3,9 +3,6 @@
 
 {% block content %}
 
-<main>
-
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Liste des tournois</h3>
@@ -14,8 +11,9 @@
     <div class="panel-body">
         {% if current_user.is_manager() %}
             <div class="btn-group" role="group">
-                <a class="btn btn-success"
+                <a class="btn btn-secondary btn-outline"
                    href="{{ url_for('.create_tournament') }}">
+                   <span class="fa fa-trophy"></span>
                     Nouveau tournoi
                 </a>
             </div>

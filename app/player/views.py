@@ -20,7 +20,7 @@ def create_player():
                         last_name = form.last_name.data)
         db.session.add(player)
         db.session.commit()
-        flash(u"Le joueur {} a été créé".format(player.get_full_name()), "info")
+        flash(u"Le joueur {} a été créé".format(player.get_full_name()), "success")
         return redirect(url_for(".create_player"))
     else:
         return render_template("player/create_player.html", title = title,
