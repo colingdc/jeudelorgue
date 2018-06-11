@@ -2,16 +2,10 @@
 
 {% block content %}
 
-<a class="btn btn-default"
-   href="{{ url_for('.view_players') }}">
-    <span class="fa fa-arrow-left"></span>
-    Revenir à la liste des joueurs
-</a>
-
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><strong>Editer le joueur</strong></h3>
+        <h3 class="panel-title">Editer le joueur {{ player.get_full_name() }}</h3>
     </div>
 
     <form action="{{ url_for('player.edit_player', player_id=player.id) }}" class="form-horizontal" method="POST">
