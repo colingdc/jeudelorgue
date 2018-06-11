@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% block styles %}
 
@@ -193,10 +194,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="btn-group" role="group">
-                                        <a class="btn btn-secondary btn-outline" href="{{ url_for('.close_tournament', tournament_id=tournament.id) }}">
-                                            <span class="fa fa-lock"></span>
-                                            Clôturer le tournoi
-                                        </a>
+                                        <div data-title="Clôturer le tournoi"
+                                             data-action="{{ url_for('.close_tournament', tournament_id=tournament.id) }}"
+                                             data-message="Confirmer la clôture du tournoi ?">
+                                            <a class="btn btn-secondary btn-outline formConfirm"
+                                               href="{{ url_for('.close_tournament', tournament_id=tournament.id) }}">
+                                                <span class="fa fa-lock"></span>
+                                                Clôturer le tournoi
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -223,11 +229,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="btn-group" role="group">
-                                        <a class="btn btn-secondary btn-outline"
-                                           href="{{ url_for('.close_registrations', tournament_id=tournament.id)}}">
-                                            <span class="fa fa-lock"></span>
-                                            Fermer les inscriptions
-                                        </a>
+                                        <div data-title="Fermer les inscriptions"
+                                             data-action="{{ url_for('.close_registrations', tournament_id=tournament.id) }}"
+                                             data-message="Confirmer la fermeture des inscriptions ?">
+                                            <a class="btn btn-secondary btn-outline formConfirm"
+                                               href="{{ url_for('.close_registrations', tournament_id=tournament.id)}}">
+                                                <span class="fa fa-lock"></span>
+                                                Fermer les inscriptions
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -237,11 +247,15 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="btn-group" role="group">
-                                    <a class="btn btn-secondary btn-outline"
-                                       href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
-                                       <span class="fa fa-unlock"></span>
-                                        Ouvrir les inscriptions
-                                    </a>
+                                    <div data-title="Ouvrir les inscriptions"
+                                         data-action="{{ url_for('.open_registrations', tournament_id=tournament.id) }}"
+                                         data-message="Confirmer l'ouverture des inscriptions ?">
+                                        <a class="btn btn-secondary btn-outline formConfirm"
+                                           href="{{ url_for('.open_registrations', tournament_id=tournament.id) }}">
+                                           <span class="fa fa-unlock"></span>
+                                            Ouvrir les inscriptions
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -400,6 +414,7 @@
     </div>
 </div>
 
+{{ macros.confirmation_modal() }}
 
 {% endblock %}
 
@@ -414,6 +429,28 @@
                                             info : false
                                         });
     } );
+</script>
+
+<script type="text/javascript">
+
+  var action = "view_tournament";
+  $('.formConfirm').on('click', function(e) {
+        e.preventDefault();
+        var el = $(this).parent();
+        var title = el.attr('data-title');
+        var msg = el.attr('data-message');
+        action = el.attr('data-action');
+
+        $('#formConfirm')
+        .find('#frm_body').html(msg)
+        .end().find('#frm_title').html(title)
+        .end().modal('show');
+
+  });
+
+  $('#formConfirm').on('click', '#frm_submit', function(e) {
+    window.location.href = action;
+  });
 </script>
 {% endblock %}
 
