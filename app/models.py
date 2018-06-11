@@ -331,12 +331,16 @@ class Tournament(db.Model):
         return names[::-1]
 
 
-    def get_score_per_round(self):
+    def get_score_per_round(self, max_round = None):
+        if max_round is None:
+            max_round = 0
         if self.number_rounds < 7:
-            return {round: 2 ** (self.number_rounds - round)
-                    for round in range(1, self.number_rounds + 1)}
-        return {round: 2 ** (self.number_rounds - round - 1) if round < self.number_rounds else 1
-                for round in range(1, self.number_rounds + 1)}
+            return {round_id: 2 ** (self.number_rounds - round_id) if round_id >= max_round else 0
+                    for round_id in range(1, self.number_rounds + 1)}
+        return {round_id: 0 if round_id < max_round
+                          else 2 ** (self.number_rounds - round_id - 1) if round_id < self.number_rounds
+                          else 1
+                for round_id in range(1, self.number_rounds + 1)}
 
     def get_risk_coefficient_per_round(self):
         return {round: 2 ** (self.number_rounds - round)
@@ -384,6 +388,10 @@ class Tournament(db.Model):
 
     def participants_sorted(self):
         return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(), Participant.created_at))
+
+    def get_participants_ranking(self, max_round = None):
+        scores = sorted([(p, p.get_score(max_round)) for p in self.participants], key = lambda x: -x[1])
+        return scores
 
     def get_tournament_player_stats(self, tournament_player):
         # Get the tournament player's first round match
@@ -541,8 +549,8 @@ class Participant(db.Model):
     def has_completely_filled_draw(self):
         return self.has_filled_draw() and len(self.forecasts.filter(Forecast.winner_id).all()) == len(self.forecasts.all())
 
-    def get_score(self):
-        score_per_round = self.tournament.get_score_per_round()
+    def get_score(self, max_round = None):
+        score_per_round = self.tournament.get_score_per_round(max_round)
         number_byes = sum(1 for p in self.tournament.players if p.player and p.player.last_name == "Bye")
 
         matches = {m.id: (m.winner_id, m.round) for m in Match.query.filter(Match.tournament_id == self.tournament.id)}

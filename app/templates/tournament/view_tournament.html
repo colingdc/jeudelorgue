@@ -367,9 +367,6 @@
                                             <a href= '{{ url_for(".view_participant_draw_last16", tournament_id = tournament.id, participant_id = participant.id, _external = True) }}'>
                                              / A partir des 8èmes</a>
                                             {% endif %}
-                                            {% if tournament.old_website_id %}
-                                            <a target="_blank" href= '{{ participant.get_old_website_draw_url() }}'> / Sur l'ancien site</a>
-                                            {% endif %}
                                         </td>
                                         {% if tournament.is_finished() %}
                                             <td>{{ participant.points }}</td>

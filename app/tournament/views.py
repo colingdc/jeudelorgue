@@ -672,12 +672,20 @@ def intermediary_rankings(tournament_id):
     form.round_name.choices = [(-1, "Choisir un tour...")] + round_choices
 
     round_id = request.args.get("round_id")
-    round_name = None
+    if round_id is not None:
+        round_name = round_names.get(round_id)
 
-
-    if round_id is None and form.validate_on_submit():
+    elif form.validate_on_submit():
         round_id = form.round_name.data
-        round_name = round_names[round_id]
+        if round_id == -1:
+            round_id = None
+            round_name = None
+        else:
+            round_name = round_names.get(round_id)
+
+    else:
+        round_name = None
+
 
     return render_template("tournament/intermediary_rankings.html",
                            title = title,
