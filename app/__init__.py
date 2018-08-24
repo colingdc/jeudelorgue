@@ -89,13 +89,19 @@ def create_app(config_name):
         session.modified = True
         g.user = current_user
 
-        if current_user.is_authenticated and not current_user.confirmed and current_user.is_old_account and request.endpoint[:5] != 'auth.':
+
+        if (current_user.is_authenticated and
+            not current_user.confirmed and
+            current_user.is_old_account and
+            request.endpoint[:5] != 'auth.' and
+            not request.path.startswith('/static')):
             flash(OLD_ACCOUNT_PASSWORD_CHANGE, "info")
             return redirect(url_for('auth.change_password'))
 
         if (current_user.is_authenticated and
             not current_user.confirmed and
-            request.endpoint[:5] != 'auth.'):
+            request.endpoint[:5] != 'auth.' and
+            not request.path.startswith('/static')):
             return redirect(url_for('auth.unconfirmed'))
 
         rp = request.path
