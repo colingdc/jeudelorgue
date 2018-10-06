@@ -114,3 +114,7 @@ run.sh
 
 # List of fontawesome icons
 fa.txt
+
+instance.txt
+nohup.out
+app/static/bower_components/
