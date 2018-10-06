@@ -290,5 +290,23 @@ def import_surfaces(filename):
     db.session.commit()
 
 
+@manager.command
+def close_registrations(tournament_id):
+    tournament = Tournament.query.get(tournament_id)
+    tournament.status = TournamentStatus.ONGOING
+    db.session.add(tournament)
+    db.session.commit()
+
+    for participant in tournament.participants:
+        if not participant.has_filled_draw():
+            db.session.delete(participant)
+    db.session.commit()
+
+    for participant in tournament.participants:
+        participant.risk_coefficient = participant.get_risk_coefficient()
+        db.session.add(participant)
+    db.session.commit()
+
+
 if __name__ == "__main__":
     manager.run()
