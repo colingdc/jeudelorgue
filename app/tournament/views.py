@@ -306,9 +306,9 @@ def edit_tournament_draw(tournament_id):
 
     if request.method == "GET":
         for p, match in zip(form.player, matches):
-            if match.tournament_player1.player:
+            if match.tournament_player1 and match.tournament_player1.player:
                 p.player1_name.data = match.tournament_player1.player.id
-            if match.tournament_player2.player:
+            if match.tournament_player2 and match.tournament_player2.player:
                 p.player2_name.data = match.tournament_player2.player.id
             p.player1_status.data = match.tournament_player1.status
             p.player2_status.data = match.tournament_player2.status
