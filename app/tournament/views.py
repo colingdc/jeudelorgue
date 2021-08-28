@@ -306,14 +306,16 @@ def edit_tournament_draw(tournament_id):
 
     if request.method == "GET":
         for p, match in zip(form.player, matches):
-            if match.tournament_player1 and match.tournament_player1.player:
-                p.player1_name.data = match.tournament_player1.player.id
-            if match.tournament_player2 and match.tournament_player2.player:
-                p.player2_name.data = match.tournament_player2.player.id
-            p.player1_status.data = match.tournament_player1.status
-            p.player2_status.data = match.tournament_player2.status
-            p.player1_seed.data = match.tournament_player1.seed
-            p.player2_seed.data = match.tournament_player2.seed
+            if match.tournament_player1:
+                if match.tournament_player1.player:
+                    p.player1_name.data = match.tournament_player1.player.id
+                p.player1_status.data = match.tournament_player1.status
+                p.player1_seed.data = match.tournament_player1.seed
+            if match.tournament_player2:
+                if match.tournament_player2.player:
+                    p.player2_name.data = match.tournament_player2.player.id
+                p.player2_status.data = match.tournament_player2.status
+                p.player2_seed.data = match.tournament_player2.seed
 
     if form.validate_on_submit():
         qualifier_count = 0
