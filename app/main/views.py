@@ -121,7 +121,6 @@ def edit_profile_admin(user_id):
 
 
 @bp.route("/contact", methods = ['GET', 'POST'])
-@login_required
 def contact():
     title = "Contact"
     form = ContactForm()
