@@ -126,7 +126,7 @@ def contact():
     form = ContactForm()
     if form.validate_on_submit():
         message = form.message.data
-        if current_user:
+        if current_user and hasattr(current_user, "username"):
             sender = current_user.username
         else:
             sender = "un utilisateur non connecté"
