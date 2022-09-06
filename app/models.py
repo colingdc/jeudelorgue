@@ -831,7 +831,7 @@ class Ranking(db.Model):
         df["number_tournaments"] = 1
         df = df.dropna()
 
-        annual_points = df[df["started_at"] > tournament.started_at - relativedelta(years = 1)].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
+        annual_points = df[df["started_at"] > tournament.started_at - relativedelta(years = 1, days = -3)].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
         annual_points["rank"] = range(1, len(annual_points) + 1)
         year_to_date_points = df[df["started_at"].dt.year == tournament.started_at.year].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
         year_to_date_points["rank"] = range(1, len(year_to_date_points) + 1)
