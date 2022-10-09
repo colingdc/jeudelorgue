@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from . import bp
 from ..decorators import admin_required, manager_required
@@ -9,6 +9,10 @@ from .. import db
 from ..texts import PROFILE_UPDATED
 from .forms import EditProfileAdminForm, ContactForm
 from ..email import send_email
+from ..utils import (
+    display_info_toast,
+    display_success_toast,
+)
 from flask import current_app
 
 
@@ -146,7 +150,7 @@ def edit_profile_admin(user_id):
         user.confirmed = form.confirmed.data
         user.role = Role.query.get(form.role.data)
         db.session.add(user)
-        flash(PROFILE_UPDATED, "success")
+        display_success_toast(PROFILE_UPDATED)
         return redirect(
             url_for(
                 ".view_user",
@@ -185,10 +189,7 @@ def contact():
             email=form.email.data,
             user=current_user
         )
-        flash(
-            u"Votre message a bien été envoyé.",
-            "info"
-        )
+        display_info_toast(u"Votre message a bien été envoyé.")
         return redirect(url_for(".contact"))
 
     return render_template(
