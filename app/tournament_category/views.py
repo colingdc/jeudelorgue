@@ -6,12 +6,7 @@ from . import bp
 from .forms import CreateCategoryForm, EditCategoryForm
 from .. import db
 from ..decorators import manager_required
-from ..lang import (
-    TOURNAMENT_CATEGORIES,
-    TOURNAMENT_CATEGORY_CREATED,
-    TOURNAMENT_CATEGORY_DELETED,
-    TOURNAMENT_CATEGORY_UPDATED,
-)
+from ..lang import WORDINGS
 from ..models import TournamentCategory
 from ..utils import display_info_toast
 
@@ -30,7 +25,7 @@ def create_category():
         )
         db.session.add(category)
         db.session.commit()
-        display_info_toast(TOURNAMENT_CATEGORY_CREATED.format(category.name))
+        display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORY_CREATED.format(category.name))
         return redirect(url_for(".create_category"))
     else:
         return render_template(
@@ -58,7 +53,7 @@ def edit_category(category_id):
         category.minimal_score = form.minimal_score.data
         db.session.add(category)
         db.session.commit()
-        display_info_toast(TOURNAMENT_CATEGORY_UPDATED.format(category.name))
+        display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORY_UPDATED.format(category.name))
         return redirect(
             url_for(
                 ".edit_category",
@@ -93,7 +88,7 @@ def delete_category(category_id):
     category.deleted_at = datetime.datetime.now()
     db.session.add(category)
     db.session.commit()
-    display_info_toast(TOURNAMENT_CATEGORY_DELETED.format(category.name))
+    display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORY_DELETED.format(category.name))
     return redirect(url_for(".view_categories"))
 
 
@@ -106,6 +101,6 @@ def view_categories():
                   .paginate(page, per_page=current_app.config["CATEGORIES_PER_PAGE"], error_out=False))
     return render_template(
         "tournament_category/view_categories.html",
-        title=TOURNAMENT_CATEGORIES,
+        title=WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORIES,
         pagination=pagination
     )

@@ -4,7 +4,7 @@ from flask import render_template
 
 from . import bp
 from ..decorators import manager_required
-from ..lang import ADMIN_DASHBOARD
+from ..lang import WORDINGS
 
 
 @bp.route("/dashboard", methods=["GET"])
@@ -12,5 +12,5 @@ from ..lang import ADMIN_DASHBOARD
 def dashboard():
     return render_template(
         "admin/dashboard.html",
-        title=ADMIN_DASHBOARD
+        title=WORDINGS.MAIN.ADMIN_DASHBOARD
     )

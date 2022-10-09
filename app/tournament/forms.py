@@ -3,13 +3,14 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateTimeField, IntegerField, SubmitField, SelectField, FormField, FieldList
 from wtforms.validators import DataRequired, InputRequired, Optional
+from ..lang import WORDINGS
 
 
 class CreateTournamentForm(FlaskForm):
     name = StringField(
         'Nom',
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     tournament_topic_url = StringField(
@@ -36,7 +37,7 @@ class CreateTournamentForm(FlaskForm):
         u'Date de début',
         format="%d/%m/%Y %H:%M",
         validators=[
-            InputRequired(message="Ce champ est obligatoire")
+            InputRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     submit = SubmitField("Valider")
@@ -46,7 +47,7 @@ class EditTournamentForm(FlaskForm):
     name = StringField(
         'Nom',
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     tournament_topic_url = StringField(
@@ -79,7 +80,7 @@ class EditTournamentForm(FlaskForm):
         u'Date de début',
         format="%d/%m/%Y %H:%M",
         validators=[
-            InputRequired(message="Ce champ est obligatoire")
+            InputRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     submit = SubmitField("Valider")

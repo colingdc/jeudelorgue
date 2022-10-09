@@ -12,22 +12,7 @@ from ..utils import (
     display_info_toast,
     display_success_toast,
 )
-from ..lang import (
-    ACCOUNT_CONFIRMED,
-    CONFIRMATION_MAIL_RESENT,
-    CONFIRMATION_MAIL_SENT,
-    EMAIL_ALREADY_TAKEN,
-    INCORRECT_CREDENTIALS,
-    INVALID_CONFIRMATION_TOKEN,
-    LOGIN,
-    LOGIN_SUCCESSFUL,
-    OLD_ACCOUNT_PASSWORD_CHANGE,
-    PASSWORD_CHANGE,
-    PASSWORD_UPDATED,
-    REGISTRATION,
-    RESET_PASSWORD_EMAIL_SENT,
-    USERNAME_ALREADY_TAKEN,
-)
+from ..lang import WORDINGS
 from ..email import send_email
 
 
@@ -35,7 +20,7 @@ from ..email import send_email
 def pre_signup():
     return render_template(
         "auth/pre_signup.html",
-        title=REGISTRATION
+        title=WORDINGS.AUTH.REGISTRATION
     )
 
 
@@ -47,14 +32,14 @@ def signup():
         user_exist = User.query.filter_by(username=form.username.data).first()
         email_exist = User.query.filter_by(email=form.email.data).first()
         if user_exist:
-            form.username.errors.append(USERNAME_ALREADY_TAKEN)
+            form.username.errors.append(WORDINGS.AUTH.USERNAME_ALREADY_TAKEN)
         if email_exist:
-            form.email.errors.append(EMAIL_ALREADY_TAKEN)
+            form.email.errors.append(WORDINGS.AUTH.EMAIL_ALREADY_TAKEN)
         if user_exist or email_exist:
             return render_template(
                 "auth/signup.html",
                 form=form,
-                title=REGISTRATION
+                title=WORDINGS.AUTH.REGISTRATION
             )
         else:
             user = User(
@@ -80,7 +65,7 @@ def signup():
                 user=user
             )
 
-            display_info_toast(CONFIRMATION_MAIL_SENT)
+            display_info_toast(WORDINGS.AUTH.CONFIRMATION_MAIL_SENT)
             session.pop("signed", None)
             session.pop("username", None)
             logout_user()
@@ -89,7 +74,7 @@ def signup():
         return render_template(
             "auth/signup.html",
             form=form,
-            title=REGISTRATION
+            title=WORDINGS.AUTH.REGISTRATION
         )
 
 
@@ -107,22 +92,22 @@ def login():
 
         # If the credentials are incorrect, render the login page with an error message
         if user is None:
-            form.username.errors.append(INCORRECT_CREDENTIALS)
+            form.username.errors.append(WORDINGS.AUTH.INCORRECT_CREDENTIALS)
             form.password.errors.append("")
             return render_template(
                 "auth/login.html",
                 form=form,
-                title=LOGIN
+                title=WORDINGS.AUTH.LOGIN
             )
 
         is_password_correct = user.verify_password(form.password.data)
         if not is_password_correct:
-            form.username.errors.append(INCORRECT_CREDENTIALS)
+            form.username.errors.append(WORDINGS.AUTH.INCORRECT_CREDENTIALS)
             form.password.errors.append("")
             return render_template(
                 "auth/login.html",
                 form=form,
-                title=LOGIN
+                title=WORDINGS.AUTH.LOGIN
             )
 
         # Otherwise log the user in
@@ -132,10 +117,10 @@ def login():
         )
         session["signed"] = True
         session["username"] = user.username
-        display_success_toast(LOGIN_SUCCESSFUL)
+        display_success_toast(WORDINGS.AUTH.LOGIN_SUCCESSFUL)
 
         if user.is_old_account and not user.confirmed:
-            display_info_toast(OLD_ACCOUNT_PASSWORD_CHANGE)
+            display_info_toast(WORDINGS.AUTH.OLD_ACCOUNT_PASSWORD_CHANGE)
             return redirect(url_for(".change_password"))
 
         # Redirect the user to the page he initially wanted to access
@@ -150,7 +135,7 @@ def login():
     return render_template(
         "auth/login.html",
         form=form,
-        title=LOGIN
+        title=WORDINGS.AUTH.LOGIN
     )
 
 
@@ -175,9 +160,9 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for("main.index"))
     if current_user.confirm(token):
-        display_success_toast(ACCOUNT_CONFIRMED)
+        display_success_toast(WORDINGS.AUTH.ACCOUNT_CONFIRMED)
     else:
-        display_error_toast(INVALID_CONFIRMATION_TOKEN)
+        display_error_toast(WORDINGS.AUTH.INVALID_CONFIRMATION_TOKEN)
     return redirect(url_for("main.index"))
 
 
@@ -192,7 +177,7 @@ def resend_confirmation():
         user=current_user,
         token=token
     )
-    display_info_toast(CONFIRMATION_MAIL_RESENT)
+    display_info_toast(WORDINGS.AUTH.CONFIRMATION_MAIL_RESENT)
     return redirect(url_for("main.index"))
 
 
@@ -212,14 +197,14 @@ def change_password():
                     user=current_user
                 )
             db.session.add(current_user)
-            display_success_toast(PASSWORD_UPDATED)
+            display_success_toast(WORDINGS.AUTH.PASSWORD_UPDATED)
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
     return render_template(
         "auth/change_password.html",
         form=form,
-        title=PASSWORD_CHANGE,
+        title=WORDINGS.AUTH.PASSWORD_CHANGE,
         user=current_user
     )
 
@@ -239,13 +224,13 @@ def reset_password_request():
                        "email/reset_password",
                        user=user, token=token,
                        next=request.args.get("next"))
-            display_info_toast(RESET_PASSWORD_EMAIL_SENT)
+            display_info_toast(WORDINGS.AUTH.RESET_PASSWORD_EMAIL_SENT)
         return redirect(url_for("auth.login"))
 
     return render_template(
         "auth/reset_password_request.html",
         form=form,
-        title=PASSWORD_CHANGE
+        title=WORDINGS.AUTH.PASSWORD_CHANGE
     )
 
 
@@ -260,7 +245,7 @@ def reset_password(token):
         if user is None:
             return redirect(url_for("main.index"))
         if user.reset_password(token, form.password.data):
-            display_success_toast(PASSWORD_UPDATED)
+            display_success_toast(WORDINGS.AUTH.PASSWORD_UPDATED)
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))
@@ -268,5 +253,5 @@ def reset_password(token):
         "auth/reset_password.html",
         form=form,
         token=token,
-        title=PASSWORD_CHANGE
+        title=WORDINGS.AUTH.PASSWORD_CHANGE
     )

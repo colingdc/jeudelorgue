@@ -5,7 +5,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Optional
 
 from ..models import Player
-from ..lang import PLAYER_ALREADY_EXISTS
+from ..lang import WORDINGS
 
 
 class CreatePlayerForm(FlaskForm):
@@ -18,7 +18,7 @@ class CreatePlayerForm(FlaskForm):
     last_name = StringField(
         "Nom",
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     submit = SubmitField("Valider")
@@ -30,7 +30,7 @@ class CreatePlayerForm(FlaskForm):
         if (Player.query.filter_by(first_name=self.first_name.data)
                 .filter_by(last_name=self.last_name.data).first()):
             self.first_name.errors.append("")
-            self.last_name.errors.append(PLAYER_ALREADY_EXISTS)
+            self.last_name.errors.append(WORDINGS.PLAYER.PLAYER_ALREADY_EXISTS)
             return False
         return True
 
@@ -45,7 +45,7 @@ class EditPlayerForm(FlaskForm):
     last_name = StringField(
         "Nom",
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     submit = SubmitField("Valider")

@@ -8,13 +8,7 @@ from .forms import CreatePlayerForm, EditPlayerForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Player
-from ..lang import (
-    CREATE_PLAYER,
-    PLAYER_CREATED,
-    PLAYER_DELETED,
-    PLAYER_UPDATED,
-    PLAYERS,
-)
+from ..lang import WORDINGS
 from ..utils import display_info_toast
 
 
@@ -29,12 +23,12 @@ def create_player():
         )
         db.session.add(player)
         db.session.commit()
-        display_info_toast(PLAYER_CREATED.format(player.get_full_name()))
+        display_info_toast(WORDINGS.PLAYER.PLAYER_CREATED.format(player.get_full_name()))
         return redirect(url_for(".create_player"))
     else:
         return render_template(
             "player/create_player.html",
-            title=CREATE_PLAYER,
+            title=WORDINGS.PLAYER.CREATE_PLAYER,
             form=form
         )
 
@@ -53,7 +47,7 @@ def edit_player(player_id):
         player.last_name = form.last_name.data
         db.session.add(player)
         db.session.commit()
-        display_info_toast(PLAYER_UPDATED.format(player.get_full_name()))
+        display_info_toast(WORDINGS.PLAYER.PLAYER_UPDATED.format(player.get_full_name()))
         return redirect(
             url_for(
                 ".edit_player",
@@ -76,7 +70,7 @@ def delete_player(player_id):
     player.deleted_at = datetime.datetime.now()
     db.session.add(player)
     db.session.commit()
-    display_info_toast(PLAYER_DELETED.format(player.get_full_name()))
+    display_info_toast(WORDINGS.PLAYER.PLAYER_DELETED.format(player.get_full_name()))
     return redirect(url_for(".view_players"))
 
 
@@ -102,6 +96,6 @@ def view_players():
 
     return render_template(
         "player/view_players.html",
-        title=PLAYERS,
+        title=WORDINGS.PLAYER.PLAYERS,
         pagination=pagination
     )

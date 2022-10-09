@@ -16,7 +16,7 @@ import babel
 import os
 
 from config import config
-from .lang import OLD_ACCOUNT_PASSWORD_CHANGE
+from .lang import WORDINGS
 from .utils import display_info_toast
 
 db = SQLAlchemy()
@@ -94,7 +94,7 @@ def create_app(config_name):
             current_user.is_old_account and
             request.endpoint[:5] != 'auth.' and
             not request.path.startswith('/static')):
-            display_info_toast(OLD_ACCOUNT_PASSWORD_CHANGE)
+            display_info_toast(WORDINGS.AUTH.OLD_ACCOUNT_PASSWORD_CHANGE)
             return redirect(url_for('auth.change_password'))
 
         if (current_user.is_authenticated and

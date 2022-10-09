@@ -3,59 +3,53 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
-from ..lang import (
-    MISSING_EMAIL_ADDRESS,
-    MISSING_FIELD,
-    INVALID_EMAIL_ADDRESS,
-    INVALID_PASSWORD,
-    VALIDATION,
-)
+from ..lang import WORDINGS
 
 
 class SignupForm(FlaskForm):
     email = StringField(
         'Email',
         validators=[
-            DataRequired(INVALID_EMAIL_ADDRESS),
+            DataRequired(WORDINGS.AUTH.INVALID_EMAIL_ADDRESS),
             Length(1, 64),
-            Email(message=MISSING_EMAIL_ADDRESS)
+            Email(message=WORDINGS.AUTH.MISSING_EMAIL_ADDRESS)
         ]
     )
     password = PasswordField(
         'Mot de passe',
         validators=[
-            DataRequired(message=MISSING_FIELD),
-            Length(min=8, message=INVALID_PASSWORD)
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
+            Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD)
         ]
     )
     username = StringField(
         "Pseudo",
         validators=[
-            DataRequired(message=MISSING_FIELD),
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
             Length(1, 64)
         ]
     )
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class LoginForm(FlaskForm):
     username = StringField(
         "Pseudo",
         validators=[
-            DataRequired(message=MISSING_FIELD)
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     password = PasswordField(
         "Mot de passe",
         validators=[
-            DataRequired(message=MISSING_FIELD)
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     remember_me = BooleanField(
         "Se souvenir de moi",
         default=False
     )
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class ChangePasswordForm(FlaskForm):
@@ -68,8 +62,8 @@ class ChangePasswordForm(FlaskForm):
     password = PasswordField(
         "Nouveau mot de passe",
         validators=[
-            DataRequired(message=MISSING_FIELD),
-            Length(min=8, message=INVALID_PASSWORD),
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
+            Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD),
             EqualTo('password2', message="Les mots de passe entrés sont différents")
         ]
     )
@@ -79,7 +73,7 @@ class ChangePasswordForm(FlaskForm):
             DataRequired()
         ]
     )
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class PasswordResetRequestForm(FlaskForm):
@@ -91,7 +85,7 @@ class PasswordResetRequestForm(FlaskForm):
             Email()
         ]
     )
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class PasswordResetForm(FlaskForm):
@@ -107,7 +101,7 @@ class PasswordResetForm(FlaskForm):
         "Nouveau mot de passe",
         validators=[
             DataRequired(),
-            Length(min=8, message=INVALID_PASSWORD),
+            Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD),
             EqualTo("password2", message="Les mots de passe entrés sont différents")
         ]
     )
@@ -117,4 +111,4 @@ class PasswordResetForm(FlaskForm):
             DataRequired()
         ]
     )
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)

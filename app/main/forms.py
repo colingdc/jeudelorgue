@@ -3,11 +3,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
-from ..lang import (
-    EMAIL_ALREADY_TAKEN,
-    USERNAME_ALREADY_TAKEN,
-    VALIDATION,
-)
+from ..lang import WORDINGS
 from ..models import User, Role
 
 
@@ -29,7 +25,7 @@ class EditProfileAdminForm(FlaskForm):
     )
     confirmed = BooleanField('Confirmed')
     role = SelectField('Role', coerce=int)
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
@@ -42,11 +38,11 @@ class EditProfileAdminForm(FlaskForm):
 
     def validate_email(self, field):
         if field.data != self.user.email and User.query.filter_by(email=field.data).first():
-            raise ValidationError(EMAIL_ALREADY_TAKEN)
+            raise ValidationError(WORDINGS.AUTH.EMAIL_ALREADY_TAKEN)
 
     def validate_username(self, field):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
-            raise ValidationError(USERNAME_ALREADY_TAKEN)
+            raise ValidationError(WORDINGS.AUTH.USERNAME_ALREADY_TAKEN)
 
 
 class ContactForm(FlaskForm):
@@ -65,4 +61,4 @@ class ContactForm(FlaskForm):
             Length(max=1000)
         ]
     )
-    submit = SubmitField(VALIDATION)
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
