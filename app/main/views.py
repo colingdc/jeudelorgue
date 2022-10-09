@@ -6,7 +6,14 @@ from . import bp
 from ..decorators import admin_required, manager_required
 from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
 from .. import db
-from ..lang import PROFILE_UPDATED
+from ..lang import (
+    FAQ,
+    HOMEPAGE,
+    MESSAGE_SENT,
+    PROFILE_UPDATED,
+    RACE_RANKING,
+    USERS,
+)
 from .forms import EditProfileAdminForm, ContactForm
 from ..email import send_email
 from ..utils import (
@@ -22,7 +29,7 @@ def landing():
         return redirect(url_for(".index"))
     return render_template(
         "main/homepage.html",
-        title="Accueil"
+        title=HOMEPAGE
     )
 
 
@@ -35,7 +42,7 @@ def index():
 
     return render_template(
         "main/index.html",
-        title="Accueil",
+        title=HOMEPAGE,
         tournaments=tournaments,
         current_tournament=current_tournament,
         race_ranking=race_ranking
@@ -70,7 +77,7 @@ def view_user(user_id):
             ]
         },
         {
-            "name": "Classement Race",
+            "name": RACE_RANKING,
             "data": [
                 {
                     "x": int(t.started_at.strftime("%s")) * 1000,
@@ -100,7 +107,7 @@ def view_users():
                   .paginate(page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
     return render_template(
         "main/view_users.html",
-        title="Utilisateurs",
+        title=USERS,
         pagination=pagination,
         page_start_index=(page - 1) * current_app.config["USERS_PER_PAGE"]
     )
@@ -117,7 +124,7 @@ def view_validated_users():
 
     return render_template(
         "main/view_users.html",
-        title="Utilisateurs",
+        title=USERS,
         pagination=pagination,
         page_start_index=(page - 1) * current_app.config["USERS_PER_PAGE"]
     )
@@ -127,7 +134,7 @@ def view_validated_users():
 def faq():
     return render_template(
         "main/faq.html",
-        title="FAQ"
+        title=FAQ
     )
 
 
@@ -189,7 +196,7 @@ def contact():
             email=form.email.data,
             user=current_user
         )
-        display_info_toast(u"Votre message a bien été envoyé.")
+        display_info_toast(MESSAGE_SENT)
         return redirect(url_for(".contact"))
 
     return render_template(

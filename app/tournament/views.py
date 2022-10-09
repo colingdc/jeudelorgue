@@ -38,13 +38,29 @@ from ..models import (
 )
 from ..lang import (
     ALREADY_REGISTERED,
+    CHOOSE_PLAYER,
+    CREATE_TOURNAMENT,
+    CREATE_TOURNAMENT_DRAW,
     DRAW_FILLED_COMPLETELY,
     DRAW_NOT_FILLED_COMPLETELY,
+    FILL_MY_DRAW,
+    FORECAST_BY_PLAYER,
+    GLOBAL_FORECASTS,
+    PARTICIPANT_DRAW,
+    RAW_RANKING,
     REGISTERED_TO_TOURNAMENT,
     REGISTRATION_CLOSED,
     REGISTRATION_NOT_OPEN,
     REGISTRATION_OPENED,
+    SCENARIO_SIMULATOR,
     TOURNAMENT_CLOSED,
+    TOURNAMENT_CREATED,
+    TOURNAMENT_DELETED,
+    TOURNAMENT_DRAW,
+    TOURNAMENT_DRAW_CREATED,
+    TOURNAMENT_DRAW_UPDATED,
+    TOURNAMENT_UPDATED,
+    UPDATE_TOURNAMENT_DRAW,
 )
 from ..utils import display_info_toast, display_success_toast, display_warning_toast
 
@@ -79,7 +95,7 @@ def create_tournament():
             )
             db.session.add(match)
         db.session.commit()
-        display_info_toast("Le tournoi {} a été créé".format(form.name.data))
+        display_info_toast(TOURNAMENT_CREATED.format(form.name.data))
         return redirect(
             url_for(
                 ".view_tournament",
@@ -89,7 +105,7 @@ def create_tournament():
     else:
         return render_template(
             "tournament/create_tournament.html",
-            title=u"Créer un tournoi",
+            title=CREATE_TOURNAMENT,
             form=form
         )
 
@@ -122,7 +138,7 @@ def edit_tournament(tournament_id):
         tournament.jeudelorgue_topic_url = form.jeudelorgue_topic_url.data
         db.session.add(tournament)
         db.session.commit()
-        display_info_toast(u"Le tournoi {} a été mis à jour".format(form.name.data))
+        display_info_toast(TOURNAMENT_UPDATED.format(form.name.data))
         return redirect(
             url_for(
                 ".edit_tournament",
@@ -146,7 +162,7 @@ def delete_tournament(tournament_id):
     tournament.deleted_at = datetime.datetime.now()
     db.session.add(tournament)
     db.session.commit()
-    display_info_toast(u"Le tournoi {} a été supprimé".format(tournament.name))
+    display_info_toast(TOURNAMENT_DELETED.format(tournament.name))
     return redirect(url_for(".view_tournaments"))
 
 
@@ -365,7 +381,7 @@ def create_tournament_draw(tournament_id):
             db.session.add(tournament)
             db.session.commit()
 
-        display_info_toast("Le tableau du tournoi {} a été créé".format(tournament.name))
+        display_info_toast(TOURNAMENT_DRAW_CREATED.format(tournament.name))
         return redirect(
             url_for(
                 ".view_tournament",
@@ -388,7 +404,6 @@ def edit_tournament_draw(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
         abort(404)
-    title = u"Créer le tableau du tournoi"
 
     matches = tournament.get_matches_first_round()
 
@@ -460,7 +475,7 @@ def edit_tournament_draw(tournament_id):
             db.session.add(tournament)
             db.session.commit()
 
-        display_info_toast("Le tableau du tournoi {} a été modifié".format(tournament.name))
+        display_info_toast(TOURNAMENT_DRAW_UPDATED.format(tournament.name))
         return redirect(
             url_for(
                 ".view_tournament",
@@ -470,7 +485,7 @@ def edit_tournament_draw(tournament_id):
     else:
         return render_template(
             "tournament/edit_tournament_draw.html",
-            title=title,
+            title=CREATE_TOURNAMENT_DRAW,
             form=form,
             tournament=tournament,
             surface=tournament.surface.class_name
@@ -486,7 +501,7 @@ def view_tournament_draw(tournament_id):
 
     return render_template(
         "tournament/view_tournament_draw.html",
-        title=u"Tableau du tournoi",
+        title=TOURNAMENT_DRAW,
         tournament=tournament,
         surface=tournament.surface.class_name
     )
@@ -509,7 +524,7 @@ def view_tournament_draw_last16(tournament_id):
 
     return render_template(
         "tournament/view_tournament_draw_last16.html",
-        title=u"Tableau du tournoi",
+        title=TOURNAMENT_DRAW,
         tournament=tournament,
         surface=tournament.surface.class_name
     )
@@ -521,7 +536,6 @@ def update_tournament_draw(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if tournament.deleted_at:
         abort(404)
-    title = u"Mettre à jour le tableau du tournoi"
 
     form = FillTournamentDrawForm()
 
@@ -585,7 +599,7 @@ def update_tournament_draw(tournament_id):
     else:
         return render_template(
             "tournament/update_tournament_draw.html",
-            title=title,
+            title=UPDATE_TOURNAMENT_DRAW,
             tournament=tournament,
             form=form,
             surface=tournament.surface.class_name
@@ -615,7 +629,7 @@ def fill_my_draw(tournament_id, participant_id):
             )
         )
 
-    title = u"{} - Remplir mon tableau".format(tournament.name)
+    title = FILL_MY_DRAW.format(tournament.name)
 
     if participant.has_filled_draw():
         return redirect(
@@ -748,7 +762,7 @@ def view_participant_draw(tournament_id, participant_id):
                 )
             )
 
-    title = u"{} - Tableau de {}".format(tournament.name, participant.user.username)
+    title = PARTICIPANT_DRAW.format(tournament.name, participant.user.username)
 
     return render_template(
         "tournament/view_participant_draw.html",
@@ -792,7 +806,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
                 )
             )
 
-    title = u"{} - Tableau de {}".format(tournament.name, participant.user.username)
+    title = PARTICIPANT_DRAW.format(tournament.name, participant.user.username)
 
     return render_template(
         "tournament/view_participant_draw_last16.html",
@@ -818,10 +832,10 @@ def tournament_player_stats(tournament_id):
             )
         )
 
-    title = u"{} - Pronostics par joueur ATP".format(tournament.name)
+    title = FORECAST_BY_PLAYER.format(tournament.name)
 
     form = TournamentPlayerStatsForm()
-    tournament_players = [(-1, "Choisir un joueur...")] + [
+    tournament_players = [(-1, CHOOSE_PLAYER)] + [
         (p.id, p.get_full_name())
         for p in tournament.players
         if (p.player is None or p.player.last_name.lower() != "bye")
@@ -829,7 +843,7 @@ def tournament_player_stats(tournament_id):
     form.player_name.choices = tournament_players
 
     form_alphabetic = TournamentPlayerAlphabeticStatsForm()
-    tournament_players_alphabetic = [(-1, "Choisir un joueur...")] + [
+    tournament_players_alphabetic = [(-1, CHOOSE_PLAYER)] + [
         (p.id, p.get_full_name_surname_first())
         for p in tournament.players_alphabetic
         if (p.player is None or p.player.last_name.lower() != "bye")
@@ -876,7 +890,7 @@ def overall_forecasts_stats(tournament_id):
             )
         )
 
-    title = u"{} - Pronostics globaux".format(tournament.name)
+    title = GLOBAL_FORECASTS.format(tournament.name)
 
     return render_template(
         "tournament/overall_forecasts_stats.html",
@@ -916,7 +930,7 @@ def scenario_simulator(tournament_id):
             )
         )
 
-    title = u"{} - Simulateur de scénarios".format(tournament.name)
+    title = SCENARIO_SIMULATOR.format(tournament.name)
 
     form = FillTournamentDrawForm()
 
@@ -977,7 +991,7 @@ def raw_tournament_ranking(tournament_id):
     if tournament.deleted_at:
         abort(404)
 
-    title = u"{} - Classement brut".format(tournament.name)
+    title = RAW_RANKING.format(tournament.name)
 
     return render_template(
         "tournament/raw_tournament_ranking.html",

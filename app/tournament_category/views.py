@@ -6,6 +6,12 @@ from . import bp
 from .forms import CreateCategoryForm, EditCategoryForm
 from .. import db
 from ..decorators import manager_required
+from ..lang import (
+    TOURNAMENT_CATEGORIES,
+    TOURNAMENT_CATEGORY_CREATED,
+    TOURNAMENT_CATEGORY_DELETED,
+    TOURNAMENT_CATEGORY_UPDATED,
+)
 from ..models import TournamentCategory
 from ..utils import display_info_toast
 
@@ -24,7 +30,7 @@ def create_category():
         )
         db.session.add(category)
         db.session.commit()
-        display_info_toast(u"La catégorie de tournois {} a été créée".format(category.name))
+        display_info_toast(TOURNAMENT_CATEGORY_CREATED.format(category.name))
         return redirect(url_for(".create_category"))
     else:
         return render_template(
@@ -52,7 +58,7 @@ def edit_category(category_id):
         category.minimal_score = form.minimal_score.data
         db.session.add(category)
         db.session.commit()
-        display_info_toast(u"La catégorie de tournois {} a été mise à jour".format(category.name))
+        display_info_toast(TOURNAMENT_CATEGORY_UPDATED.format(category.name))
         return redirect(
             url_for(
                 ".edit_category",
@@ -87,20 +93,19 @@ def delete_category(category_id):
     category.deleted_at = datetime.datetime.now()
     db.session.add(category)
     db.session.commit()
-    display_info_toast(u"La catégorie {} a été supprimé".format(category.name))
+    display_info_toast(TOURNAMENT_CATEGORY_DELETED.format(category.name))
     return redirect(url_for(".view_categories"))
 
 
 @bp.route("/all")
 @manager_required
 def view_categories():
-    title = "Catégories de tournois"
     page = request.args.get("page", 1, type=int)
     pagination = (TournamentCategory.query.order_by(TournamentCategory.name)
                   .filter(TournamentCategory.deleted_at.is_(None))
                   .paginate(page, per_page=current_app.config["CATEGORIES_PER_PAGE"], error_out=False))
     return render_template(
         "tournament_category/view_categories.html",
-        title=title,
+        title=TOURNAMENT_CATEGORIES,
         pagination=pagination
     )

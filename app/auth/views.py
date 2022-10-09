@@ -19,8 +19,13 @@ from ..lang import (
     EMAIL_ALREADY_TAKEN,
     INCORRECT_CREDENTIALS,
     INVALID_CONFIRMATION_TOKEN,
+    LOGIN,
     LOGIN_SUCCESSFUL,
     OLD_ACCOUNT_PASSWORD_CHANGE,
+    PASSWORD_CHANGE,
+    PASSWORD_UPDATED,
+    REGISTRATION,
+    RESET_PASSWORD_EMAIL_SENT,
     USERNAME_ALREADY_TAKEN,
 )
 from ..email import send_email
@@ -30,7 +35,7 @@ from ..email import send_email
 def pre_signup():
     return render_template(
         "auth/pre_signup.html",
-        title="Inscription"
+        title=REGISTRATION
     )
 
 
@@ -49,7 +54,7 @@ def signup():
             return render_template(
                 "auth/signup.html",
                 form=form,
-                title="Inscription"
+                title=REGISTRATION
             )
         else:
             user = User(
@@ -84,7 +89,7 @@ def signup():
         return render_template(
             "auth/signup.html",
             form=form,
-            title="Inscription"
+            title=REGISTRATION
         )
 
 
@@ -107,7 +112,7 @@ def login():
             return render_template(
                 "auth/login.html",
                 form=form,
-                title="Connexion"
+                title=LOGIN
             )
 
         is_password_correct = user.verify_password(form.password.data)
@@ -117,7 +122,7 @@ def login():
             return render_template(
                 "auth/login.html",
                 form=form,
-                title="Connexion"
+                title=LOGIN
             )
 
         # Otherwise log the user in
@@ -145,7 +150,7 @@ def login():
     return render_template(
         "auth/login.html",
         form=form,
-        title="Connexion"
+        title=LOGIN
     )
 
 
@@ -207,14 +212,14 @@ def change_password():
                     user=current_user
                 )
             db.session.add(current_user)
-            display_success_toast("Votre mot de passe a été mis à jour")
+            display_success_toast(PASSWORD_UPDATED)
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
     return render_template(
         "auth/change_password.html",
         form=form,
-        title="Changement de mot de passe",
+        title=PASSWORD_CHANGE,
         user=current_user
     )
 
@@ -234,14 +239,13 @@ def reset_password_request():
                        "email/reset_password",
                        user=user, token=token,
                        next=request.args.get("next"))
-            display_info_toast(
-                "Un email contenant des instructions pour réinitialiser votre mot de passe vous a été envoyé.")
+            display_info_toast(RESET_PASSWORD_EMAIL_SENT)
         return redirect(url_for("auth.login"))
 
     return render_template(
         "auth/reset_password_request.html",
         form=form,
-        title="Changement de mot de passe"
+        title=PASSWORD_CHANGE
     )
 
 
@@ -256,7 +260,7 @@ def reset_password(token):
         if user is None:
             return redirect(url_for("main.index"))
         if user.reset_password(token, form.password.data):
-            display_success_toast("Votre mot de passe a été mis à jour.")
+            display_success_toast(PASSWORD_UPDATED)
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))
@@ -264,5 +268,5 @@ def reset_password(token):
         "auth/reset_password.html",
         form=form,
         token=token,
-        title="Changement de mot de passe"
+        title=PASSWORD_CHANGE
     )
