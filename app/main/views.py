@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, url_for, request
+from flask import (
+    current_app,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import login_required, current_user
-from . import bp
+
 from ..decorators import admin_required, manager_required
-from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
-from .. import db
-from ..lang import WORDINGS
-from .forms import EditProfileAdminForm, ContactForm
 from ..email import send_email
+from ..lang import WORDINGS
+from ..models import (
+    db,
+    Participant,
+    Ranking,
+    Role,
+    Tournament,
+    TournamentStatus,
+    User,
+)
+from ..tournament import domain as tournament_domain
 from ..utils import (
     display_info_toast,
     display_success_toast,
 )
-from flask import current_app
-from ..tournament import domain as tournament_domain
+
+from . import bp
+from .forms import EditProfileAdminForm, ContactForm
+
 
 @bp.route("/")
 def landing():

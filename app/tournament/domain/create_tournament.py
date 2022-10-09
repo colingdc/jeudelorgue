@@ -1,4 +1,5 @@
 from math import log, floor
+
 from ...models import db, Match, Tournament
 
 

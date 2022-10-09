@@ -1,8 +1,21 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateTimeField, IntegerField, SubmitField, SelectField, FormField, FieldList
-from wtforms.validators import DataRequired, InputRequired, Optional
+from wtforms import (
+    DateTimeField,
+    FieldList,
+    FormField,
+    IntegerField,
+    SelectField,
+    StringField,
+    SubmitField,
+)
+from wtforms.validators import (
+    DataRequired,
+    InputRequired,
+    Optional,
+)
+
 from ..lang import WORDINGS
 
 

@@ -4,8 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Optional
 
-from ..models import Player
 from ..lang import WORDINGS
+from ..models import Player
 
 
 class CreatePlayerForm(FlaskForm):

@@ -4,8 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
 
-from ..models import TournamentCategory
 from ..lang import WORDINGS
+from ..models import TournamentCategory
 
 
 class CreateCategoryForm(FlaskForm):

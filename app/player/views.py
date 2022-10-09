@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, url_for, current_app
 import datetime
+from flask import render_template, redirect, request, url_for, current_app
+
+from ..decorators import manager_required
+from ..lang import WORDINGS
+from ..models import db, Player
+from ..utils import display_info_toast
 
 from . import bp
 from .forms import CreatePlayerForm, EditPlayerForm
-from .. import db
-from ..decorators import manager_required
-from ..models import Player
-from ..lang import WORDINGS
-from ..utils import display_info_toast
 
 
 @bp.route("/create", methods=["GET", "POST"])

@@ -1,39 +1,40 @@
 # -*- coding: utf-8 -*-
 
-from flask import (
-    render_template,
-    redirect,
-    request,
-    url_for,
-    current_app
-)
-from flask_login import login_required, current_user
 import datetime
 import json
+from flask import (
+    current_app,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from flask_login import login_required, current_user
 
+from ..decorators import manager_required
+from ..lang import WORDINGS
+from ..models import (
+    db,
+    Forecast,
+    Participant,
+    Player,
+    Ranking,
+    Tournament,
+    TournamentPlayer,
+    TournamentStatus,
+)
+from ..utils import display_info_toast, display_success_toast, display_warning_toast
+
+from . import domain
 from . import bp
 from .forms import (
+    CreateTournamentDrawForm,
     CreateTournamentForm,
     EditTournamentForm,
-    CreateTournamentDrawForm,
     FillTournamentDrawForm,
+    TournamentPlayerAlphabeticStatsForm,
     TournamentPlayerStatsForm,
-    TournamentPlayerAlphabeticStatsForm
 )
-from .. import db
-from ..decorators import manager_required
-from ..models import (
-    Tournament,
-    TournamentStatus,
-    Participant,
-    TournamentPlayer,
-    Player,
-    Forecast,
-    Ranking
-)
-from ..lang import WORDINGS
-from ..utils import display_info_toast, display_success_toast, display_warning_toast
-from . import domain
 
 
 @bp.route("/create", methods=["GET", "POST"])

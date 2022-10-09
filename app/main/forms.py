@@ -3,6 +3,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
+
 from ..lang import WORDINGS
 from ..models import User, Role
 
