@@ -828,7 +828,7 @@ def overall_forecasts_stats(tournament_id):
 @bp.route("/current")
 @login_required
 def current_tournament():
-    tournament = Tournament.get_current_tournament()
+    tournament = domain.get_current_tournament()
     if tournament:
         return redirect(
             url_for(

@@ -14,7 +14,7 @@ from ..utils import (
     display_success_toast,
 )
 from flask import current_app
-
+from ..tournament import domain as tournament_domain
 
 @bp.route("/")
 def landing():
@@ -29,7 +29,7 @@ def landing():
 @bp.route("/index")
 def index():
     tournaments = Tournament.get_recent_tournaments(20)
-    current_tournament = Tournament.get_current_tournament()
+    current_tournament = tournament_domain.get_current_tournament()
     latest_tournament = Tournament.get_latest_finished_tournament()
     race_ranking = Ranking.get_historical_race_ranking(latest_tournament.id).limit(20)
 
