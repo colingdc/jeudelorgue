@@ -10,24 +10,28 @@ from ..decorators import manager_required
 from ..models import Player
 
 
-@bp.route("/create", methods = ["GET", "POST"])
+@bp.route("/create", methods=["GET", "POST"])
 @manager_required
 def create_player():
-    title = u"Créer un joueur"
     form = CreatePlayerForm(request.form)
     if form.validate_on_submit():
-        player = Player(first_name = form.first_name.data,
-                        last_name = form.last_name.data)
+        player = Player(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data
+        )
         db.session.add(player)
         db.session.commit()
         flash(u"Le joueur {} a été créé".format(player.get_full_name()), "info")
         return redirect(url_for(".create_player"))
     else:
-        return render_template("player/create_player.html", title = title,
-                               form = form)
+        return render_template(
+            "player/create_player.html",
+            title=u"Créer un joueur",
+            form=form
+        )
 
 
-@bp.route("/<player_id>/edit", methods = ["GET", "POST"])
+@bp.route("/<player_id>/edit", methods=["GET", "POST"])
 @manager_required
 def edit_player(player_id):
     player = Player.query.get_or_404(player_id)
@@ -41,11 +45,23 @@ def edit_player(player_id):
         player.last_name = form.last_name.data
         db.session.add(player)
         db.session.commit()
-        flash(u"Le joueur {} a été mis à jour".format(player.get_full_name()), "info")
-        return redirect(url_for(".edit_player", player_id = player_id))
+        flash(
+            u"Le joueur {} a été mis à jour".format(player.get_full_name()),
+            "info"
+        )
+        return redirect(
+            url_for(
+                ".edit_player",
+                player_id=player_id
+            )
+        )
     else:
-        return render_template("player/edit_player.html", title = title,
-                               form = form, player = player)
+        return render_template(
+            "player/edit_player.html",
+            title=title,
+            form=form,
+            player=player
+        )
 
 
 @bp.route("/<player_id>/delete")
@@ -64,17 +80,23 @@ def delete_player(player_id):
 def view_player(player_id):
     player = Player.query.get_or_404(player_id)
     title = player.get_full_name()
-    return render_template("player/view_player.html", title = title,
-                           player = player)
+    return render_template(
+        "player/view_player.html",
+        title=title,
+        player=player
+    )
 
 
 @bp.route("/all")
 @manager_required
 def view_players():
-    title = "Joueurs"
-    page = request.args.get("page", 1, type = int)
+    page = request.args.get("page", 1, type=int)
     pagination = (Player.query.order_by(Player.last_name, Player.first_name)
                   .filter(Player.deleted_at.is_(None))
-                  .paginate(page, per_page = current_app.config["PLAYERS_PER_PAGE"], error_out = False))
-    return render_template("player/view_players.html", title = title,
-                           pagination = pagination)
+                  .paginate(page, per_page=current_app.config["PLAYERS_PER_PAGE"], error_out=False))
+
+    return render_template(
+        "player/view_players.html",
+        title="Joueurs",
+        pagination=pagination
+    )

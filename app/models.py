@@ -2,33 +2,30 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
-from math import log, exp, floor
 import pandas as pd
-from flask import current_app, url_for
+from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db, bcrypt, login_manager
 from sqlalchemy import or_, func
 
 
-
 class User(UserMixin, db.Model):
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key = True)
-    deleted_at = db.Column(db.DateTime, default = None)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    confirmed = db.Column(db.Boolean, default = False)
-    is_old_account = db.Column(db.Boolean, default = False)
-    username = db.Column(db.String(64), index = True, unique = True)
+    id = db.Column(db.Integer, primary_key=True)
+    deleted_at = db.Column(db.DateTime, default=None)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    confirmed = db.Column(db.Boolean, default=False)
+    is_old_account = db.Column(db.Boolean, default=False)
+    username = db.Column(db.String(64), index=True, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    email = db.Column(db.String(120), index = True)
+    email = db.Column(db.String(120), index=True)
     password_hash = db.Column(db.String(128))
     annual_points = db.Column(db.Integer)
     year_to_date_points = db.Column(db.Integer)
 
-    participants = db.relationship("Participant", backref = "user", lazy = "dynamic")
-    rankings = db.relationship("Ranking", backref = "user", lazy = "dynamic")
-
+    participants = db.relationship("Participant", backref="user", lazy="dynamic")
+    rankings = db.relationship("Ranking", backref="user", lazy="dynamic")
 
     def __repr__(self):
         return "<User %r>" % self.username
@@ -37,10 +34,9 @@ class User(UserMixin, db.Model):
         super(User, self).__init__(*args, **kwargs)
         if self.role is None:
             if self.email == current_app.config['ADMIN_JDL']:
-                self.role = Role.query.filter_by(permissions = 0xff).first()
+                self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
-                self.role = Role.query.filter_by(default = True).first()
-
+                self.role = Role.query.filter_by(default=True).first()
 
     def is_anonymous(self):
         return False
@@ -65,11 +61,11 @@ class User(UserMixin, db.Model):
     def is_manager(self):
         return self.can(Permission.MANAGE_TOURNAMENT)
 
-    def generate_confirmation_token(self, expiration = 3600):
+    def generate_confirmation_token(self, expiration=3600):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
         return s.dumps({"confirm": self.id})
 
-    def generate_reset_token(self, expiration = 3600):
+    def generate_reset_token(self, expiration=3600):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
         return s.dumps({"reset": self.id})
 
@@ -98,19 +94,28 @@ class User(UserMixin, db.Model):
         return True
 
     @staticmethod
-    def insert_user(email, role_name = "User", username = None, confirmed = True, password = "test1234", is_old_account = False):
-        role = Role.query.filter_by(name = role_name).first()
+    def insert_user(
+            email,
+            role_name="User",
+            username=None,
+            confirmed=True,
+            password="test1234",
+            is_old_account=False
+    ):
+        role = Role.query.filter_by(name=role_name).first()
         if role is None:
             print("This role does not exist")
         else:
             if username is None:
                 username = email
-            user = User(email = email,
-                        role = role,
-                        confirmed = confirmed,
-                        is_old_account = is_old_account,
-                        username = username,
-                        password = password)
+            user = User(
+                email=email,
+                role=role,
+                confirmed=confirmed,
+                is_old_account=is_old_account,
+                username=username,
+                password=password
+            )
             try:
                 db.session.add(user)
                 db.session.commit()
@@ -119,7 +124,6 @@ class User(UserMixin, db.Model):
                 print("\n")
                 print(str(e))
                 db.session.rollback()
-
 
     def get_id(self):
         return str(self.id)
@@ -152,18 +156,20 @@ class User(UserMixin, db.Model):
     @property
     def annual_participations(self):
         participations = (self.all_participations
-                          .filter(Tournament.started_at >= datetime.datetime.now() - relativedelta(years = 1))
+                          .filter(Tournament.started_at >= datetime.datetime.now() - relativedelta(years=1))
                           .filter(Tournament.started_at <= datetime.datetime.now()))
         return participations
 
     def get_annual_points(self):
-        points = sum(participation.points for participation in self.annual_participations if participation.points is not None)
+        points = sum(
+            participation.points for participation in self.annual_participations if participation.points is not None)
         if not points:
             points = 0
         return points
 
     def get_year_to_date_points(self):
-        points = sum(participation.points for participation in self.year_to_date_participations if participation.points is not None) or 0
+        points = sum(participation.points for participation in self.year_to_date_participations if
+                     participation.points is not None) or 0
         if not points:
             points = 0
         return points
@@ -172,14 +178,19 @@ class User(UserMixin, db.Model):
         return (self.participants.order_by(Participant.created_at.desc()))
 
     def get_titles(self):
-        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(Tournament.deleted_at.is_(None)).filter(Tournament.status == TournamentStatus.FINISHED).filter(Participant.ranking == 1)
+        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(
+            Tournament.deleted_at.is_(None)).filter(Tournament.status == TournamentStatus.FINISHED).filter(
+            Participant.ranking == 1)
 
     def get_best_tournament_rank(self):
-        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(Tournament.deleted_at.is_(None)).filter(Tournament.status == TournamentStatus.FINISHED).order_by(Participant.ranking).first()
+        return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(
+            Tournament.deleted_at.is_(None)).filter(Tournament.status == TournamentStatus.FINISHED).order_by(
+            Participant.ranking).first()
 
     def get_current_ranking(self):
         latest_tournament = Tournament.get_latest_finished_tournament()
-        return Ranking.query.filter(Ranking.user_id == self.id).filter(Ranking.tournament_id == latest_tournament.id).first()
+        return Ranking.query.filter(Ranking.user_id == self.id).filter(
+            Ranking.tournament_id == latest_tournament.id).first()
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -207,11 +218,11 @@ class Permission:
 
 class Role(db.Model):
     __tablename__ = "roles"
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(64), unique = True)
-    default = db.Column(db.Boolean, default = False, index = True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    default = db.Column(db.Boolean, default=False, index=True)
     permissions = db.Column(db.Integer)
-    users = db.relationship("User", backref = "role", lazy = "dynamic")
+    users = db.relationship("User", backref="role", lazy="dynamic")
 
     @staticmethod
     def insert_roles():
@@ -223,9 +234,9 @@ class Role(db.Model):
             'Administrator': (0xff, False)
         }
         for r in roles:
-            role = Role.query.filter_by(name = r).first()
+            role = Role.query.filter_by(name=r).first()
             if role is None:
-                role = Role(name = r)
+                role = Role(name=r)
             role.permissions = roles[r][0]
             role.default = roles[r][1]
             db.session.add(role)
@@ -244,30 +255,29 @@ class TournamentStatus:
 
 class Tournament(db.Model):
     __tablename__ = "tournaments"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
 
-    old_website_id = db.Column(db.Integer, default = None)
+    old_website_id = db.Column(db.Integer, default=None)
     name = db.Column(db.String(64))
     tournament_topic_url = db.Column(db.String(64))
     jeudelorgue_topic_url = db.Column(db.String(64))
-    name = db.Column(db.String(64))
     started_at = db.Column(db.DateTime)
-    ended_at = db.Column(db.DateTime, default = None)
-    status = db.Column(db.Integer, default = TournamentStatus.CREATED)
+    ended_at = db.Column(db.DateTime, default=None)
+    status = db.Column(db.Integer, default=TournamentStatus.CREATED)
     maximal_score = db.Column(db.Integer)
-    current_maximal_score = db.Column(db.Integer, default = 0)
+    current_maximal_score = db.Column(db.Integer, default=0)
 
     category_id = db.Column(db.Integer, db.ForeignKey("tournament_categories.id"))
-    category = db.relationship("TournamentCategory", foreign_keys = category_id)
+    category = db.relationship("TournamentCategory", foreign_keys=category_id)
     surface_id = db.Column(db.Integer, db.ForeignKey("surfaces.id"))
-    surface = db.relationship("Surface", foreign_keys = surface_id)
+    surface = db.relationship("Surface", foreign_keys=surface_id)
 
-    matches = db.relationship("Match", backref = "tournament", lazy = "dynamic")
-    participants = db.relationship("Participant", backref = "tournament", lazy = "dynamic")
-    players = db.relationship("TournamentPlayer", backref = "tournament", lazy = "dynamic")
-    rankings = db.relationship("Ranking", backref = "tournament", lazy = "dynamic")
+    matches = db.relationship("Match", backref="tournament", lazy="dynamic")
+    participants = db.relationship("Participant", backref="tournament", lazy="dynamic")
+    players = db.relationship("TournamentPlayer", backref="tournament", lazy="dynamic")
+    rankings = db.relationship("Ranking", backref="tournament", lazy="dynamic")
 
     def is_created(self):
         return self.status == TournamentStatus.CREATED
@@ -324,7 +334,6 @@ class Tournament(db.Model):
         names = ["F", "DF", "QF", "HF"]
         return names[::-1]
 
-
     def get_score_per_round(self):
         if self.number_rounds < 7:
             return {round: 2 ** (self.number_rounds - round)
@@ -334,7 +343,7 @@ class Tournament(db.Model):
 
     def get_risk_coefficient_per_round(self):
         return {round: 2 ** (self.number_rounds - round)
-                    for round in range(1, self.number_rounds + 1)}
+                for round in range(1, self.number_rounds + 1)}
 
     def get_maximal_score(self):
         score_per_round = self.get_score_per_round()
@@ -348,7 +357,6 @@ class Tournament(db.Model):
             score += match_score
         return score
 
-
     def get_current_maximal_score(self):
         score_per_round = self.get_score_per_round()
         score = 0
@@ -361,7 +369,6 @@ class Tournament(db.Model):
                 match_score = score_per_round[match.round]
                 score += match_score
         return score
-
 
     def get_current_maximal_score_simulator(self, scenario):
         score_per_round = self.get_score_per_round()
@@ -377,13 +384,14 @@ class Tournament(db.Model):
         return score
 
     def participants_sorted(self):
-        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(), Participant.created_at))
+        return (self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(),
+                                           Participant.created_at))
 
     def get_tournament_player_stats(self, tournament_player):
         # Get the tournament player's first round match
         first_match = (self.matches.filter(or_(Match.tournament_player1_id == tournament_player.id,
                                                Match.tournament_player2_id == tournament_player.id))
-                                   .filter(Match.round == self.number_rounds)).first()
+                       .filter(Match.round == self.number_rounds)).first()
         if not first_match:
             return None
 
@@ -407,7 +415,7 @@ class Tournament(db.Model):
         for tournament_player in self.players:
             stats[tournament_player] = {}
             for round in range(1, self.number_rounds + 1):
-                 stats[tournament_player][round] = (forecasts
+                stats[tournament_player][round] = (forecasts
                                                    .filter(Match.round == round)
                                                    .filter(Forecast.winner_id == tournament_player.id)
                                                    .count())
@@ -416,13 +424,15 @@ class Tournament(db.Model):
         return stats
 
     def distribute_points(self):
-        participants = self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(), Participant.created_at)
+        participants = self.participants.order_by(Participant.score.desc(), Participant.risk_coefficient.desc(),
+                                                  Participant.created_at)
         number_participants = participants.count()
         if number_participants == 1:
             return {participants.first(): self.category.maximal_score}
 
         def ranking_score(rank):
-            return self.category.minimal_score * (0.9 * self.category.maximal_score / self.category.minimal_score) ** ((number_participants - rank - 1.) / (number_participants - 1.))
+            return self.category.minimal_score * (0.9 * self.category.maximal_score / self.category.minimal_score) ** (
+                    (number_participants - rank - 1.) / (number_participants - 1.))
 
         maximal_score = participants.first().score
         minimal_score = participants.all()[-1].score
@@ -430,7 +440,8 @@ class Tournament(db.Model):
         def score_score(score):
             return 0.1 * self.category.maximal_score * (score - minimal_score) / (maximal_score - minimal_score)
 
-        scores = {participant: round(ranking_score(rank) + score_score(participant.score)) for rank, participant in enumerate(participants)}
+        scores = {participant: round(ranking_score(rank) + score_score(participant.score)) for rank, participant in
+                  enumerate(participants)}
         return scores
 
     @classmethod
@@ -446,17 +457,20 @@ class Tournament(db.Model):
         return cls.query.filter(cls.status == TournamentStatus.FINISHED).order_by(cls.started_at.desc()).first()
 
     @staticmethod
-    def insert_tournament(name, started_at, ended_at, category_name, old_website_id = None, status = TournamentStatus.FINISHED):
-        category = TournamentCategory.query.filter_by(name = category_name).first()
+    def insert_tournament(name, started_at, ended_at, category_name, old_website_id=None,
+                          status=TournamentStatus.FINISHED):
+        category = TournamentCategory.query.filter_by(name=category_name).first()
         if category is None:
             print("This category does not exist")
         else:
-            tournament = Tournament(name = name,
-                                    old_website_id = old_website_id,
-                                    started_at = started_at,
-                                    ended_at = ended_at,
-                                    category = category,
-                                    status = status)
+            tournament = Tournament(
+                name=name,
+                old_website_id=old_website_id,
+                started_at=started_at,
+                ended_at=ended_at,
+                category=category,
+                status=status
+            )
             try:
                 db.session.add(tournament)
                 db.session.commit()
@@ -465,16 +479,18 @@ class Tournament(db.Model):
                 print("\n")
                 print(str(e))
                 db.session.rollback()
+
     @property
     def players_alphabetic(self):
-        return self.players.join(Player, Player.id == TournamentPlayer.player_id).order_by(Player.last_name, Player.first_name)
+        return self.players.join(Player, Player.id == TournamentPlayer.player_id).order_by(Player.last_name,
+                                                                                           Player.first_name)
 
 
 class TournamentCategory(db.Model):
     __tablename__ = "tournament_categories"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
 
     name = db.Column(db.String(64))
     number_rounds = db.Column(db.Integer)
@@ -488,9 +504,9 @@ class TournamentCategory(db.Model):
 
 class Surface(db.Model):
     __tablename__ = "surfaces"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
 
     name = db.Column(db.String(64))
     class_name = db.Column(db.String(64))
@@ -499,41 +515,41 @@ class Surface(db.Model):
     def get_all_surfaces(cls):
         return [(p.id, p.name) for p in cls.query.order_by(cls.name).all()]
 
-
     @staticmethod
     def insert_surfaces():
         surfaces = [("Dur", "surface-hard"),
                     ("Gazon", "surface-grass"),
                     ("Terre battue", "surface-clay")]
         for (s, c) in surfaces:
-            surface = Surface(name = s,
-                              class_name = c)
+            surface = Surface(name=s,
+                              class_name=c)
             db.session.add(surface)
         db.session.commit()
 
 
 class Participant(db.Model):
     __tablename__ = "participants"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
-    matches_not_forecasted = db.Column(db.Integer, default = None)
-    score = db.Column(db.Integer, default = 0)
-    risk_coefficient = db.Column(db.Float, default = 0)
-    points = db.Column(db.Integer, default = 0)
-    ranking = db.Column(db.Integer, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
+    matches_not_forecasted = db.Column(db.Integer, default=None)
+    score = db.Column(db.Integer, default=0)
+    risk_coefficient = db.Column(db.Float, default=0)
+    points = db.Column(db.Integer, default=0)
+    ranking = db.Column(db.Integer, default=None)
 
-    old_website_id = db.Column(db.Integer, default = None)
+    old_website_id = db.Column(db.Integer, default=None)
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    forecasts = db.relationship("Forecast", backref = "participant", lazy = "dynamic")
+    forecasts = db.relationship("Forecast", backref="participant", lazy="dynamic")
 
     def has_filled_draw(self):
         return len(self.forecasts.all()) > 0
 
     def has_completely_filled_draw(self):
-        return self.has_filled_draw() and len(self.forecasts.filter(Forecast.winner_id).all()) == len(self.forecasts.all())
+        return self.has_filled_draw() and len(self.forecasts.filter(Forecast.winner_id).all()) == len(
+            self.forecasts.all())
 
     def get_score(self):
         score_per_round = self.tournament.get_score_per_round()
@@ -542,10 +558,11 @@ class Participant(db.Model):
         matches = {m.id: (m.winner_id, m.round) for m in Match.query.filter(Match.tournament_id == self.tournament.id)}
         forecasts = {f.match_id: f.winner_id for f in self.forecasts if f.winner_id}
 
-        score = sum((matches[match_id][0] == winner_id) * score_per_round[matches[match_id][1]] for match_id, winner_id in forecasts.items())
+        score = sum(
+            (matches[match_id][0] == winner_id) * score_per_round[matches[match_id][1]] for match_id, winner_id in
+            forecasts.items())
 
         return score - number_byes
-
 
     def get_score_simulator(self, scenario):
         """
@@ -573,55 +590,56 @@ class Participant(db.Model):
 
         query = (db.session.query(Forecast.winner_id.label("participant_winner_id"),
                                   Forecast.match_id)
-                        .join(Match, Match.id == Forecast.match_id)
-                        .filter(Match.tournament_id == self.tournament.id)
-                        .filter(Forecast.participant_id == self.id)
-                        )
+                 .join(Match, Match.id == Forecast.match_id)
+                 .filter(Match.tournament_id == self.tournament.id)
+                 .filter(Forecast.participant_id == self.id)
+                 )
 
         participant_forecasts = pd.read_sql(query.statement, query.session.bind)
 
         query = (db.session.query(Forecast.participant_id,
-                                 Forecast.winner_id,
-                                 Forecast.match_id,
-                                 Match.round)
-                        .join(Match, Match.id == Forecast.match_id)
-                        .filter(Match.tournament_id == self.tournament.id)
-                        .filter(Forecast.participant_id != self.id)
-                        )
+                                  Forecast.winner_id,
+                                  Forecast.match_id,
+                                  Match.round)
+                 .join(Match, Match.id == Forecast.match_id)
+                 .filter(Match.tournament_id == self.tournament.id)
+                 .filter(Forecast.participant_id != self.id)
+                 )
 
         other_forecasts = pd.read_sql(query.statement, query.session.bind)
         other_forecasts["match_score"] = other_forecasts["round"].apply(lambda x: score_per_round[x])
 
-        merged = other_forecasts.merge(participant_forecasts, on = "match_id", how = "left")
-        weighted_divergent_forecasts = sum(merged[merged["winner_id"] != merged["participant_winner_id"]]["match_score"])
+        merged = other_forecasts.merge(participant_forecasts, on="match_id", how="left")
+        weighted_divergent_forecasts = sum(
+            merged[merged["winner_id"] != merged["participant_winner_id"]]["match_score"])
         return weighted_divergent_forecasts / self.tournament.participants.count()
 
     def get_old_website_draw_url(self):
-        return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(self.tournament.old_website_id, self.old_website_id)
+        return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(
+            self.tournament.old_website_id, self.old_website_id)
 
 
 class Player(db.Model):
     __tablename__ = "players"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
 
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
 
-    tournament_players = db.relationship("TournamentPlayer", backref = "player", lazy = "dynamic")
+    tournament_players = db.relationship("TournamentPlayer", backref="player", lazy="dynamic")
 
     def get_full_name(self):
         return u"{} {}".format(self.first_name,
-                                  self.last_name.upper())
+                               self.last_name.upper())
 
     def get_draw_name(self):
         if self.first_name:
             return u"{} {}".format(self.first_name[0] + ".",
-                                      self.last_name.upper())
+                                   self.last_name.upper())
         else:
             return self.last_name.upper()
-
 
     def get_full_name_surname_first(self):
         return u"{}, {}".format(self.last_name.upper(), self.first_name)
@@ -629,8 +647,8 @@ class Player(db.Model):
     @classmethod
     def get_all_players(cls):
         return [(p.id, p.get_full_name_surname_first())
-        for p in cls.query.filter(cls.deleted_at.is_(None))
-        .order_by(cls.last_name, cls.first_name).all()]
+                for p in cls.query.filter(cls.deleted_at.is_(None))
+                    .order_by(cls.last_name, cls.first_name).all()]
 
     @classmethod
     def get_closest_player(cls, player_name):
@@ -639,7 +657,8 @@ class Player(db.Model):
             player_name = player_name.strip()
         last_name = player_name.split(". ")[-1].lower().replace("-", " ")
         first_name_initial = player_name.split(". ")[0]
-        closest_player = cls.query.filter(func.lower(cls.last_name) == last_name).filter(cls.first_name.like(first_name_initial + "%")).first()
+        closest_player = cls.query.filter(func.lower(cls.last_name) == last_name).filter(
+            cls.first_name.like(first_name_initial + "%")).first()
         return closest_player
 
     @staticmethod
@@ -667,9 +686,9 @@ class Player(db.Model):
 
 class TournamentPlayer(db.Model):
     __tablename__ = "tournament_players"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
     player_id = db.Column(db.Integer, db.ForeignKey('players.id'))
 
     seed = db.Column(db.Integer)
@@ -679,16 +698,15 @@ class TournamentPlayer(db.Model):
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     position = db.Column(db.Integer)
     matches_won = db.relationship("Match",
-                                  backref = "winner_tournament_player",
-                                  primaryjoin = "TournamentPlayer.id==Match.winner_id",
-                                  lazy = "dynamic")
+                                  backref="winner_tournament_player",
+                                  primaryjoin="TournamentPlayer.id==Match.winner_id",
+                                  lazy="dynamic")
     matches = db.relationship("Match",
-                              backref = "tournament_player",
-                              primaryjoin = "or_(TournamentPlayer.id==Match.tournament_player1_id, TournamentPlayer.id==Match.tournament_player2_id)",
-                              lazy ='dynamic')
+                              backref="tournament_player",
+                              primaryjoin="or_(TournamentPlayer.id==Match.tournament_player1_id, TournamentPlayer.id==Match.tournament_player2_id)",
+                              lazy='dynamic')
 
-    forecasts = db.relationship("Forecast", backref = "winner", lazy = "dynamic")
-
+    forecasts = db.relationship("Forecast", backref="winner", lazy="dynamic")
 
     def get_full_name(self):
         full_name = u""
@@ -711,7 +729,7 @@ class TournamentPlayer(db.Model):
     def is_eliminated(self):
         matches = (Match.query
                    .filter(or_(Match.tournament_player1_id == self.id,
-                                         Match.tournament_player2_id == self.id))
+                               Match.tournament_player2_id == self.id))
                    .filter(Match.winner_id.isnot(None))
                    .filter(Match.winner_id != self.id)
                    )
@@ -723,8 +741,8 @@ class TournamentPlayer(db.Model):
 
 class Match(db.Model):
     __tablename__ = "matches"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     deleted_at = db.Column(db.DateTime)
 
     position = db.Column(db.Integer)
@@ -733,14 +751,14 @@ class Match(db.Model):
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
 
-    forecasts = db.relationship("Forecast", backref = "match", lazy = "dynamic")
+    forecasts = db.relationship("Forecast", backref="match", lazy="dynamic")
 
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
-    winner = db.relationship("TournamentPlayer", foreign_keys = "Match.winner_id")
+    winner = db.relationship("TournamentPlayer", foreign_keys="Match.winner_id")
     tournament_player1_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
     tournament_player2_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
-    tournament_player1 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player1_id")
-    tournament_player2 = db.relationship("TournamentPlayer", foreign_keys = "Match.tournament_player2_id")
+    tournament_player1 = db.relationship("TournamentPlayer", foreign_keys="Match.tournament_player1_id")
+    tournament_player2 = db.relationship("TournamentPlayer", foreign_keys="Match.tournament_player2_id")
 
     def get_forecast(self, participant_id):
         forecast = (Forecast.query
@@ -773,23 +791,25 @@ class Match(db.Model):
         if self.round == self.tournament.number_rounds:
             return None
         matches = (Match.query
-                 .filter(Match.tournament_id == self.tournament_id)
-                 .filter(or_(Match.position == 2 * self.position, Match.position == 2 * self.position + 1))
-                 .all())
+                   .filter(Match.tournament_id == self.tournament_id)
+                   .filter(or_(Match.position == 2 * self.position, Match.position == 2 * self.position + 1))
+                   .all())
         return matches
 
     def has_bye(self):
         if self.round < self.tournament.number_rounds:
             return False
-        return ((self.tournament_player1 and self.tournament_player1.player and self.tournament_player1.player.last_name == "Bye")
-            or (self.tournament_player2 and self.tournament_player2.player and self.tournament_player2.player.last_name == "Bye"))
+        return ((
+                        self.tournament_player1 and self.tournament_player1.player and self.tournament_player1.player.last_name == "Bye")
+                or (
+                        self.tournament_player2 and self.tournament_player2.player and self.tournament_player2.player.last_name == "Bye"))
 
 
 class Forecast(db.Model):
     __tablename__ = "forecasts"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
-    deleted_at = db.Column(db.DateTime, default = None)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    deleted_at = db.Column(db.DateTime, default=None)
 
     match_id = db.Column(db.Integer, db.ForeignKey('matches.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('tournament_players.id'))
@@ -798,8 +818,8 @@ class Forecast(db.Model):
 
 class Ranking(db.Model):
     __tablename__ = "rankings"
-    id = db.Column(db.Integer, primary_key = True)
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now)
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     deleted_at = db.Column(db.DateTime)
 
     annual_points = db.Column(db.Integer)
@@ -814,7 +834,7 @@ class Ranking(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     @staticmethod
-    def compute_historical_rankings(tournament = None):
+    def compute_historical_rankings(tournament=None):
         participations = (Participant.query
                           .join(Tournament, Tournament.id == Participant.tournament_id)
                           .filter(Tournament.deleted_at.is_(None))
@@ -831,16 +851,19 @@ class Ranking(db.Model):
         df["number_tournaments"] = 1
         df = df.dropna()
 
-        annual_points = df[df["started_at"] > tournament.started_at - relativedelta(years = 1, days = -3)].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
+        annual_points = df[df["started_at"] > tournament.started_at - relativedelta(years=1, days=-3)].groupby(
+            "user_id").sum().sort_values("points", ascending=False).reset_index()
         annual_points["rank"] = range(1, len(annual_points) + 1)
-        year_to_date_points = df[df["started_at"].dt.year == tournament.started_at.year].groupby("user_id").sum().sort_values("points", ascending = False).reset_index()
+        year_to_date_points = df[df["started_at"].dt.year == tournament.started_at.year].groupby(
+            "user_id").sum().sort_values("points", ascending=False).reset_index()
         year_to_date_points["rank"] = range(1, len(year_to_date_points) + 1)
 
         print("Computing annual points and rankings")
         for _, row in annual_points.iterrows():
-            r = Ranking.query.filter(Ranking.tournament_id == tournament.id).filter(Ranking.user_id == row["user_id"]).first()
+            r = Ranking.query.filter(Ranking.tournament_id == tournament.id).filter(
+                Ranking.user_id == row["user_id"]).first()
             if r is None:
-                r = Ranking(user_id = row["user_id"], tournament_id = tournament.id)
+                r = Ranking(user_id=row["user_id"], tournament_id=tournament.id)
             r.annual_points = row["points"]
             r.annual_ranking = row["rank"]
             r.annual_number_tournaments = row["number_tournaments"]
@@ -848,9 +871,10 @@ class Ranking(db.Model):
 
         print("Computing year to date points and rankings")
         for _, row in year_to_date_points.iterrows():
-            r = Ranking.query.filter(Ranking.tournament_id == tournament.id).filter(Ranking.user_id == row["user_id"]).first()
+            r = Ranking.query.filter(Ranking.tournament_id == tournament.id).filter(
+                Ranking.user_id == row["user_id"]).first()
             if r is None:
-                r = Ranking(user_id = row["user_id"], tournament_id = tournament.id)
+                r = Ranking(user_id=row["user_id"], tournament_id=tournament.id)
             r.year_to_date_points = row["points"]
             r.year_to_date_ranking = row["rank"]
             r.year_to_date_number_tournaments = row["number_tournaments"]
@@ -865,7 +889,8 @@ class Ranking(db.Model):
                 .filter(Ranking.tournament_id == tournament_id)
                 .filter(Ranking.annual_ranking.isnot(None))
                 .order_by(Ranking.annual_ranking)
-                .with_entities(User.id, User.username, Ranking.annual_number_tournaments, Ranking.annual_points, Ranking.annual_ranking)
+                .with_entities(User.id, User.username, Ranking.annual_number_tournaments, Ranking.annual_points,
+                               Ranking.annual_ranking)
                 )
 
     @staticmethod
@@ -874,7 +899,8 @@ class Ranking(db.Model):
                 .join(Ranking, Ranking.user_id == User.id)
                 .filter(Ranking.tournament_id == tournament_id)
                 .filter(Ranking.year_to_date_ranking.isnot(None))
-                .with_entities(User.id, User.username, Ranking.year_to_date_number_tournaments, Ranking.year_to_date_points, Ranking.year_to_date_ranking)
+                .with_entities(User.id, User.username, Ranking.year_to_date_number_tournaments,
+                               Ranking.year_to_date_points, Ranking.year_to_date_ranking)
                 .order_by(Ranking.year_to_date_ranking))
 
     @classmethod

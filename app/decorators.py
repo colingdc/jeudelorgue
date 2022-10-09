@@ -13,7 +13,9 @@ def permission_required(permission):
             if not current_user.can(permission):
                 abort(403)
             return f(*args, **kwargs)
+
         return decorated_function
+
     return decorator
 
 
