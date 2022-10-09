@@ -3,86 +3,87 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateTimeField, IntegerField, SubmitField, SelectField, FormField, FieldList
 from wtforms.validators import DataRequired, InputRequired, Optional
+from ..lang import WORDINGS
 
 
 class CreateTournamentForm(FlaskForm):
     name = StringField(
-        'Nom',
+        WORDINGS.TOURNAMENT.NAME,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     tournament_topic_url = StringField(
-        'Lien du topic du tournoi sur JVC',
+        WORDINGS.TOURNAMENT.URL_JVC,
         validators=[
             Optional()
         ]
     )
     jeudelorgue_topic_url = StringField(
-        'Lien du topic du jeu de L-orgue sur JVC',
+        WORDINGS.TOURNAMENT.URL_JDL_JVC,
         validators=[
             Optional()
         ]
     )
     category = SelectField(
-        u'Catégorie',
+        WORDINGS.TOURNAMENT.CATEGORY,
         coerce=int
     )
     surface = SelectField(
-        u'Surface',
+        WORDINGS.TOURNAMENT.SURFACE,
         coerce=int
     )
     start_date = DateTimeField(
-        u'Date de début',
+        WORDINGS.TOURNAMENT.START_DATE,
         format="%d/%m/%Y %H:%M",
         validators=[
-            InputRequired(message="Ce champ est obligatoire")
+            InputRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class EditTournamentForm(FlaskForm):
     name = StringField(
-        'Nom',
+        WORDINGS.TOURNAMENT.NAME,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     tournament_topic_url = StringField(
-        'Lien du topic du tournoi sur JVC',
+        WORDINGS.TOURNAMENT.URL_JVC,
         validators=[
             Optional()
         ]
     )
     jeudelorgue_topic_url = StringField(
-        'Lien du topic du jeu de L-orgue sur JVC',
+        WORDINGS.TOURNAMENT.URL_JDL_JVC,
         validators=[
             Optional()
         ]
     )
     category = SelectField(
-        u'Catégorie',
+        WORDINGS.TOURNAMENT.CATEGORY,
         coerce=int,
         validators=[
             Optional()
         ]
     )
     surface = SelectField(
-        u'Surface',
+        WORDINGS.TOURNAMENT.SURFACE,
         coerce=int,
         validators=[
             Optional()
         ]
     )
     start_date = DateTimeField(
-        u'Date de début',
+        WORDINGS.TOURNAMENT.START_DATE,
         format="%d/%m/%Y %H:%M",
         validators=[
-            InputRequired(message="Ce champ est obligatoire")
+            InputRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, tournament, *args, **kwargs):
         super(EditTournamentForm, self).__init__(*args, **kwargs)
@@ -90,33 +91,33 @@ class EditTournamentForm(FlaskForm):
 
 
 class PlayerTournamentDrawForm(FlaskForm):
-    player1_name = SelectField("Joueur", coerce=int)
-    player2_name = SelectField("Joueur", coerce=int)
-    player1_status = StringField("Statut")
-    player2_status = StringField("Statut")
-    player1_seed = IntegerField(u"Tête de série", validators=[Optional()])
-    player2_seed = IntegerField(u"Tête de série", validators=[Optional()])
+    player1_name = SelectField(WORDINGS.PLAYER.PLAYER, coerce=int)
+    player2_name = SelectField(WORDINGS.PLAYER.PLAYER, coerce=int)
+    player1_status = StringField(WORDINGS.PLAYER.STATUS)
+    player2_status = StringField(WORDINGS.PLAYER.STATUS)
+    player1_seed = IntegerField(WORDINGS.PLAYER.SEED, validators=[Optional()])
+    player2_seed = IntegerField(WORDINGS.PLAYER.SEED, validators=[Optional()])
 
 
 class CreateTournamentDrawForm(FlaskForm):
     player = FieldList(FormField(PlayerTournamentDrawForm))
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class FillTournamentDrawForm(FlaskForm):
     forecast = StringField("forecast")
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class TournamentPlayerStatsForm(FlaskForm):
     player_name = SelectField(
-        "Ordre du tableau",
+        WORDINGS.TOURNAMENT.ORDER_DRAW,
         coerce=int
     )
 
 
 class TournamentPlayerAlphabeticStatsForm(FlaskForm):
     player_name = SelectField(
-        u"Ordre alphabétique",
+        WORDINGS.TOURNAMENT.ORDER_ALPHABETICAL,
         coerce=int
     )

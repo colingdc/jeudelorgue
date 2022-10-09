@@ -3,6 +3,7 @@
 from flask import abort, render_template, redirect, request, url_for, current_app
 from flask_login import login_required
 from . import bp
+from ..lang import WORDINGS
 from ..models import Tournament, Ranking, TournamentStatus
 from .forms import RankingForm
 
@@ -50,7 +51,7 @@ def historical_annual_ranking(tournament_id):
 
     return render_template(
         "ranking/historical_annual_ranking.html",
-        title=u"Classement Race",
+        title=WORDINGS.RANKING.RACE_RANKING,
         pagination=pagination,
         tournament=tournament
     )
@@ -77,7 +78,7 @@ def historical_race_ranking(tournament_id):
 
     return render_template(
         "ranking/historical_race_ranking.html",
-        title=u"Classement Race",
+        title=WORDINGS.RANKING.RACE_RANKING,
         pagination=pagination,
         tournament=tournament
     )
@@ -130,6 +131,6 @@ def all_rankings():
 
     return render_template(
         "ranking/all_rankings.html",
-        title=u"Classements",
+        title=WORDINGS.RANKING.RANKINGS,
         form=form
     )

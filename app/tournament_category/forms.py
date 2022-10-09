@@ -5,72 +5,71 @@ from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
 
 from ..models import TournamentCategory
-from ..texts import CATEGORY_ALREADY_EXISTS
+from ..lang import WORDINGS
 
 
 class CreateCategoryForm(FlaskForm):
     name = StringField(
-        u"Nom",
+        WORDINGS.TOURNAMENT.NAME,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     number_rounds = IntegerField(
-        u"Nombre de tours",
+        WORDINGS.TOURNAMENT.NUMBER_OF_ROUNDS,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     maximal_score = IntegerField(
-        u"Nombre de points du vainqueur",
+        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MAX,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     minimal_score = IntegerField(
-        u"Nombre de points du dernier participant",
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def validate(self):
         rv = FlaskForm.validate(self)
         if not rv:
             return False
         if (TournamentCategory.query.filter_by(name=self.name.data).first()):
-            self.name.errors.append(CATEGORY_ALREADY_EXISTS)
+            self.name.errors.append(WORDINGS.TOURNAMENT.CATEGORY_ALREADY_EXISTS)
             return False
         return True
 
 
 class EditCategoryForm(FlaskForm):
     name = StringField(
-        u"Nom",
+        WORDINGS.TOURNAMENT.CATEGORY_NAME,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     number_rounds = IntegerField(
-        u"Nombre de tours",
+        WORDINGS.TOURNAMENT.NUMBER_OF_ROUNDS,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     maximal_score = IntegerField(
-        u"Nombre de points du vainqueur",
+        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MAX,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     minimal_score = IntegerField(
-        u"Nombre de points du dernier participant",
+        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MIN,
         validators=[
-            DataRequired(message="Ce champ est obligatoire")
+            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, category, *args, **kwargs):
         super(EditCategoryForm, self).__init__(*args, **kwargs)
@@ -82,6 +81,6 @@ class EditCategoryForm(FlaskForm):
             return False
         if (self.name.data != self.category["name"]
                 and (TournamentCategory.query.filter_by(name=self.name.data).first())):
-            self.name.errors.append(CATEGORY_ALREADY_EXISTS)
+            self.name.errors.append(WORDINGS.TOURNAMENT.CATEGORY_ALREADY_EXISTS)
             return False
         return True
