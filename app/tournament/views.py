@@ -4,7 +4,6 @@ from flask import (
     render_template,
     redirect,
     request,
-    flash,
     url_for,
     current_app,
     abort
@@ -47,6 +46,7 @@ from ..texts import (
     DRAW_FILLED_COMPLETELY,
     DRAW_NOT_FILLED_COMPLETELY
 )
+from ..utils import display_info_toast, display_success_toast, display_warning_toast
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -79,10 +79,7 @@ def create_tournament():
             )
             db.session.add(match)
         db.session.commit()
-        flash(
-            "Le tournoi {} a été créé".format(form.name.data),
-            "info"
-        )
+        display_info_toast("Le tournoi {} a été créé".format(form.name.data))
         return redirect(
             url_for(
                 ".view_tournament",
@@ -125,10 +122,7 @@ def edit_tournament(tournament_id):
         tournament.jeudelorgue_topic_url = form.jeudelorgue_topic_url.data
         db.session.add(tournament)
         db.session.commit()
-        flash(
-            u"Le tournoi {} a été mis à jour".format(form.name.data),
-            "info"
-        )
+        display_info_toast(u"Le tournoi {} a été mis à jour".format(form.name.data))
         return redirect(
             url_for(
                 ".edit_tournament",
@@ -152,10 +146,7 @@ def delete_tournament(tournament_id):
     tournament.deleted_at = datetime.datetime.now()
     db.session.add(tournament)
     db.session.commit()
-    flash(
-        u"Le tournoi {} a été supprimé".format(tournament.name),
-        "info"
-    )
+    display_info_toast(u"Le tournoi {} a été supprimé".format(tournament.name))
     return redirect(url_for(".view_tournaments"))
 
 
@@ -198,7 +189,7 @@ def open_registrations(tournament_id):
     tournament.ended_at = None
     db.session.add(tournament)
     db.session.commit()
-    flash(REGISTRATION_OPENED, "info")
+    display_info_toast(REGISTRATION_OPENED)
     return redirect(
         url_for(
             ".view_tournament",
@@ -225,7 +216,7 @@ def close_registrations(tournament_id):
         db.session.add(participant)
     db.session.commit()
 
-    flash(REGISTRATION_CLOSED, "info")
+    display_info_toast(REGISTRATION_CLOSED)
     return redirect(
         url_for(
             ".view_tournament",
@@ -254,7 +245,7 @@ def close_tournament(tournament_id):
 
     Ranking.compute_historical_rankings(tournament)
 
-    flash(TOURNAMENT_CLOSED, "info")
+    display_info_toast(TOURNAMENT_CLOSED)
     return redirect(
         url_for(
             ".view_tournament",
@@ -268,7 +259,7 @@ def close_tournament(tournament_id):
 def register(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if not tournament.is_open_to_registration():
-        flash(REGISTRATION_NOT_OPEN, "warning")
+        display_warning_toast(REGISTRATION_NOT_OPEN)
         return redirect(
             url_for(
                 ".view_tournament",
@@ -277,7 +268,7 @@ def register(tournament_id):
         )
 
     if current_user.is_registered_to_tournament(tournament_id):
-        flash(ALREADY_REGISTERED, "warning")
+        display_warning_toast(ALREADY_REGISTERED)
         return redirect(
             url_for(
                 ".view_tournament",
@@ -291,7 +282,7 @@ def register(tournament_id):
     )
     db.session.add(participant)
     db.session.commit()
-    flash(REGISTERED_TO_TOURNAMENT, "info")
+    display_info_toast(REGISTERED_TO_TOURNAMENT)
     return redirect(
         url_for(
             ".view_tournament",
@@ -374,10 +365,7 @@ def create_tournament_draw(tournament_id):
             db.session.add(tournament)
             db.session.commit()
 
-        flash(
-            "Le tableau du tournoi {} a été créé".format(tournament.name),
-            "info"
-        )
+        display_info_toast("Le tableau du tournoi {} a été créé".format(tournament.name))
         return redirect(
             url_for(
                 ".view_tournament",
@@ -472,10 +460,7 @@ def edit_tournament_draw(tournament_id):
             db.session.add(tournament)
             db.session.commit()
 
-        flash(
-            "Le tableau du tournoi {} a été modifié".format(tournament.name),
-            "info"
-        )
+        display_info_toast("Le tableau du tournoi {} a été modifié".format(tournament.name))
         return redirect(
             url_for(
                 ".view_tournament",
@@ -662,9 +647,9 @@ def fill_my_draw(tournament_id, participant_id):
         db.session.commit()
 
         if participant.has_completely_filled_draw():
-            flash(DRAW_FILLED_COMPLETELY, "success")
+            display_success_toast(DRAW_FILLED_COMPLETELY)
         else:
-            flash(DRAW_NOT_FILLED_COMPLETELY, "warning")
+            display_warning_toast(DRAW_NOT_FILLED_COMPLETELY)
 
         return redirect(
             url_for(
@@ -724,9 +709,9 @@ def edit_my_draw(tournament_id, participant_id):
         db.session.commit()
 
         if participant.has_completely_filled_draw():
-            flash(DRAW_FILLED_COMPLETELY, "success")
+            display_success_toast(DRAW_FILLED_COMPLETELY)
         else:
-            flash(DRAW_NOT_FILLED_COMPLETELY, "warning")
+            display_warning_toast(DRAW_NOT_FILLED_COMPLETELY)
 
         return redirect(
             url_for(
