@@ -1,4 +1,5 @@
 from flask import abort
+
 from ...models import Tournament
 
 

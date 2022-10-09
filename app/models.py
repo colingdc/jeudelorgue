@@ -6,8 +6,9 @@ import pandas as pd
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from . import db, bcrypt, login_manager
 from sqlalchemy import or_, func
+
+from . import db, bcrypt, login_manager
 
 
 class User(UserMixin, db.Model):

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from flask_script import Manager, Shell, Command, Option
+import os
+import time
+from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from app import create_app, db
+
+from app import create_app
 from app.models import *
 from instance import INSTANCE
-from math import log, floor
 import pandas as pd
-import time
-import os
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):

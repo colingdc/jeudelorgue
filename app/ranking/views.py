@@ -2,9 +2,15 @@
 
 from flask import abort, render_template, redirect, request, url_for, current_app
 from flask_login import login_required
-from . import bp
+
 from ..lang import WORDINGS
-from ..models import Tournament, Ranking, TournamentStatus
+from ..models import (
+    Tournament,
+    Ranking,
+    TournamentStatus,
+)
+
+from . import bp
 from .forms import RankingForm
 
 

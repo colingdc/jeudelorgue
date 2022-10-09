@@ -2,9 +2,9 @@
 
 from flask import render_template
 
-from . import bp
 from ..decorators import manager_required
 from ..lang import WORDINGS
+from . import bp
 
 
 @bp.route("/dashboard", methods=["GET"])

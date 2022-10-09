@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, url_for, current_app
 import datetime
-from . import bp
-from .forms import CreateCategoryForm, EditCategoryForm
-from .. import db
+from flask import (
+    current_app,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+
 from ..decorators import manager_required
 from ..lang import WORDINGS
-from ..models import TournamentCategory
+from ..models import db, TournamentCategory
 from ..utils import display_info_toast
+
+from . import bp
+from .forms import CreateCategoryForm, EditCategoryForm
 
 
 @bp.route("/create", methods=["GET", "POST"])

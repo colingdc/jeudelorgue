@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import logging
+import os
 from datetime import timedelta
+import babel
+import logging
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask, session, g, request, redirect, url_for
@@ -12,8 +14,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 from flask_babel import Babel
-import babel
-import os
 
 from config import config
 from .lang import WORDINGS

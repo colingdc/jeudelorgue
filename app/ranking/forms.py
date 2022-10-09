@@ -2,6 +2,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import SelectField
+
 from ..lang import WORDINGS
 
 
