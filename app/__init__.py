@@ -12,7 +12,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 from flask_babel import Babel
-from flask_debugtoolbar import DebugToolbarExtension
 import babel
 import os
 
@@ -53,7 +52,6 @@ def create_app(config_name):
     app.config.from_object(config.get(config_name, "default"))
     app.url_map.strict_slashes = False
     CSRFProtect(app)
-    # DebugToolbarExtension(app)
 
     db.init_app(app)
     bootstrap.init_app(app)
