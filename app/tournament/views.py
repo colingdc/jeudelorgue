@@ -10,7 +10,6 @@ from flask import (
 )
 from flask_login import login_required, current_user
 import datetime
-from math import log, floor
 import json
 
 from . import bp
@@ -28,7 +27,6 @@ from ..models import (
     Tournament,
     TournamentStatus,
     Participant,
-    Match,
     TournamentPlayer,
     Player,
     Forecast,
@@ -38,6 +36,7 @@ from ..models import (
 )
 from ..lang import WORDINGS
 from ..utils import display_info_toast, display_success_toast, display_warning_toast
+from . import domain
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -52,25 +51,10 @@ def create_tournament():
     form.surface.choices = surfaces
 
     if form.validate_on_submit():
-        tournament = Tournament(
-            name=form.name.data,
-            started_at=form.start_date.data,
-            category_id=form.category.data,
-            surface_id=form.surface.data,
-            tournament_topic_url=form.tournament_topic_url.data,
-            jeudelorgue_topic_url=form.jeudelorgue_topic_url.data
-        )
-        db.session.add(tournament)
-        db.session.commit()
-        for i in range(1, 2 ** tournament.number_rounds):
-            match = Match(
-                position=i,
-                tournament_id=tournament.id,
-                round=floor(log(i) / log(2)) + 1
-            )
-            db.session.add(match)
-        db.session.commit()
+        tournament = domain.create_tournament(form)
+
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CREATED.format(form.name.data))
+
         return redirect(
             url_for(
                 ".view_tournament",
