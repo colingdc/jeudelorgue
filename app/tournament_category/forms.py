@@ -10,30 +10,29 @@ from ..lang import WORDINGS
 
 class CreateCategoryForm(FlaskForm):
     name = StringField(
-        u"Nom",
+        WORDINGS.TOURNAMENT.NAME,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     number_rounds = IntegerField(
-        u"Nombre de tours",
+        WORDINGS.TOURNAMENT.NUMBER_OF_ROUNDS,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     maximal_score = IntegerField(
-        u"Nombre de points du vainqueur",
+        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MAX,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     minimal_score = IntegerField(
-        u"Nombre de points du dernier participant",
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def validate(self):
         rv = FlaskForm.validate(self)
@@ -47,30 +46,30 @@ class CreateCategoryForm(FlaskForm):
 
 class EditCategoryForm(FlaskForm):
     name = StringField(
-        u"Nom",
+        WORDINGS.TOURNAMENT.CATEGORY_NAME,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     number_rounds = IntegerField(
-        u"Nombre de tours",
+        WORDINGS.TOURNAMENT.NUMBER_OF_ROUNDS,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     maximal_score = IntegerField(
-        u"Nombre de points du vainqueur",
+        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MAX,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
     minimal_score = IntegerField(
-        u"Nombre de points du dernier participant",
+        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MIN,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, category, *args, **kwargs):
         super(EditCategoryForm, self).__init__(*args, **kwargs)

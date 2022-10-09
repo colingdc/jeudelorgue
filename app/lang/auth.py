@@ -2,8 +2,11 @@ from types import SimpleNamespace
 
 wordings = SimpleNamespace(
     ACCOUNT_CONFIRMED="Votre compte est à présent validé. Merci !",
+    CONFIRM_NEW_PASWORD="Confirmer le nouveau mot de passe",
     CONFIRMATION_MAIL_RESENT="Un email vous a été renvoyé afin de valider votre adresse email",
     CONFIRMATION_MAIL_SENT="Votre compte a bien été créé !\nUn email vous a été envoyé afin de valider votre adresse email.",
+    CURRENT_PASSWORD="Mot de passe actuel",
+    EMAIL="Email",
     EMAIL_ALREADY_TAKEN="Cette adresse email est déjà utilisée",
     INCORRECT_CREDENTIALS="Le nom d'utilisateur ou le mot de passe est incorrect",
     INVALID_CONFIRMATION_TOKEN="Le lien de confirmation est invalide ou a expiré.",
@@ -12,11 +15,16 @@ wordings = SimpleNamespace(
     LOGIN="Connexion",
     LOGIN_SUCCESSFUL="Vous êtes à présent connecté",
     MISSING_EMAIL_ADDRESS="Merci de renseigner une adresse email valide",
+    NEW_PASSWORD="Nouveau mot de passe",
     OLD_ACCOUNT_PASSWORD_CHANGE="Afin de valider la création de votre nouveau compte et d'accéder aux fonctionnalités du site, merci de changer votre mot de passe",
+    PASSWORD="Mot de passe",
     PASSWORD_CHANGE="Changement de mot de passe",
     PASSWORD_UPDATED="Votre mot de passe a été mis à jour",
+    PASSWORDS_DO_NOT_MATCH="Les mots de passe entrés sont différents",
     PROFILE_UPDATED="Le profil a été mis à jour.",
     REGISTRATION="Inscription",
+    REMEMBER_ME="Se souvenir de moi",
     RESET_PASSWORD_EMAIL_SENT="Un email contenant des instructions pour réinitialiser votre mot de passe vous a été envoyé.",
+    USERNAME="Pseudo",
     USERNAME_ALREADY_TAKEN="Ce pseudo est déjà utilisé",
 )

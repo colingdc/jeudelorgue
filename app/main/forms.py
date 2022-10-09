@@ -9,7 +9,7 @@ from ..models import User, Role
 
 class EditProfileAdminForm(FlaskForm):
     email = StringField(
-        'Email',
+        WORDINGS.AUTH.EMAIL,
         validators=[
             DataRequired(),
             Length(1, 64),
@@ -17,14 +17,14 @@ class EditProfileAdminForm(FlaskForm):
         ]
     )
     username = StringField(
-        'Pseudo',
+        WORDINGS.AUTH.USERNAME,
         validators=[
             DataRequired(),
             Length(1, 64)
         ]
     )
-    confirmed = BooleanField('Confirmed')
-    role = SelectField('Role', coerce=int)
+    confirmed = BooleanField(WORDINGS.MAIN.CONFIRMED)
+    role = SelectField(WORDINGS.MAIN.ROLE, coerce=int)
     submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, user, *args, **kwargs):
@@ -47,7 +47,7 @@ class EditProfileAdminForm(FlaskForm):
 
 class ContactForm(FlaskForm):
     email = StringField(
-        u'Email (si vous souhaitez recevoir une réponse)',
+        WORDINGS.AUTH.EMAIL,
         validators=[
             Optional(),
             Length(1, 64),
@@ -55,7 +55,7 @@ class ContactForm(FlaskForm):
         ]
     )
     message = TextAreaField(
-        "Message *",
+        WORDINGS.MAIN.MESSAGE,
         validators=[
             DataRequired(),
             Length(max=1000)

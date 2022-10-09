@@ -10,18 +10,18 @@ from ..lang import WORDINGS
 
 class CreatePlayerForm(FlaskForm):
     first_name = StringField(
-        u"Prénom",
+        WORDINGS.PLAYER.FIRST_NAME,
         validators=[
             Optional()
         ]
     )
     last_name = StringField(
-        "Nom",
+        WORDINGS.PLAYER.LAST_NAME,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def validate(self):
         rv = FlaskForm.validate(self)
@@ -37,18 +37,18 @@ class CreatePlayerForm(FlaskForm):
 
 class EditPlayerForm(FlaskForm):
     first_name = StringField(
-        u"Prénom",
+        WORDINGS.PLAYER.FIRST_NAME,
         validators=[
             Optional()
         ]
     )
     last_name = StringField(
-        "Nom",
+        WORDINGS.PLAYER.LAST_NAME,
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField("Valider")
+    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, player, *args, **kwargs):
         super(EditPlayerForm, self).__init__(*args, **kwargs)
@@ -63,6 +63,6 @@ class EditPlayerForm(FlaskForm):
                 and (Player.query.filter_by(first_name=self.first_name.data)
                         .filter_by(last_name=self.last_name.data).first())):
             self.first_name.errors.append("")
-            self.last_name.errors.append(PLAYER_ALREADY_EXISTS)
+            self.last_name.errors.append(WORDINGS.PLAYER.PLAYER_ALREADY_EXISTS)
             return False
         return True
