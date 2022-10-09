@@ -3,10 +3,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
-from ..texts import MISSING_FIELD
-from ..texts import MISSING_EMAIL_ADDRESS, INVALID_EMAIL_ADDRESS
-from ..texts import INVALID_PASSWORD
-from ..texts import VALIDATION
+from ..lang import (
+    MISSING_EMAIL_ADDRESS,
+    MISSING_FIELD,
+    INVALID_EMAIL_ADDRESS,
+    INVALID_PASSWORD,
+    VALIDATION,
+)
 
 
 class SignupForm(FlaskForm):

@@ -6,7 +6,7 @@ from . import bp
 from ..decorators import admin_required, manager_required
 from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
 from .. import db
-from ..texts import PROFILE_UPDATED
+from ..lang import PROFILE_UPDATED
 from .forms import EditProfileAdminForm, ContactForm
 from ..email import send_email
 from ..utils import (

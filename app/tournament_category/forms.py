@@ -5,7 +5,7 @@ from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
 
 from ..models import TournamentCategory
-from ..texts import CATEGORY_ALREADY_EXISTS
+from ..lang import CATEGORY_ALREADY_EXISTS
 
 
 class CreateCategoryForm(FlaskForm):

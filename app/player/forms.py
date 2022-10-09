@@ -5,7 +5,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Optional
 
 from ..models import Player
-from ..texts import PLAYER_ALREADY_EXISTS
+from ..lang import PLAYER_ALREADY_EXISTS
 
 
 class CreatePlayerForm(FlaskForm):

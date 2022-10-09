@@ -36,15 +36,15 @@ from ..models import (
     Surface,
     Ranking
 )
-from ..texts import (
-    REGISTRATION_CLOSED,
-    REGISTRATION_OPENED,
-    REGISTERED_TO_TOURNAMENT,
-    REGISTRATION_NOT_OPEN,
+from ..lang import (
     ALREADY_REGISTERED,
-    TOURNAMENT_CLOSED,
     DRAW_FILLED_COMPLETELY,
-    DRAW_NOT_FILLED_COMPLETELY
+    DRAW_NOT_FILLED_COMPLETELY,
+    REGISTERED_TO_TOURNAMENT,
+    REGISTRATION_CLOSED,
+    REGISTRATION_NOT_OPEN,
+    REGISTRATION_OPENED,
+    TOURNAMENT_CLOSED,
 )
 from ..utils import display_info_toast, display_success_toast, display_warning_toast
 

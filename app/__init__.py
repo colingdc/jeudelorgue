@@ -16,7 +16,7 @@ import babel
 import os
 
 from config import config
-from .texts import OLD_ACCOUNT_PASSWORD_CHANGE
+from .lang import OLD_ACCOUNT_PASSWORD_CHANGE
 from .utils import display_info_toast
 
 db = SQLAlchemy()

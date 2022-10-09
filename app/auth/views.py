@@ -12,9 +12,17 @@ from ..utils import (
     display_info_toast,
     display_success_toast,
 )
-from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
-from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
-from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN, OLD_ACCOUNT_PASSWORD_CHANGE
+from ..lang import (
+    ACCOUNT_CONFIRMED,
+    CONFIRMATION_MAIL_RESENT,
+    CONFIRMATION_MAIL_SENT,
+    EMAIL_ALREADY_TAKEN,
+    INCORRECT_CREDENTIALS,
+    INVALID_CONFIRMATION_TOKEN,
+    LOGIN_SUCCESSFUL,
+    OLD_ACCOUNT_PASSWORD_CHANGE,
+    USERNAME_ALREADY_TAKEN,
+)
 from ..email import send_email
 
 
@@ -226,7 +234,8 @@ def reset_password_request():
                        "email/reset_password",
                        user=user, token=token,
                        next=request.args.get("next"))
-            display_info_toast("Un email contenant des instructions pour réinitialiser votre mot de passe vous a été envoyé.")
+            display_info_toast(
+                "Un email contenant des instructions pour réinitialiser votre mot de passe vous a été envoyé.")
         return redirect(url_for("auth.login"))
 
     return render_template(
