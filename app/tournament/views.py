@@ -30,7 +30,6 @@ from ..models import (
     TournamentPlayer,
     Player,
     Forecast,
-    Surface,
     Ranking
 )
 from ..lang import WORDINGS
@@ -44,9 +43,7 @@ def create_tournament():
     form = CreateTournamentForm(request.form)
 
     form.category.choices = domain.get_categories()
-
-    surfaces = Surface.get_all_surfaces()
-    form.surface.choices = surfaces
+    form.surface.choices = domain.get_surfaces()
 
     if form.validate_on_submit():
         tournament = domain.create_tournament(form)
@@ -75,9 +72,7 @@ def edit_tournament(tournament_id):
     form = EditTournamentForm(request.form)
 
     form.category.choices = domain.get_categories()
-
-    surfaces = Surface.get_all_surfaces()
-    form.surface.choices = surfaces
+    form.surface.choices = domain.get_surfaces()
 
     if request.method == "GET":
         form.name.data = tournament.name
