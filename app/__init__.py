@@ -4,7 +4,7 @@ import logging
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, session, g, request, redirect, url_for, flash
+from flask import Flask, session, g, request, redirect, url_for
 from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
@@ -12,12 +12,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 from flask_babel import Babel
-from flask_debugtoolbar import DebugToolbarExtension
 import babel
 import os
 
 from config import config
 from .texts import OLD_ACCOUNT_PASSWORD_CHANGE
+from .utils import display_info_toast
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -52,7 +52,6 @@ def create_app(config_name):
     app.config.from_object(config.get(config_name, "default"))
     app.url_map.strict_slashes = False
     CSRFProtect(app)
-    # DebugToolbarExtension(app)
 
     db.init_app(app)
     bootstrap.init_app(app)
@@ -95,7 +94,7 @@ def create_app(config_name):
             current_user.is_old_account and
             request.endpoint[:5] != 'auth.' and
             not request.path.startswith('/static')):
-            flash(OLD_ACCOUNT_PASSWORD_CHANGE, "info")
+            display_info_toast(OLD_ACCOUNT_PASSWORD_CHANGE)
             return redirect(url_for('auth.change_password'))
 
         if (current_user.is_authenticated and
