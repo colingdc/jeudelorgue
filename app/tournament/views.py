@@ -5,12 +5,10 @@ from flask import (
     redirect,
     request,
     url_for,
-    current_app,
-    abort
+    current_app
 )
 from flask_login import login_required, current_user
 import datetime
-from math import log, floor
 import json
 
 from . import bp
@@ -28,16 +26,14 @@ from ..models import (
     Tournament,
     TournamentStatus,
     Participant,
-    Match,
     TournamentPlayer,
     Player,
     Forecast,
-    TournamentCategory,
-    Surface,
     Ranking
 )
 from ..lang import WORDINGS
 from ..utils import display_info_toast, display_success_toast, display_warning_toast
+from . import domain
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -45,32 +41,11 @@ from ..utils import display_info_toast, display_success_toast, display_warning_t
 def create_tournament():
     form = CreateTournamentForm(request.form)
 
-    categories = TournamentCategory.get_all_categories()
-    form.category.choices = categories
-
-    surfaces = Surface.get_all_surfaces()
-    form.surface.choices = surfaces
-
     if form.validate_on_submit():
-        tournament = Tournament(
-            name=form.name.data,
-            started_at=form.start_date.data,
-            category_id=form.category.data,
-            surface_id=form.surface.data,
-            tournament_topic_url=form.tournament_topic_url.data,
-            jeudelorgue_topic_url=form.jeudelorgue_topic_url.data
-        )
-        db.session.add(tournament)
-        db.session.commit()
-        for i in range(1, 2 ** tournament.number_rounds):
-            match = Match(
-                position=i,
-                tournament_id=tournament.id,
-                round=floor(log(i) / log(2)) + 1
-            )
-            db.session.add(match)
-        db.session.commit()
+        tournament = domain.create_tournament(form)
+
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CREATED.format(form.name.data))
+
         return redirect(
             url_for(
                 ".view_tournament",
@@ -78,6 +53,9 @@ def create_tournament():
             )
         )
     else:
+        form.category.choices = domain.get_categories()
+        form.surface.choices = domain.get_surfaces()
+
         return render_template(
             "tournament/create_tournament.html",
             title=WORDINGS.TOURNAMENT.CREATE_TOURNAMENT,
@@ -88,15 +66,12 @@ def create_tournament():
 @bp.route("/<tournament_id>/edit", methods=["GET", "POST"])
 @manager_required
 def edit_tournament(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament = domain.get_tournament(tournament_id)
     title = tournament.name
     form = EditTournamentForm(request.form)
 
-    categories = TournamentCategory.get_all_categories()
-    form.category.choices = categories
-
-    surfaces = Surface.get_all_surfaces()
-    form.surface.choices = surfaces
+    form.category.choices = domain.get_categories()
+    form.surface.choices = domain.get_surfaces()
 
     if request.method == "GET":
         form.name.data = tournament.name
@@ -133,7 +108,7 @@ def edit_tournament(tournament_id):
 @bp.route("/<tournament_id>/delete")
 @manager_required
 def delete_tournament(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament = domain.get_tournament(tournament_id)
     tournament.deleted_at = datetime.datetime.now()
     db.session.add(tournament)
     db.session.commit()
@@ -144,9 +119,7 @@ def delete_tournament(tournament_id):
 @bp.route("/<tournament_id>")
 @login_required
 def view_tournament(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
     title = tournament.name
     return render_template(
         "tournament/view_tournament.html",
@@ -175,7 +148,7 @@ def view_tournaments():
 @bp.route("/<tournament_id>/open_registrations")
 @manager_required
 def open_registrations(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament = domain.get_tournament(tournament_id)
     tournament.status = TournamentStatus.REGISTRATION_OPEN
     tournament.ended_at = None
     db.session.add(tournament)
@@ -192,7 +165,7 @@ def open_registrations(tournament_id):
 @bp.route("/<tournament_id>/close_registrations")
 @manager_required
 def close_registrations(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament = domain.get_tournament(tournament_id)
     tournament.status = TournamentStatus.ONGOING
     db.session.add(tournament)
     db.session.commit()
@@ -219,7 +192,7 @@ def close_registrations(tournament_id):
 @bp.route("/<tournament_id>/close_tournament")
 @manager_required
 def close_tournament(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament = domain.get_tournament(tournament_id)
     tournament.status = TournamentStatus.FINISHED
     tournament.ended_at = datetime.datetime.now()
     db.session.add(tournament)
@@ -248,7 +221,7 @@ def close_tournament(tournament_id):
 @bp.route("/<tournament_id>/register")
 @login_required
 def register(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
+    tournament = domain.get_tournament(tournament_id)
     if not tournament.is_open_to_registration():
         display_warning_toast(WORDINGS.TOURNAMENT.REGISTRATION_NOT_OPEN)
         return redirect(
@@ -285,9 +258,7 @@ def register(tournament_id):
 @bp.route("/<tournament_id>/draw/create", methods=["GET", "POST"])
 @manager_required
 def create_tournament_draw(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
     title = u"{} - Créer le tableau".format(tournament.name)
 
     matches = tournament.get_matches_first_round()
@@ -376,10 +347,7 @@ def create_tournament_draw(tournament_id):
 @bp.route("/<tournament_id>/draw/edit", methods=["GET", "POST"])
 @manager_required
 def edit_tournament_draw(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
-
+    tournament = domain.get_tournament(tournament_id)
     matches = tournament.get_matches_first_round()
 
     if not request.form:
@@ -470,9 +438,7 @@ def edit_tournament_draw(tournament_id):
 @bp.route("/<tournament_id>/draw")
 @login_required
 def view_tournament_draw(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     return render_template(
         "tournament/view_tournament_draw.html",
@@ -485,9 +451,7 @@ def view_tournament_draw(tournament_id):
 @bp.route("/<tournament_id>/draw/last16")
 @login_required
 def view_tournament_draw_last16(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     if tournament.number_rounds <= 4:
         return redirect(
@@ -508,9 +472,7 @@ def view_tournament_draw_last16(tournament_id):
 @bp.route("/<tournament_id>/draw/update", methods=["GET", "POST"])
 @manager_required
 def update_tournament_draw(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     form = FillTournamentDrawForm()
 
@@ -584,9 +546,7 @@ def update_tournament_draw(tournament_id):
 @bp.route("/<tournament_id>/draw/<participant_id>/fill", methods=["GET", "POST"])
 @login_required
 def fill_my_draw(tournament_id, participant_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
     participant = Participant.query.get_or_404(participant_id)
     if participant.user_id != current_user.id:
         return redirect(
@@ -661,9 +621,7 @@ def fill_my_draw(tournament_id, participant_id):
 @bp.route("/<tournament_id>/draw/<participant_id>/edit", methods=["GET", "POST"])
 @login_required
 def edit_my_draw(tournament_id, participant_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
     participant = Participant.query.get_or_404(participant_id)
     if participant.user_id != current_user.id:
         return redirect(
@@ -723,9 +681,7 @@ def edit_my_draw(tournament_id, participant_id):
 @bp.route("/<tournament_id>/draw/<participant_id>")
 @login_required
 def view_participant_draw(tournament_id, participant_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
     participant = Participant.query.get_or_404(participant_id)
 
     if tournament.are_draws_private():
@@ -757,9 +713,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
             tournament_id=tournament_id
         )
     )
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     if tournament.number_rounds <= 4:
         return redirect(
@@ -795,9 +749,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
 @bp.route("/<tournament_id>/stats/tournament_players", methods=["GET", "POST"])
 @login_required
 def tournament_player_stats(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     if tournament.are_draws_private():
         return redirect(
@@ -853,9 +805,7 @@ def tournament_player_stats(tournament_id):
 @bp.route("/<tournament_id>/stats/forecasts")
 @login_required
 def overall_forecasts_stats(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     if tournament.are_draws_private():
         return redirect(
@@ -878,7 +828,7 @@ def overall_forecasts_stats(tournament_id):
 @bp.route("/current")
 @login_required
 def current_tournament():
-    tournament = Tournament.get_current_tournament()
+    tournament = domain.get_current_tournament()
     if tournament:
         return redirect(
             url_for(
@@ -893,9 +843,7 @@ def current_tournament():
 @bp.route("/<tournament_id>/scenario_simulator", methods=["GET", "POST"])
 @login_required
 def scenario_simulator(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     if tournament.are_draws_private():
         return redirect(
@@ -962,9 +910,7 @@ def scenario_simulator(tournament_id):
 @bp.route("/<tournament_id>/ranking/raw")
 @manager_required
 def raw_tournament_ranking(tournament_id):
-    tournament = Tournament.query.get_or_404(tournament_id)
-    if tournament.deleted_at:
-        abort(404)
+    tournament = domain.get_tournament(tournament_id)
 
     title = WORDINGS.RANKING.RAW_RANKING.format(tournament.name)
 

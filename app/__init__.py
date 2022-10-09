@@ -61,11 +61,11 @@ def create_app(config_name):
 
     def format_datetime(value, format='medium'):
         if format == 'long':
-            format="EEEE dd MMMM y 'à' HH:mm"
+            format = "EEEE dd MMMM y 'à' HH:mm"
         elif format == 'medium':
-            format="dd MMMM y"
+            format = "dd MMMM y"
         elif format == 'short':
-            format="dd/MM/y"
+            format = "dd/MM/y"
         return babel.dates.format_datetime(value, format)
 
     app.jinja_env.filters['datetime'] = format_datetime
@@ -76,7 +76,7 @@ def create_app(config_name):
     def load_user(user_id):
         return User.query.filter(User.id == int(user_id)).first()
 
-    error_handler = RotatingFileHandler("logs/app.log", maxBytes = 1000000, backupCount = 1)
+    error_handler = RotatingFileHandler("logs/app.log", maxBytes=1000000, backupCount=1)
     formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
     error_handler.setFormatter(formatter)
     app.logger.addHandler(error_handler)
@@ -84,23 +84,22 @@ def create_app(config_name):
     @app.before_request
     def before_request():
         session.permanent = True
-        app.permanent_session_lifetime = timedelta(minutes = 60)
+        app.permanent_session_lifetime = timedelta(minutes=60)
         session.modified = True
         g.user = current_user
 
-
         if (current_user.is_authenticated and
-            not current_user.confirmed and
-            current_user.is_old_account and
-            request.endpoint[:5] != 'auth.' and
-            not request.path.startswith('/static')):
+                not current_user.confirmed and
+                current_user.is_old_account and
+                request.endpoint[:5] != 'auth.' and
+                not request.path.startswith('/static')):
             display_info_toast(WORDINGS.AUTH.OLD_ACCOUNT_PASSWORD_CHANGE)
             return redirect(url_for('auth.change_password'))
 
         if (current_user.is_authenticated and
-            not current_user.confirmed and
-            request.endpoint[:5] != 'auth.' and
-            not request.path.startswith('/static')):
+                not current_user.confirmed and
+                request.endpoint[:5] != 'auth.' and
+                not request.path.startswith('/static')):
             return redirect(url_for('auth.unconfirmed'))
 
         rp = request.path
@@ -113,13 +112,12 @@ def create_app(config_name):
             app.logger.info(request.full_path)
         return response
 
-
     @app.template_filter('autoversion')
     def autoversion_filter(filename):
         # determining fullpath might be project specific
         fullpath = os.path.join('app/', filename[1:])
         try:
-          timestamp = str(os.path.getmtime(fullpath))
+            timestamp = str(os.path.getmtime(fullpath))
         except OSError:
             return filename
         newfilename = "{0}?v={1}".format(filename, timestamp)
@@ -132,19 +130,19 @@ def create_app(config_name):
     app.register_blueprint(auth_blueprint)
 
     from .tournament import bp as tournament_blueprint
-    app.register_blueprint(tournament_blueprint, url_prefix = "/tournament")
+    app.register_blueprint(tournament_blueprint, url_prefix="/tournament")
 
     from .player import bp as player_blueprint
-    app.register_blueprint(player_blueprint, url_prefix = "/player")
+    app.register_blueprint(player_blueprint, url_prefix="/player")
 
     from .ranking import bp as ranking_blueprint
-    app.register_blueprint(ranking_blueprint, url_prefix = "/ranking")
+    app.register_blueprint(ranking_blueprint, url_prefix="/ranking")
 
     from .tournament_category import bp as tournament_category_blueprint
-    app.register_blueprint(tournament_category_blueprint, url_prefix = "/tournament_category")
+    app.register_blueprint(tournament_category_blueprint, url_prefix="/tournament_category")
 
     from .admin import bp as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix = "/admin")
+    app.register_blueprint(admin_blueprint, url_prefix="/admin")
 
     # app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix = app.config.get("URL_PREFIX", "/jeudelorgue"))
 
