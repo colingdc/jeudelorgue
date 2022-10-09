@@ -30,7 +30,6 @@ from ..models import (
     TournamentPlayer,
     Player,
     Forecast,
-    TournamentCategory,
     Surface,
     Ranking
 )
@@ -44,8 +43,7 @@ from . import domain
 def create_tournament():
     form = CreateTournamentForm(request.form)
 
-    categories = TournamentCategory.get_all_categories()
-    form.category.choices = categories
+    form.category.choices = domain.get_categories()
 
     surfaces = Surface.get_all_surfaces()
     form.surface.choices = surfaces
@@ -76,8 +74,7 @@ def edit_tournament(tournament_id):
     title = tournament.name
     form = EditTournamentForm(request.form)
 
-    categories = TournamentCategory.get_all_categories()
-    form.category.choices = categories
+    form.category.choices = domain.get_categories()
 
     surfaces = Surface.get_all_surfaces()
     form.surface.choices = surfaces
