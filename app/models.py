@@ -684,12 +684,13 @@ class Match(db.Model):
         return match
 
     def has_bye(self):
+        def is_bye(tournament_player):
+            return tournament_player and tournament_player.player and tournament_player.player.last_name == "Bye"
+
         if self.round < self.tournament.number_rounds:
             return False
-        return ((
-                        self.tournament_player1 and self.tournament_player1.player and self.tournament_player1.player.last_name == "Bye")
-                or (
-                        self.tournament_player2 and self.tournament_player2.player and self.tournament_player2.player.last_name == "Bye"))
+
+        return is_bye(self.tournament_player1) or is_bye(self.tournament_player2)
 
 
 class Forecast(db.Model):
