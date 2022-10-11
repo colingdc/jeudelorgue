@@ -3,8 +3,6 @@
 import os
 from datetime import timedelta
 import babel
-import logging
-from logging.handlers import RotatingFileHandler
 
 from flask import Flask, session, g, request, redirect, url_for
 from flask_bcrypt import Bcrypt
@@ -17,7 +15,7 @@ from flask_babel import Babel
 
 from config import config
 from .lang import WORDINGS
-from .utils import display_info_toast
+from .utils import build_error_handler, display_info_toast
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -53,10 +51,7 @@ def create_app(config_name):
     def load_user(user_id):
         return User.query.filter(User.id == int(user_id)).first()
 
-    error_handler = RotatingFileHandler("logs/app.log", maxBytes=1000000, backupCount=1)
-    formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
-    error_handler.setFormatter(formatter)
-    app.logger.addHandler(error_handler)
+    app.logger.addHandler(build_error_handler())
 
     @app.before_request
     def before_request():
