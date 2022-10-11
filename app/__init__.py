@@ -30,23 +30,6 @@ login_manager.login_message_category = "danger"
 login_manager.login_message = u"Veuillez vous connecter pour accéder à cette page."
 
 
-class PrefixMiddleware(object):
-
-    def __init__(self, app, prefix=''):
-        self.app = app
-        self.prefix = prefix
-
-    def __call__(self, environ, start_response):
-
-        if environ['PATH_INFO'].startswith(self.prefix):
-            environ['PATH_INFO'] = environ['PATH_INFO'][len(self.prefix):]
-            environ['SCRIPT_NAME'] = self.prefix
-            return self.app(environ, start_response)
-        else:
-            start_response('404', [('Content-Type', 'text/plain')])
-            return ["This url does not belong to the app.".encode()]
-
-
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config.get(config_name, "default"))
@@ -59,14 +42,8 @@ def create_app(config_name):
     mail.init_app(app)
     babel_.init_app(app)
 
-    def format_datetime(value, format='medium'):
-        if format == 'long':
-            format = "EEEE dd MMMM y 'à' HH:mm"
-        elif format == 'medium':
-            format = "dd MMMM y"
-        elif format == 'short':
-            format = "dd/MM/y"
-        return babel.dates.format_datetime(value, format)
+    def format_datetime(value):
+        return babel.dates.format_datetime(value, "EEEE dd MMMM y 'à' HH:mm")
 
     app.jinja_env.filters['datetime'] = format_datetime
 
@@ -143,7 +120,5 @@ def create_app(config_name):
 
     from .admin import bp as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix="/admin")
-
-    # app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix = app.config.get("URL_PREFIX", "/jeudelorgue"))
 
     return app
