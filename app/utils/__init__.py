@@ -1,3 +1,4 @@
+from .logging import build_error_handler
 from .toasts import (
     display_error_toast,
     display_info_toast,

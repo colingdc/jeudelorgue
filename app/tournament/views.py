@@ -26,6 +26,7 @@ from ..models import (
 from ..utils import display_info_toast, display_success_toast, display_warning_toast
 
 from . import domain
+from ..ranking import domain as ranking_domain
 from . import bp
 from .forms import (
     CreateTournamentDrawForm,
@@ -41,6 +42,8 @@ from .forms import (
 @manager_required
 def create_tournament():
     form = CreateTournamentForm(request.form)
+    form.category.choices = domain.get_categories()
+    form.surface.choices = domain.get_surfaces()
 
     if form.validate_on_submit():
         tournament = domain.create_tournament(form)
@@ -54,9 +57,6 @@ def create_tournament():
             )
         )
     else:
-        form.category.choices = domain.get_categories()
-        form.surface.choices = domain.get_surfaces()
-
         return render_template(
             "tournament/create_tournament.html",
             title=WORDINGS.TOURNAMENT.CREATE_TOURNAMENT,
@@ -208,7 +208,7 @@ def close_tournament(tournament_id):
         db.session.add(participant)
     db.session.commit()
 
-    Ranking.compute_historical_rankings(tournament)
+    ranking_domain.compute_historical_rankings(tournament)
 
     display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CLOSED)
     return redirect(
