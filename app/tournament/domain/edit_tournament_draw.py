@@ -1,4 +1,5 @@
 from ...models import db
+from .update_tournament_maximal_score import update_tournament_maximal_score
 
 
 def edit_tournament_draw(tournament, matches, form):
@@ -37,6 +38,4 @@ def edit_tournament_draw(tournament, matches, form):
         db.session.add(t2)
         db.session.commit()
 
-        tournament.maximal_score = tournament.get_maximal_score()
-        db.session.add(tournament)
-        db.session.commit()
+    update_tournament_maximal_score(tournament)
