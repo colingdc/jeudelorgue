@@ -1,13 +1,5 @@
 {% extends "base.html" %}
 
-{% block styles %}
-
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}">
-
-{% endblock %}
-
-
 {% block content %}
 
 
@@ -110,15 +102,11 @@
 
 
 {% block extrajs %}
-<script src="{{ url_for('static', filename='bower_components/moment/locale/fr.js') }}"></script>
-<script src="{{ url_for('static', filename='bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('#datetimepicker').datetimepicker();
     });
-
-
 </script>
 
 {% endblock %}
