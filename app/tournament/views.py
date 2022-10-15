@@ -26,6 +26,7 @@ from ..utils import display_info_toast, display_success_toast, display_warning_t
 
 from . import domain
 from ..ranking import domain as ranking_domain
+from . import routing
 from . import bp
 from .forms import (
     CreateTournamentDrawForm,
@@ -46,15 +47,8 @@ def create_tournament():
 
     if form.validate_on_submit():
         tournament = domain.create_tournament(form)
-
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CREATED.format(form.name.data))
-
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament.id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament.id)
     else:
         return render_template(
             "tournament/create_tournament.html",
@@ -148,12 +142,7 @@ def open_registrations(tournament_id):
     db.session.add(tournament)
     db.session.commit()
     display_info_toast(WORDINGS.TOURNAMENT.REGISTRATION_OPENED)
-    return redirect(
-        url_for(
-            ".view_tournament",
-            tournament_id=tournament.id
-        )
-    )
+    return routing.redirect_to_view_tournament(tournament.id)
 
 
 @bp.route("/<tournament_id>/close_registrations")
@@ -175,12 +164,7 @@ def close_registrations(tournament_id):
     db.session.commit()
 
     display_info_toast(WORDINGS.TOURNAMENT.REGISTRATION_CLOSED)
-    return redirect(
-        url_for(
-            ".view_tournament",
-            tournament_id=tournament.id
-        )
-    )
+    return routing.redirect_to_view_tournament(tournament.id)
 
 
 @bp.route("/<tournament_id>/close_tournament")
@@ -204,12 +188,7 @@ def close_tournament(tournament_id):
     ranking_domain.compute_historical_rankings(tournament)
 
     display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CLOSED)
-    return redirect(
-        url_for(
-            ".view_tournament",
-            tournament_id=tournament.id
-        )
-    )
+    return routing.redirect_to_view_tournament(tournament.id)
 
 
 @bp.route("/<tournament_id>/register")
@@ -218,21 +197,11 @@ def register(tournament_id):
     tournament = domain.get_tournament(tournament_id)
     if not tournament.is_open_to_registration():
         display_warning_toast(WORDINGS.TOURNAMENT.REGISTRATION_NOT_OPEN)
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament.id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     if current_user.is_registered_to_tournament(tournament_id):
         display_warning_toast(WORDINGS.TOURNAMENT.ALREADY_REGISTERED)
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament.id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     participant = Participant(
         tournament_id=tournament_id,
@@ -241,12 +210,7 @@ def register(tournament_id):
     db.session.add(participant)
     db.session.commit()
     display_info_toast(WORDINGS.TOURNAMENT.REGISTERED_TO_TOURNAMENT)
-    return redirect(
-        url_for(
-            ".view_tournament",
-            tournament_id=tournament.id
-        )
-    )
+    return routing.redirect_to_view_tournament(tournament.id)
 
 
 @bp.route("/<tournament_id>/draw/create", methods=["GET", "POST"])
@@ -276,12 +240,7 @@ def create_tournament_draw(tournament_id):
         domain.create_tournament_draw(tournament, matches, form)
 
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_DRAW_CREATED.format(tournament.name))
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
     else:
         return render_template(
             "tournament/create_tournament_draw.html",
@@ -330,12 +289,7 @@ def edit_tournament_draw(tournament_id):
         domain.edit_tournament_draw(tournament, matches, form)
 
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_DRAW_UPDATED.format(tournament.name))
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
     else:
         return render_template(
             "tournament/edit_tournament_draw.html",
@@ -391,12 +345,7 @@ def update_tournament_draw(tournament_id):
         try:
             results = json.loads(form.forecast.data)
         except json.decoder.JSONDecodeError:
-            return redirect(
-                url_for(
-                    ".view_tournament",
-                    tournament_id=tournament_id
-                )
-            )
+            return routing.redirect_to_view_tournament(tournament_id)
 
         matches = tournament.matches
 
@@ -437,12 +386,7 @@ def update_tournament_draw(tournament_id):
         db.session.add(tournament)
         db.session.commit()
 
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     else:
         return render_template(
@@ -460,20 +404,10 @@ def fill_my_draw(tournament_id, participant_id):
     tournament = domain.get_tournament(tournament_id)
     participant = Participant.query.get_or_404(participant_id)
     if participant.user_id != current_user.id:
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     if not tournament.is_open_to_registration():
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     title = WORDINGS.TOURNAMENT.FILL_MY_DRAW.format(tournament.name)
 
@@ -510,13 +444,7 @@ def fill_my_draw(tournament_id, participant_id):
             display_success_toast(WORDINGS.TOURNAMENT.DRAW_FILLED_COMPLETELY)
         else:
             display_warning_toast(WORDINGS.TOURNAMENT.DRAW_NOT_FILLED_COMPLETELY)
-
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+            return routing.redirect_to_view_tournament(tournament_id)
 
     else:
         return render_template(
@@ -535,20 +463,10 @@ def edit_my_draw(tournament_id, participant_id):
     tournament = domain.get_tournament(tournament_id)
     participant = Participant.query.get_or_404(participant_id)
     if participant.user_id != current_user.id:
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     if not tournament.is_open_to_registration():
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     title = u"{} - Modifier mon tableau".format(tournament.name)
     form = FillTournamentDrawForm()
@@ -571,12 +489,7 @@ def edit_my_draw(tournament_id, participant_id):
         else:
             display_warning_toast(WORDINGS.TOURNAMENT.DRAW_NOT_FILLED_COMPLETELY)
 
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+            return routing.redirect_to_view_tournament(tournament_id)
 
     else:
         return render_template(
@@ -597,12 +510,7 @@ def view_participant_draw(tournament_id, participant_id):
 
     if tournament.are_draws_private():
         if participant.user_id != current_user.id:
-            return redirect(
-                url_for(
-                    ".view_tournament",
-                    tournament_id=tournament_id
-                )
-            )
+            return routing.redirect_to_view_tournament(tournament_id)
 
     title = WORDINGS.TOURNAMENT.PARTICIPANT_DRAW.format(tournament.name, participant.user.username)
 
@@ -618,12 +526,6 @@ def view_participant_draw(tournament_id, participant_id):
 @bp.route("/<tournament_id>/draw/<participant_id>/last16")
 @login_required
 def view_participant_draw_last16(tournament_id, participant_id):
-    redirect(
-        url_for(
-            ".view_tournament",
-            tournament_id=tournament_id
-        )
-    )
     tournament = domain.get_tournament(tournament_id)
 
     if tournament.number_rounds <= 4:
@@ -639,12 +541,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
 
     if tournament.are_draws_private():
         if participant.user_id != current_user.id:
-            return redirect(
-                url_for(
-                    ".view_tournament",
-                    tournament_id=tournament_id
-                )
-            )
+            return routing.redirect_to_view_tournament(tournament_id)
 
     title = WORDINGS.TOURNAMENT.PARTICIPANT_DRAW.format(tournament.name, participant.user.username)
 
@@ -663,12 +560,7 @@ def tournament_player_stats(tournament_id):
     tournament = domain.get_tournament(tournament_id)
 
     if tournament.are_draws_private():
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     title = WORDINGS.TOURNAMENT.FORECAST_BY_PLAYER.format(tournament.name)
 
@@ -719,12 +611,7 @@ def overall_forecasts_stats(tournament_id):
     tournament = domain.get_tournament(tournament_id)
 
     if tournament.are_draws_private():
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     title = WORDINGS.TOURNAMENT.GLOBAL_FORECASTS.format(tournament.name)
 
@@ -741,12 +628,7 @@ def overall_forecasts_stats(tournament_id):
 def current_tournament():
     tournament = domain.get_current_tournament()
     if tournament:
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament.id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament.id)
     else:
         return redirect(url_for(".view_tournaments"))
 
@@ -757,12 +639,7 @@ def scenario_simulator(tournament_id):
     tournament = domain.get_tournament(tournament_id)
 
     if tournament.are_draws_private():
-        return redirect(
-            url_for(
-                ".view_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament(tournament_id)
 
     title = WORDINGS.TOURNAMENT.SCENARIO_SIMULATOR.format(tournament.name)
 
@@ -784,7 +661,7 @@ def scenario_simulator(tournament_id):
         try:
             results = json.loads(form.forecast.data)
         except json.decoder.JSONDecodeError:
-            return redirect(url_for(".view_tournament", tournament_id=tournament_id))
+            return routing.redirect_to_view_tournament(tournament_id)
         scenario = {int(k): (int(v) if v != "None" else None) for k, v in results.items()}
 
         scores = [(participant, participant.get_score_simulator(scenario), participant.risk_coefficient) for participant
