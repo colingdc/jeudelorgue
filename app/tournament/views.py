@@ -518,13 +518,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
     tournament = domain.get_tournament(tournament_id)
 
     if tournament.number_rounds <= 4:
-        return redirect(
-            url_for(
-                ".view_participant_draw",
-                tournament_id=tournament_id,
-                participant_id=participant_id
-            )
-        )
+        return routing.redirect_to_view_participant_draw(tournament_id, participant_id)
 
     participant = Participant.query.get_or_404(participant_id)
 
