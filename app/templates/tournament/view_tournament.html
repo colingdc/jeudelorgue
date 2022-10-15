@@ -30,7 +30,7 @@
                         <p>La date limite d'inscription n'est donnée qu'à titre indicatif.</p>
                         <p>La fermeture des inscriptions peut éventuellement être repoussée par l'organisateur.</p>
                     </div>
-                    <p>Date limite d'inscription : {{ tournament.started_at | datetime("long") }}</p>
+                    <p>Date limite d'inscription : {{ tournament.started_at | datetime }}</p>
                 {% endif %}
             {% endif %}
 
