@@ -46,6 +46,6 @@ def create_tournament_draw(tournament, matches, form):
         db.session.add(match)
         db.session.commit()
 
-        tournament.maximal_score = tournament.get_maximal_score()
-        db.session.add(tournament)
-        db.session.commit()
+    tournament.maximal_score = tournament.get_maximal_score()
+    db.session.add(tournament)
+    db.session.commit()
