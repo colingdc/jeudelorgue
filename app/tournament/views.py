@@ -18,7 +18,6 @@ from ..models import (
     Forecast,
     Participant,
     Player,
-    Ranking,
     Tournament,
     TournamentPlayer,
     TournamentStatus,
