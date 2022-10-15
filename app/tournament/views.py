@@ -319,12 +319,7 @@ def view_tournament_draw_last16(tournament_id):
     tournament = domain.get_tournament(tournament_id)
 
     if tournament.number_rounds <= 4:
-        return redirect(
-            url_for(
-                "view_tournament_draw",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_view_tournament_draw(tournament_id)
 
     return render_template(
         "tournament/view_tournament_draw_last16.html",
