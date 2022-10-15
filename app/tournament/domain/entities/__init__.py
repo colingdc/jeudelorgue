@@ -1,0 +1,1 @@
+from . TournamentPlayer import TournamentPlayer
