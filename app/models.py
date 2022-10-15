@@ -308,18 +308,6 @@ class Tournament(db.Model):
         return {round: 2 ** (self.number_rounds - round)
                 for round in range(1, self.number_rounds + 1)}
 
-    def get_maximal_score(self):
-        score_per_round = self.get_score_per_round()
-        score = 0
-        for match in self.matches:
-            if match.tournament_player1 and match.tournament_player1.player and match.tournament_player1.player.last_name == "Bye":
-                continue
-            if match.tournament_player2 and match.tournament_player2.player and match.tournament_player2.player.last_name == "Bye":
-                continue
-            match_score = score_per_round[match.round]
-            score += match_score
-        return score
-
     def get_current_maximal_score(self):
         score_per_round = self.get_score_per_round()
         score = 0
