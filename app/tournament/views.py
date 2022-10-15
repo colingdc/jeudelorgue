@@ -101,7 +101,7 @@ def delete_tournament(tournament_id):
     db.session.add(tournament)
     db.session.commit()
     display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_DELETED.format(tournament.name))
-    return redirect(url_for(".view_tournaments"))
+    return routing.redirect_to_view_tournaments()
 
 
 @bp.route("/<tournament_id>")
@@ -630,7 +630,7 @@ def current_tournament():
     if tournament:
         return routing.redirect_to_view_tournament(tournament.id)
     else:
-        return redirect(url_for(".view_tournaments"))
+        return routing.redirect_to_view_tournaments()
 
 
 @bp.route("/<tournament_id>/scenario_simulator", methods=["GET", "POST"])
