@@ -81,13 +81,7 @@ def edit_tournament(tournament_id):
         form.tournament_topic_url.data = tournament.tournament_topic_url
         form.jeudelorgue_topic_url.data = tournament.jeudelorgue_topic_url
     if form.validate_on_submit():
-        tournament.name = form.name.data
-        tournament.started_at = form.start_date.data
-        tournament.surface_id = form.surface.data
-        tournament.tournament_topic_url = form.tournament_topic_url.data
-        tournament.jeudelorgue_topic_url = form.jeudelorgue_topic_url.data
-        db.session.add(tournament)
-        db.session.commit()
+        domain.edit_tournament(tournament, form)
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_UPDATED.format(form.name.data))
         return redirect(
             url_for(
