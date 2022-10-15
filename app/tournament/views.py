@@ -4,10 +4,8 @@ import datetime
 import json
 from flask import (
     current_app,
-    redirect,
     render_template,
     request,
-    url_for,
 )
 from flask_login import login_required, current_user
 
@@ -77,12 +75,7 @@ def edit_tournament(tournament_id):
     if form.validate_on_submit():
         domain.edit_tournament(tournament, form)
         display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_UPDATED.format(form.name.data))
-        return redirect(
-            url_for(
-                ".edit_tournament",
-                tournament_id=tournament_id
-            )
-        )
+        return routing.redirect_to_edit_tournament(tournament_id)
     else:
         return render_template(
             "tournament/edit_tournament.html",
