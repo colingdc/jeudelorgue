@@ -407,13 +407,7 @@ def fill_my_draw(tournament_id, participant_id):
     title = WORDINGS.TOURNAMENT.FILL_MY_DRAW.format(tournament.name)
 
     if participant.has_filled_draw():
-        return redirect(
-            url_for(
-                ".edit_my_draw",
-                tournament_id=tournament_id,
-                participant_id=participant_id
-            )
-        )
+        return routing.redirect_to_edit_my_draw(tournament_id, participant_id)
 
     form = FillTournamentDrawForm()
 
