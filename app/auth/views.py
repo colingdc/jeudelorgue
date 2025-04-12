@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, session, flash, url_for, current_app
+from flask import abort, render_template, redirect, request, session, flash, url_for, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 
 from . import bp
@@ -24,6 +24,9 @@ def signup():
     form = SignupForm(request.form)
 
     if form.validate_on_submit():
+        if form.anti_bot.data:
+            abort(403)
+
         user_exist = User.query.filter_by(username = form.username.data).first()
         email_exist = User.query.filter_by(email = form.email.data).first()
         if user_exist:
@@ -41,11 +44,6 @@ def signup():
             token = user.generate_confirmation_token()
             send_email(user.email, "Confirmation de votre adresse mail",
                        "email/confirm", user = user, token = token)
-
-            send_email(current_app.config.get("ADMIN_JDL"),
-                       "Nouvel inscrit au jeu de L'orgue",
-                       "email/new_user",
-                       user = user)
 
             flash(CONFIRMATION_MAIL_SENT, "info")
             session.pop("signed", None)
