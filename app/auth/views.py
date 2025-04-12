@@ -42,11 +42,6 @@ def signup():
             send_email(user.email, "Confirmation de votre adresse mail",
                        "email/confirm", user = user, token = token)
 
-            send_email(current_app.config.get("ADMIN_JDL"),
-                       "Nouvel inscrit au jeu de L'orgue",
-                       "email/new_user",
-                       user = user)
-
             flash(CONFIRMATION_MAIL_SENT, "info")
             session.pop("signed", None)
             session.pop("username", None)
