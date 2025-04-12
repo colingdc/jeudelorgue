@@ -17,6 +17,8 @@ class SignupForm(FlaskForm):
                                                            Length(min = 8, message = INVALID_PASSWORD)])
     username = StringField("Pseudo", validators = [DataRequired(message = MISSING_FIELD),
                                                    Length(1, 64)])
+    anti_bot = StringField()
+
     submit = SubmitField(VALIDATION)
 
 

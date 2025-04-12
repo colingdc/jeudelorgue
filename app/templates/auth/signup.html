@@ -48,6 +48,12 @@
                             {{ form.password.errors[0] }}
                     </div>
 
+                    <div class="form-group" style="visibility: hidden">
+                        <div>
+                            {{ form.anti_bot(class="form-control") }}
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <button class="btn btn-success" type="submit">Valider</button>
                         <span class="pull-right">
