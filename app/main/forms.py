@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
 
 from ..models import User, Role
-from ..texts import VALIDATION, EMAIL_ALREADY_TAKEN, USERNAME_ALREADY_TAKEN
+from ..texts import EMAIL_ALREADY_TAKEN, USERNAME_ALREADY_TAKEN
 
 
 class EditProfileAdminForm(FlaskForm):
@@ -27,7 +27,6 @@ class EditProfileAdminForm(FlaskForm):
         'Role',
         coerce=int
     )
-    submit = SubmitField(VALIDATION)
 
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
@@ -62,4 +61,3 @@ class ContactForm(FlaskForm):
         ]
     )
     anti_bot = StringField()
-    submit = SubmitField(VALIDATION)

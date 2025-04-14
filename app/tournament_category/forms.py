@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
 from ..models import TournamentCategory
@@ -31,7 +31,6 @@ class CreateCategoryForm(FlaskForm):
             DataRequired(message="Ce champ est obligatoire")
         ]
     )
-    submit = SubmitField("Valider")
 
     def validate(self):
         rv = FlaskForm.validate(self)
@@ -68,7 +67,6 @@ class EditCategoryForm(FlaskForm):
             DataRequired(message="Ce champ est obligatoire")
         ]
     )
-    submit = SubmitField("Valider")
 
     def __init__(self, category, *args, **kwargs):
         super(EditCategoryForm, self).__init__(*args, **kwargs)

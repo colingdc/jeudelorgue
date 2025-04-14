@@ -6,8 +6,6 @@ INVALID_PASSWORD = "Votre mot de passe doit contenir au moins 8 caractères"
 
 OLD_ACCOUNT_PASSWORD_CHANGE = "Afin de valider la création de votre nouveau compte et d'accéder aux fonctionnalités du site, merci de changer votre mot de passe"
 
-VALIDATION = "Valider"
-
 INCORRECT_CREDENTIALS = "Le nom d'utilisateur ou le mot de passe est incorrect"
 CONFIRMATION_MAIL_SENT = ("Votre compte a bien été créé !\n"
                           "Un email vous a été envoyé afin de valider votre adresse email.")
