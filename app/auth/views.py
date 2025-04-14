@@ -14,9 +14,10 @@ from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY
 @bp.route("/pre_signup")
 def pre_signup():
     title = "Inscription"
-    return render_template("auth/pre_signup.html", title = title)
+    return render_template("auth/pre_signup.html", title=title)
 
-@bp.route("/signup", methods = ["GET", "POST"])
+
+@bp.route("/signup", methods=["GET", "POST"])
 def signup():
     title = "Inscription"
     form = SignupForm(request.form)
@@ -25,23 +26,23 @@ def signup():
         if form.anti_bot.data:
             abort(403)
 
-        user_exist = User.query.filter_by(username = form.username.data).first()
-        email_exist = User.query.filter_by(email = form.email.data).first()
+        user_exist = User.query.filter_by(username=form.username.data).first()
+        email_exist = User.query.filter_by(email=form.email.data).first()
         if user_exist:
             form.username.errors.append(USERNAME_ALREADY_TAKEN)
         if email_exist:
             form.email.errors.append(EMAIL_ALREADY_TAKEN)
         if user_exist or email_exist:
-            return render_template("auth/signup.html", form = form, title = title)
+            return render_template("auth/signup.html", form=form, title=title)
         else:
-            user = User(username = form.username.data,
-                        email = form.email.data,
-                        password = form.password.data)
+            user = User(username=form.username.data,
+                        email=form.email.data,
+                        password=form.password.data)
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirmation_token()
             send_email(user.email, "Confirmation de votre adresse mail",
-                       "email/confirm", user = user, token = token)
+                       "email/confirm", user=user, token=token)
 
             flash(CONFIRMATION_MAIL_SENT, "info")
             session.pop("signed", None)
@@ -49,10 +50,10 @@ def signup():
             logout_user()
             return redirect(url_for("auth.login"))
     else:
-        return render_template("auth/signup.html", form = form, title = title)
+        return render_template("auth/signup.html", form=form, title=title)
 
 
-@bp.route("/login", methods = ["GET", "POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     title = "Connexion"
@@ -63,22 +64,22 @@ def login():
 
     # If form was submitted via a POST request
     if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
 
         # If the credentials are incorrect, render the login page with an error message
         if user is None:
             form.username.errors.append(INCORRECT_CREDENTIALS)
             form.password.errors.append("")
-            return render_template("auth/login.html", form = form, title = title)
+            return render_template("auth/login.html", form=form, title=title)
 
         is_password_correct = user.verify_password(form.password.data)
         if not is_password_correct:
             form.username.errors.append(INCORRECT_CREDENTIALS)
             form.password.errors.append("")
-            return render_template("auth/login.html", form = form, title = title)
+            return render_template("auth/login.html", form=form, title=title)
 
         # Otherwise log the user in
-        login_user(user, remember = form.remember_me.data)
+        login_user(user, remember=form.remember_me.data)
         session["signed"] = True
         session["username"] = user.username
         flash(LOGIN_SUCCESSFUL, "success")
@@ -96,7 +97,7 @@ def login():
             return redirect(url_for("main.index"))
 
     session["next"] = request.args.get("next")
-    return render_template("auth/login.html", form = form, title = title)
+    return render_template("auth/login.html", form=form, title=title)
 
 
 @bp.route("/logout")
@@ -131,12 +132,12 @@ def confirm(token):
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, "Confirmation de votre adresse mail",
-               "email/confirm", user = current_user, token = token)
+               "email/confirm", user=current_user, token=token)
     flash(CONFIRMATION_MAIL_RESENT, "info")
     return redirect(url_for("main.index"))
 
 
-@bp.route("/change-password", methods = ["GET", "POST"])
+@bp.route("/change-password", methods=["GET", "POST"])
 @login_required
 def change_password():
     title = "Changement de mot de passe"
@@ -147,48 +148,48 @@ def change_password():
             if current_user.is_old_account and current_user.confirmed is False:
                 current_user.confirmed = True
                 send_email(current_app.config.get("ADMIN_JDL"),
-                       "Nouvel inscrit au jeu de L'orgue depuis l'ancien site",
-                       "email/new_user",
-                       user = current_user)
+                           "Nouvel inscrit au jeu de L'orgue depuis l'ancien site",
+                           "email/new_user",
+                           user=current_user)
             db.session.add(current_user)
             flash("Votre mot de passe a été mis à jour", "success")
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
     return render_template("auth/change_password.html",
-                           form = form, title = title, user = current_user)
+                           form=form, title=title, user=current_user)
 
 
-@bp.route("/reset", methods = ["GET", "POST"])
+@bp.route("/reset", methods=["GET", "POST"])
 def reset_password_request():
     if not current_user.is_anonymous:
         return redirect(url_for("main.index"))
     form = PasswordResetRequestForm()
     title = "Changement de mot de passe"
     if form.validate_on_submit():
-        user = User.query.filter_by(email = form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_reset_token()
             send_email(user.email, "Réinitialisation de votre mot de passe",
                        "email/reset_password",
-                       user = user, token = token,
-                       next = request.args.get("next"))
+                       user=user, token=token,
+                       next=request.args.get("next"))
             flash("Un email contenant des instructions pour réinitialiser "
                   "votre mot de passe vous a été envoyé.",
                   "info")
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password_request.html",
-                           form = form, title = title)
+                           form=form, title=title)
 
 
-@bp.route("/reset/<token>", methods = ["GET", "POST"])
+@bp.route("/reset/<token>", methods=["GET", "POST"])
 def reset_password(token):
     if not current_user.is_anonymous:
         return redirect(url_for("main.index"))
     form = PasswordResetForm()
     title = "Changement de mot de passe"
     if form.validate_on_submit():
-        user = User.query.filter_by(email = form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             return redirect(url_for("main.index"))
         if user.reset_password(token, form.password.data):
@@ -197,5 +198,4 @@ def reset_password(token):
         else:
             return redirect(url_for("main.index"))
     return render_template("auth/reset_password.html",
-                           form = form, token = token, title = title)
-
+                           form=form, token=token, title=title)

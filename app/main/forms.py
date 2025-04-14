@@ -7,13 +7,13 @@ from ..texts import VALIDATION, EMAIL_ALREADY_TAKEN, USERNAME_ALREADY_TAKEN
 
 
 class EditProfileAdminForm(FlaskForm):
-    email = StringField('Email', validators = [DataRequired(),
-                                               Length(1, 64),
-                                               Email()])
-    username = StringField('Pseudo', validators = [DataRequired(),
-                                                   Length(1, 64)])
+    email = StringField('Email', validators=[DataRequired(),
+                                             Length(1, 64),
+                                             Email()])
+    username = StringField('Pseudo', validators=[DataRequired(),
+                                                 Length(1, 64)])
     confirmed = BooleanField('Confirmed')
-    role = SelectField('Role', coerce = int)
+    role = SelectField('Role', coerce=int)
     submit = SubmitField(VALIDATION)
 
     def __init__(self, user, *args, **kwargs):
@@ -24,18 +24,18 @@ class EditProfileAdminForm(FlaskForm):
         self.user = user
 
     def validate_email(self, field):
-        if field.data != self.user.email and User.query.filter_by(email = field.data).first():
+        if field.data != self.user.email and User.query.filter_by(email=field.data).first():
             raise ValidationError(EMAIL_ALREADY_TAKEN)
 
     def validate_username(self, field):
-        if field.data != self.user.username and User.query.filter_by(username = field.data).first():
+        if field.data != self.user.username and User.query.filter_by(username=field.data).first():
             raise ValidationError(USERNAME_ALREADY_TAKEN)
 
 
 class ContactForm(FlaskForm):
-    email = StringField(u'Email (si vous souhaitez recevoir une réponse)', validators = [Optional(),
-                                               Length(1, 64),
-                                               Email()])
-    message = TextAreaField("Message *", validators = [DataRequired(), Length(max = 1000)])
+    email = StringField(u'Email (si vous souhaitez recevoir une réponse)', validators=[Optional(),
+                                                                                       Length(1, 64),
+                                                                                       Email()])
+    message = TextAreaField("Message *", validators=[DataRequired(), Length(max=1000)])
     anti_bot = StringField()
     submit = SubmitField(VALIDATION)
