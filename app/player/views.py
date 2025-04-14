@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 
 from flask import render_template, redirect, request, flash, url_for, current_app

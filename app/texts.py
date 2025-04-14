@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 MISSING_EMAIL_ADDRESS = u"Merci de renseigner une adresse email valide"
 INVALID_EMAIL_ADDRESS = u"Cette adresse n'est pas valide"
 
