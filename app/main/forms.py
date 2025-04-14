@@ -38,4 +38,5 @@ class ContactForm(FlaskForm):
                                                Length(1, 64),
                                                Email()])
     message = TextAreaField("Message *", validators = [DataRequired(), Length(max = 1000)])
+    anti_bot = StringField()
     submit = SubmitField(VALIDATION)
