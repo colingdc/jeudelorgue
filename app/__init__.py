@@ -24,7 +24,7 @@ babel_ = Babel()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 login_manager.login_message_category = "danger"
-login_manager.login_message = u"Veuillez vous connecter pour accéder à cette page."
+login_manager.login_message = "Veuillez vous connecter pour accéder à cette page."
 
 
 class PrefixMiddleware(object):

@@ -10,9 +10,9 @@ class CreateTournamentForm(FlaskForm):
                                        validators=[Optional()])
     jeudelorgue_topic_url = StringField('Lien du topic du jeu de L-orgue sur JVC',
                                         validators=[Optional()])
-    category = SelectField(u'Catégorie', coerce=int)
-    surface = SelectField(u'Surface', coerce=int)
-    start_date = DateTimeField(u'Date de début',
+    category = SelectField('Catégorie', coerce=int)
+    surface = SelectField('Surface', coerce=int)
+    start_date = DateTimeField('Date de début',
                                format="%d/%m/%Y %H:%M",
                                validators=[InputRequired(message="Ce champ est obligatoire")])
     submit = SubmitField("Valider")
@@ -25,11 +25,11 @@ class EditTournamentForm(FlaskForm):
                                        validators=[Optional()])
     jeudelorgue_topic_url = StringField('Lien du topic du jeu de L-orgue sur JVC',
                                         validators=[Optional()])
-    category = SelectField(u'Catégorie', coerce=int,
+    category = SelectField('Catégorie', coerce=int,
                            validators=[Optional()])
-    surface = SelectField(u'Surface', coerce=int,
+    surface = SelectField('Surface', coerce=int,
                           validators=[Optional()])
-    start_date = DateTimeField(u'Date de début',
+    start_date = DateTimeField('Date de début',
                                format="%d/%m/%Y %H:%M",
                                validators=[InputRequired(message="Ce champ est obligatoire")])
     submit = SubmitField("Valider")
@@ -44,8 +44,8 @@ class PlayerTournamentDrawForm(FlaskForm):
     player2_name = SelectField("Joueur", coerce=int)
     player1_status = StringField("Statut")
     player2_status = StringField("Statut")
-    player1_seed = IntegerField(u"Tête de série", validators=[Optional()])
-    player2_seed = IntegerField(u"Tête de série", validators=[Optional()])
+    player1_seed = IntegerField("Tête de série", validators=[Optional()])
+    player2_seed = IntegerField("Tête de série", validators=[Optional()])
 
 
 class CreateTournamentDrawForm(FlaskForm):
@@ -63,4 +63,4 @@ class TournamentPlayerStatsForm(FlaskForm):
 
 
 class TournamentPlayerAlphabeticStatsForm(FlaskForm):
-    player_name = SelectField(u"Ordre alphabétique", coerce=int)
+    player_name = SelectField("Ordre alphabétique", coerce=int)

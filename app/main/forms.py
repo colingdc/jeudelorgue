@@ -33,7 +33,7 @@ class EditProfileAdminForm(FlaskForm):
 
 
 class ContactForm(FlaskForm):
-    email = StringField(u'Email (si vous souhaitez recevoir une réponse)', validators=[Optional(),
+    email = StringField('Email (si vous souhaitez recevoir une réponse)', validators=[Optional(),
                                                                                        Length(1, 64),
                                                                                        Email()])
     message = TextAreaField("Message *", validators=[DataRequired(), Length(max=1000)])

@@ -12,14 +12,14 @@ from ..models import Player
 @bp.route("/create", methods=["GET", "POST"])
 @manager_required
 def create_player():
-    title = u"Créer un joueur"
+    title = "Créer un joueur"
     form = CreatePlayerForm(request.form)
     if form.validate_on_submit():
         player = Player(first_name=form.first_name.data,
                         last_name=form.last_name.data)
         db.session.add(player)
         db.session.commit()
-        flash(u"Le joueur {} a été créé".format(player.get_full_name()), "info")
+        flash("Le joueur {} a été créé".format(player.get_full_name()), "info")
         return redirect(url_for(".create_player"))
     else:
         return render_template("player/create_player.html", title=title,
@@ -40,7 +40,7 @@ def edit_player(player_id):
         player.last_name = form.last_name.data
         db.session.add(player)
         db.session.commit()
-        flash(u"Le joueur {} a été mis à jour".format(player.get_full_name()), "info")
+        flash("Le joueur {} a été mis à jour".format(player.get_full_name()), "info")
         return redirect(url_for(".edit_player", player_id=player_id))
     else:
         return render_template("player/edit_player.html", title=title,
@@ -54,7 +54,7 @@ def delete_player(player_id):
     player.deleted_at = datetime.datetime.now()
     db.session.add(player)
     db.session.commit()
-    flash(u"Le joueur {} a été supprimé".format(player.get_full_name()), "info")
+    flash("Le joueur {} a été supprimé".format(player.get_full_name()), "info")
     return redirect(url_for(".view_players"))
 
 

@@ -12,7 +12,7 @@ from ..models import TournamentCategory
 @bp.route("/create", methods=["GET", "POST"])
 @manager_required
 def create_category():
-    title = u"Créer une catégorie de tournois"
+    title = "Créer une catégorie de tournois"
     form = CreateCategoryForm(request.form)
     if form.validate_on_submit():
         category = TournamentCategory(name=form.name.data,
@@ -22,7 +22,7 @@ def create_category():
                                       )
         db.session.add(category)
         db.session.commit()
-        flash(u"La catégorie de tournois {} a été créée".format(category.name), "info")
+        flash("La catégorie de tournois {} a été créée".format(category.name), "info")
         return redirect(url_for(".create_category"))
     else:
         return render_template("tournament_category/create_category.html", title=title,
@@ -47,7 +47,7 @@ def edit_category(category_id):
         category.minimal_score = form.minimal_score.data
         db.session.add(category)
         db.session.commit()
-        flash(u"La catégorie de tournois {} a été mise à jour".format(category.name), "info")
+        flash("La catégorie de tournois {} a été mise à jour".format(category.name), "info")
         return redirect(url_for(".edit_category", category_id=category_id))
     else:
         return render_template("tournament_category/edit_category.html", title=title,
@@ -70,7 +70,7 @@ def delete_category(category_id):
     category.deleted_at = datetime.datetime.now()
     db.session.add(category)
     db.session.commit()
-    flash(u"La catégorie {} a été supprimé".format(category.name), "info")
+    flash("La catégorie {} a été supprimé".format(category.name), "info")
     return redirect(url_for(".view_categories"))
 
 

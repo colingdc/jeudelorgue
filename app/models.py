@@ -621,18 +621,18 @@ class Player(db.Model):
     tournament_players = db.relationship("TournamentPlayer", backref="player", lazy="dynamic")
 
     def get_full_name(self):
-        return u"{} {}".format(self.first_name,
+        return "{} {}".format(self.first_name,
                                self.last_name.upper())
 
     def get_draw_name(self):
         if self.first_name:
-            return u"{} {}".format(self.first_name[0] + ".",
+            return "{} {}".format(self.first_name[0] + ".",
                                    self.last_name.upper())
         else:
             return self.last_name.upper()
 
     def get_full_name_surname_first(self):
-        return u"{}, {}".format(self.last_name.upper(), self.first_name)
+        return "{}, {}".format(self.last_name.upper(), self.first_name)
 
     @classmethod
     def get_all_players(cls):
@@ -699,7 +699,7 @@ class TournamentPlayer(db.Model):
     forecasts = db.relationship("Forecast", backref="winner", lazy="dynamic")
 
     def get_full_name(self):
-        full_name = u""
+        full_name = ""
         if self.status:
             full_name += "[{}] ".format(self.status)
         if self.seed:
@@ -707,14 +707,14 @@ class TournamentPlayer(db.Model):
         if self.player:
             full_name += self.player.get_draw_name()
         else:
-            full_name += u"Qualifié " + str(self.qualifier_id)
+            full_name += "Qualifié " + str(self.qualifier_id)
         return full_name
 
     def get_full_name_surname_first(self):
         if self.player:
-            return u"{}, {}".format(self.player.last_name.upper(), self.player.first_name)
+            return "{}, {}".format(self.player.last_name.upper(), self.player.first_name)
         else:
-            return u"Qualifié " + str(self.qualifier_id)
+            return "Qualifié " + str(self.qualifier_id)
 
     def is_eliminated(self):
         matches = (Match.query

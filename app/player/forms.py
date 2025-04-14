@@ -7,7 +7,7 @@ from ..texts import PLAYER_ALREADY_EXISTS
 
 
 class CreatePlayerForm(FlaskForm):
-    first_name = StringField(u"Prénom",
+    first_name = StringField("Prénom",
                              validators=[Optional()])
     last_name = StringField("Nom",
                             validators=[DataRequired(message="Ce champ est obligatoire")])
@@ -26,7 +26,7 @@ class CreatePlayerForm(FlaskForm):
 
 
 class EditPlayerForm(FlaskForm):
-    first_name = StringField(u"Prénom",
+    first_name = StringField("Prénom",
                              validators=[Optional()])
     last_name = StringField("Nom",
                             validators=[DataRequired(message="Ce champ est obligatoire")])

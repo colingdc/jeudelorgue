@@ -139,7 +139,7 @@ def contact():
                    message=message,
                    email=form.email.data,
                    user=current_user)
-        flash(u"Votre message a bien été envoyé.", "info")
+        flash("Votre message a bien été envoyé.", "info")
         return redirect(url_for(".contact"))
 
     return render_template("main/contact.html", form=form, title=title)

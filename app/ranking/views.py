@@ -30,7 +30,7 @@ def historical_annual_ranking(tournament_id):
     if not tournament.is_finished():
         redirect(url_for("tournament.view_tournament", tournament_id=tournament_id))
 
-    title = u"Classement Race"
+    title = "Classement Race"
     page = request.args.get("page", 1, type=int)
     pagination = (Ranking.get_historical_annual_ranking(tournament_id)
                   .paginate(page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
@@ -48,7 +48,7 @@ def historical_race_ranking(tournament_id):
     if not tournament.is_finished():
         redirect(url_for("tournament.view_tournament", tournament_id=tournament_id))
 
-    title = u"Classement Race"
+    title = "Classement Race"
     page = request.args.get("page", 1, type=int)
     pagination = (Ranking.get_historical_race_ranking(tournament_id)
                   .paginate(page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
@@ -59,7 +59,7 @@ def historical_race_ranking(tournament_id):
 @bp.route("/all", methods=["GET", "POST"])
 @login_required
 def all_rankings():
-    title = u"Classements"
+    title = "Classements"
 
     form = RankingForm()
     tournaments = Tournament.query.filter(Tournament.deleted_at.is_(None)).filter(
