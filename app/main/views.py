@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import abort, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from . import bp
 from ..decorators import admin_required, manager_required
@@ -125,6 +125,9 @@ def contact():
     title = "Contact"
     form = ContactForm()
     if form.validate_on_submit():
+        if form.anti_bot.data:
+            abort(403)
+
         message = form.message.data
         if current_user and hasattr(current_user, "username"):
             sender = current_user.username
