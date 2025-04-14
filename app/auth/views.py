@@ -1,4 +1,4 @@
-from flask import abort, render_template, redirect, request, session, flash, url_for, current_app
+from flask import abort, render_template, redirect, request, session, url_for, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 
 from . import bp
@@ -6,6 +6,7 @@ from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm,
 from ..email import send_email
 from ..models import User
 from ..models import db
+from ..notifications import display_success_message, display_info_message, display_error_message
 from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN, OLD_ACCOUNT_PASSWORD_CHANGE
 from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
 from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
@@ -44,7 +45,7 @@ def signup():
             send_email(user.email, "Confirmation de votre adresse mail",
                        "email/confirm", user=user, token=token)
 
-            flash(CONFIRMATION_MAIL_SENT, "info")
+            display_info_message(CONFIRMATION_MAIL_SENT)
             session.pop("signed", None)
             session.pop("username", None)
             logout_user()
@@ -82,10 +83,10 @@ def login():
         login_user(user, remember=form.remember_me.data)
         session["signed"] = True
         session["username"] = user.username
-        flash(LOGIN_SUCCESSFUL, "success")
+        display_success_message(LOGIN_SUCCESSFUL)
 
         if user.is_old_account and not user.confirmed:
-            flash(OLD_ACCOUNT_PASSWORD_CHANGE, "info")
+            display_info_message(OLD_ACCOUNT_PASSWORD_CHANGE)
             return redirect(url_for(".change_password"))
 
         # Redirect the user to the page he initially wanted to access
@@ -121,9 +122,9 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for("main.index"))
     if current_user.confirm(token):
-        flash(ACCOUNT_CONFIRMED, "success")
+        display_success_message(ACCOUNT_CONFIRMED)
     else:
-        flash(INVALID_CONFIRMATION_TOKEN, "error")
+        display_error_message(INVALID_CONFIRMATION_TOKEN)
     return redirect(url_for("main.index"))
 
 
@@ -133,7 +134,7 @@ def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, "Confirmation de votre adresse mail",
                "email/confirm", user=current_user, token=token)
-    flash(CONFIRMATION_MAIL_RESENT, "info")
+    display_info_message(CONFIRMATION_MAIL_RESENT)
     return redirect(url_for("main.index"))
 
 
@@ -152,7 +153,7 @@ def change_password():
                            "email/new_user",
                            user=current_user)
             db.session.add(current_user)
-            flash("Votre mot de passe a été mis à jour", "success")
+            display_success_message("Votre mot de passe a été mis à jour")
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
@@ -174,9 +175,8 @@ def reset_password_request():
                        "email/reset_password",
                        user=user, token=token,
                        next=request.args.get("next"))
-            flash("Un email contenant des instructions pour réinitialiser "
-                  "votre mot de passe vous a été envoyé.",
-                  "info")
+            display_info_message("Un email contenant des instructions pour réinitialiser "
+                  "votre mot de passe vous a été envoyé.")
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password_request.html",
                            form=form, title=title)
@@ -193,7 +193,7 @@ def reset_password(token):
         if user is None:
             return redirect(url_for("main.index"))
         if user.reset_password(token, form.password.data):
-            flash("Votre mot de passe a été mis à jour.", "success")
+            display_success_message("Votre mot de passe a été mis à jour.")
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))

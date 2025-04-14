@@ -1,12 +1,13 @@
 import datetime
 
-from flask import render_template, redirect, request, flash, url_for, current_app
+from flask import render_template, redirect, request, url_for, current_app
 
 from . import bp
 from .forms import CreateCategoryForm, EditCategoryForm
 from .. import db
 from ..decorators import manager_required
 from ..models import TournamentCategory
+from ..notifications import display_info_message
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -22,7 +23,7 @@ def create_category():
                                       )
         db.session.add(category)
         db.session.commit()
-        flash("La catégorie de tournois {} a été créée".format(category.name), "info")
+        display_info_message("La catégorie de tournois {} a été créée".format(category.name))
         return redirect(url_for(".create_category"))
     else:
         return render_template("tournament_category/create_category.html", title=title,
@@ -47,7 +48,7 @@ def edit_category(category_id):
         category.minimal_score = form.minimal_score.data
         db.session.add(category)
         db.session.commit()
-        flash("La catégorie de tournois {} a été mise à jour".format(category.name), "info")
+        display_info_message("La catégorie de tournois {} a été mise à jour".format(category.name))
         return redirect(url_for(".edit_category", category_id=category_id))
     else:
         return render_template("tournament_category/edit_category.html", title=title,
@@ -70,7 +71,7 @@ def delete_category(category_id):
     category.deleted_at = datetime.datetime.now()
     db.session.add(category)
     db.session.commit()
-    flash("La catégorie {} a été supprimé".format(category.name), "info")
+    display_info_message("La catégorie {} a été supprimé".format(category.name))
     return redirect(url_for(".view_categories"))
 
 

@@ -2,7 +2,7 @@ import datetime
 import json
 from math import log, floor
 
-from flask import render_template, redirect, request, flash, url_for, current_app, abort
+from flask import render_template, redirect, request, url_for, current_app, abort
 from flask_login import login_required, current_user
 
 from . import bp
@@ -12,6 +12,7 @@ from .. import db
 from ..decorators import manager_required
 from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, \
     TournamentCategory, Surface, Ranking
+from ..notifications import display_info_message, display_warning_message, display_success_message
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED, TOURNAMENT_CLOSED, DRAW_FILLED_COMPLETELY, DRAW_NOT_FILLED_COMPLETELY)
 
@@ -44,7 +45,7 @@ def create_tournament():
                           round=floor(log(i) / log(2)) + 1)
             db.session.add(match)
         db.session.commit()
-        flash("Le tournoi {} a été créé".format(form.name.data), "info")
+        display_info_message("Le tournoi {} a été créé".format(form.name.data))
         return redirect(url_for(".view_tournament", tournament_id=tournament.id))
     else:
         return render_template("tournament/create_tournament.html", title=title,
@@ -79,7 +80,7 @@ def edit_tournament(tournament_id):
         tournament.jeudelorgue_topic_url = form.jeudelorgue_topic_url.data
         db.session.add(tournament)
         db.session.commit()
-        flash("Le tournoi {} a été mis à jour".format(form.name.data), "info")
+        display_info_message("Le tournoi {} a été mis à jour".format(form.name.data))
         return redirect(url_for(".edit_tournament", tournament_id=tournament_id))
     else:
         return render_template("tournament/edit_tournament.html", title=title,
@@ -93,7 +94,7 @@ def delete_tournament(tournament_id):
     tournament.deleted_at = datetime.datetime.now()
     db.session.add(tournament)
     db.session.commit()
-    flash("Le tournoi {} a été supprimé".format(tournament.name), "info")
+    display_info_message("Le tournoi {} a été supprimé".format(tournament.name))
     return redirect(url_for(".view_tournaments"))
 
 
@@ -129,7 +130,7 @@ def open_registrations(tournament_id):
     tournament.ended_at = None
     db.session.add(tournament)
     db.session.commit()
-    flash(REGISTRATION_OPENED, "info")
+    display_info_message(REGISTRATION_OPENED)
     return redirect(url_for(".view_tournament", tournament_id=tournament.id))
 
 
@@ -151,7 +152,7 @@ def close_registrations(tournament_id):
         db.session.add(participant)
     db.session.commit()
 
-    flash(REGISTRATION_CLOSED, "info")
+    display_info_message(REGISTRATION_CLOSED)
     return redirect(url_for(".view_tournament", tournament_id=tournament.id))
 
 
@@ -175,7 +176,7 @@ def close_tournament(tournament_id):
 
     Ranking.compute_historical_rankings(tournament)
 
-    flash(TOURNAMENT_CLOSED, "info")
+    display_info_message(TOURNAMENT_CLOSED)
     return redirect(url_for(".view_tournament", tournament_id=tournament.id))
 
 
@@ -184,18 +185,18 @@ def close_tournament(tournament_id):
 def register(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
     if not tournament.is_open_to_registration():
-        flash(REGISTRATION_NOT_OPEN, "warning")
+        display_warning_message(REGISTRATION_NOT_OPEN)
         return redirect(url_for(".view_tournament", tournament_id=tournament.id))
 
     if current_user.is_registered_to_tournament(tournament_id):
-        flash(ALREADY_REGISTERED, "warning")
+        display_warning_message(ALREADY_REGISTERED)
         return redirect(url_for(".view_tournament", tournament_id=tournament.id))
 
     participant = Participant(tournament_id=tournament_id,
                               user_id=current_user.id)
     db.session.add(participant)
     db.session.commit()
-    flash(REGISTERED_TO_TOURNAMENT, "info")
+    display_info_message(REGISTERED_TO_TOURNAMENT)
     return redirect(url_for(".view_tournament", tournament_id=tournament.id))
 
 
@@ -269,7 +270,7 @@ def create_tournament_draw(tournament_id):
             db.session.add(tournament)
             db.session.commit()
 
-        flash("Le tableau du tournoi {} a été créé".format(tournament.name), "info")
+        display_info_message("Le tableau du tournoi {} a été créé".format(tournament.name))
         return redirect(url_for(".view_tournament", tournament_id=tournament_id))
     else:
         return render_template("tournament/create_tournament_draw.html",
@@ -357,7 +358,7 @@ def edit_tournament_draw(tournament_id):
             db.session.add(tournament)
             db.session.commit()
 
-        flash("Le tableau du tournoi {} a été modifié".format(tournament.name), "info")
+        display_info_message("Le tableau du tournoi {} a été modifié".format(tournament.name))
         return redirect(url_for(".view_tournament", tournament_id=tournament_id))
     else:
         return render_template("tournament/edit_tournament_draw.html", title=title,
@@ -497,9 +498,9 @@ def fill_my_draw(tournament_id, participant_id):
         db.session.commit()
 
         if participant.has_completely_filled_draw():
-            flash(DRAW_FILLED_COMPLETELY, "success")
+            display_success_message(DRAW_FILLED_COMPLETELY)
         else:
-            flash(DRAW_NOT_FILLED_COMPLETELY, "warning")
+            display_warning_message(DRAW_NOT_FILLED_COMPLETELY)
 
         return redirect(url_for(".view_tournament", tournament_id=tournament_id))
 
@@ -542,9 +543,9 @@ def edit_my_draw(tournament_id, participant_id):
         db.session.commit()
 
         if participant.has_completely_filled_draw():
-            flash(DRAW_FILLED_COMPLETELY, "success")
+            display_success_message(DRAW_FILLED_COMPLETELY)
         else:
-            flash(DRAW_NOT_FILLED_COMPLETELY, "warning")
+            display_warning_message(DRAW_NOT_FILLED_COMPLETELY)
 
         return redirect(url_for(".view_tournament", tournament_id=tournament_id))
 

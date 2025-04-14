@@ -1,12 +1,13 @@
 import datetime
 
-from flask import render_template, redirect, request, flash, url_for, current_app
+from flask import render_template, redirect, request, url_for, current_app
 
 from . import bp
 from .forms import CreatePlayerForm, EditPlayerForm
 from .. import db
 from ..decorators import manager_required
 from ..models import Player
+from ..notifications import display_info_message
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -19,7 +20,7 @@ def create_player():
                         last_name=form.last_name.data)
         db.session.add(player)
         db.session.commit()
-        flash("Le joueur {} a été créé".format(player.get_full_name()), "info")
+        display_info_message("Le joueur {} a été créé".format(player.get_full_name()))
         return redirect(url_for(".create_player"))
     else:
         return render_template("player/create_player.html", title=title,
@@ -40,7 +41,7 @@ def edit_player(player_id):
         player.last_name = form.last_name.data
         db.session.add(player)
         db.session.commit()
-        flash("Le joueur {} a été mis à jour".format(player.get_full_name()), "info")
+        display_info_message("Le joueur {} a été mis à jour".format(player.get_full_name()))
         return redirect(url_for(".edit_player", player_id=player_id))
     else:
         return render_template("player/edit_player.html", title=title,
@@ -54,7 +55,7 @@ def delete_player(player_id):
     player.deleted_at = datetime.datetime.now()
     db.session.add(player)
     db.session.commit()
-    flash("Le joueur {} a été supprimé".format(player.get_full_name()), "info")
+    display_info_message("Le joueur {} a été supprimé".format(player.get_full_name()))
     return redirect(url_for(".view_players"))
 
 

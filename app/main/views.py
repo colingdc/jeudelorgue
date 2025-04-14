@@ -1,4 +1,4 @@
-from flask import abort, render_template, flash, redirect, url_for, request
+from flask import abort, render_template, redirect, url_for, request
 from flask import current_app
 from flask_login import login_required, current_user
 
@@ -8,6 +8,7 @@ from .. import db
 from ..decorators import admin_required, manager_required
 from ..email import send_email
 from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
+from ..notifications import display_success_message, display_info_message
 from ..texts import PROFILE_UPDATED
 
 
@@ -111,7 +112,7 @@ def edit_profile_admin(user_id):
         user.confirmed = form.confirmed.data
         user.role = Role.query.get(form.role.data)
         db.session.add(user)
-        flash(PROFILE_UPDATED, "success")
+        display_success_message(PROFILE_UPDATED)
         return redirect(url_for(".view_user", user_id=user.id))
     form.email.data = user.email
     form.username.data = user.username
@@ -139,7 +140,7 @@ def contact():
                    message=message,
                    email=form.email.data,
                    user=current_user)
-        flash("Votre message a bien été envoyé.", "info")
+        display_info_message("Votre message a bien été envoyé.")
         return redirect(url_for(".contact"))
 
     return render_template("main/contact.html", form=form, title=title)
