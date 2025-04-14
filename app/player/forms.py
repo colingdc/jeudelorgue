@@ -7,10 +7,18 @@ from ..texts import PLAYER_ALREADY_EXISTS
 
 
 class CreatePlayerForm(FlaskForm):
-    first_name = StringField("Prénom",
-                             validators=[Optional()])
-    last_name = StringField("Nom",
-                            validators=[DataRequired(message="Ce champ est obligatoire")])
+    first_name = StringField(
+        "Prénom",
+        validators=[
+            Optional()
+        ]
+    )
+    last_name = StringField(
+        "Nom",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
     submit = SubmitField("Valider")
 
     def validate(self):
@@ -26,10 +34,18 @@ class CreatePlayerForm(FlaskForm):
 
 
 class EditPlayerForm(FlaskForm):
-    first_name = StringField("Prénom",
-                             validators=[Optional()])
-    last_name = StringField("Nom",
-                            validators=[DataRequired(message="Ce champ est obligatoire")])
+    first_name = StringField(
+        "Prénom",
+        validators=[
+            Optional()
+        ]
+    )
+    last_name = StringField(
+        "Nom",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
     submit = SubmitField("Valider")
 
     def __init__(self, player, *args, **kwargs):

@@ -7,14 +7,30 @@ from ..texts import CATEGORY_ALREADY_EXISTS
 
 
 class CreateCategoryForm(FlaskForm):
-    name = StringField("Nom",
-                       validators=[DataRequired(message="Ce champ est obligatoire")])
-    number_rounds = IntegerField("Nombre de tours",
-                                 validators=[DataRequired(message="Ce champ est obligatoire")])
-    maximal_score = IntegerField("Nombre de points du vainqueur",
-                                 validators=[DataRequired(message="Ce champ est obligatoire")])
-    minimal_score = IntegerField("Nombre de points du dernier participant",
-                                 validators=[DataRequired(message="Ce champ est obligatoire")])
+    name = StringField(
+        "Nom",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
+    number_rounds = IntegerField(
+        "Nombre de tours",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
+    maximal_score = IntegerField(
+        "Nombre de points du vainqueur",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
+    minimal_score = IntegerField(
+        "Nombre de points du dernier participant",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
     submit = SubmitField("Valider")
 
     def validate(self):
@@ -28,14 +44,30 @@ class CreateCategoryForm(FlaskForm):
 
 
 class EditCategoryForm(FlaskForm):
-    name = StringField("Nom",
-                       validators=[DataRequired(message="Ce champ est obligatoire")])
-    number_rounds = IntegerField("Nombre de tours",
-                                 validators=[DataRequired(message="Ce champ est obligatoire")])
-    maximal_score = IntegerField("Nombre de points du vainqueur",
-                                 validators=[DataRequired(message="Ce champ est obligatoire")])
-    minimal_score = IntegerField("Nombre de points du dernier participant",
-                                 validators=[DataRequired(message="Ce champ est obligatoire")])
+    name = StringField(
+        "Nom",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
+    number_rounds = IntegerField(
+        "Nombre de tours",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
+    maximal_score = IntegerField(
+        "Nombre de points du vainqueur",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
+    minimal_score = IntegerField(
+        "Nombre de points du dernier participant",
+        validators=[
+            DataRequired(message="Ce champ est obligatoire")
+        ]
+    )
     submit = SubmitField("Valider")
 
     def __init__(self, category, *args, **kwargs):
