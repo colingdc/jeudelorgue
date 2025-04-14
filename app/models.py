@@ -93,29 +93,6 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-    @staticmethod
-    def insert_user(email, role_name="User", username=None, confirmed=True, password="test1234", is_old_account=False):
-        role = Role.query.filter_by(name=role_name).first()
-        if role is None:
-            print("This role does not exist")
-        else:
-            if username is None:
-                username = email
-            user = User(email=email,
-                        role=role,
-                        confirmed=confirmed,
-                        is_old_account=is_old_account,
-                        username=username,
-                        password=password)
-            try:
-                db.session.add(user)
-                db.session.commit()
-                print("Import successful")
-            except Exception as e:
-                print("\n")
-                print(str(e))
-                db.session.rollback()
-
     def get_id(self):
         return str(self.id)
 
@@ -254,7 +231,6 @@ class Tournament(db.Model):
     name = db.Column(db.String(64))
     tournament_topic_url = db.Column(db.String(64))
     jeudelorgue_topic_url = db.Column(db.String(64))
-    name = db.Column(db.String(64))
     started_at = db.Column(db.DateTime)
     ended_at = db.Column(db.DateTime, default=None)
     status = db.Column(db.Integer, default=TournamentStatus.CREATED)
@@ -448,28 +424,6 @@ class Tournament(db.Model):
     def get_latest_finished_tournament(cls):
         return cls.query.filter(cls.status == TournamentStatus.FINISHED).order_by(cls.started_at.desc()).first()
 
-    @staticmethod
-    def insert_tournament(name, started_at, ended_at, category_name, old_website_id=None,
-                          status=TournamentStatus.FINISHED):
-        category = TournamentCategory.query.filter_by(name=category_name).first()
-        if category is None:
-            print("This category does not exist")
-        else:
-            tournament = Tournament(name=name,
-                                    old_website_id=old_website_id,
-                                    started_at=started_at,
-                                    ended_at=ended_at,
-                                    category=category,
-                                    status=status)
-            try:
-                db.session.add(tournament)
-                db.session.commit()
-                print("Import successful")
-            except Exception as e:
-                print("\n")
-                print(str(e))
-                db.session.rollback()
-
     @property
     def players_alphabetic(self):
         return self.players.join(Player, Player.id == TournamentPlayer.player_id).order_by(Player.last_name,
@@ -504,17 +458,6 @@ class Surface(db.Model):
     @classmethod
     def get_all_surfaces(cls):
         return [(p.id, p.name) for p in cls.query.order_by(cls.name).all()]
-
-    @staticmethod
-    def insert_surfaces():
-        surfaces = [("Dur", "surface-hard"),
-                    ("Gazon", "surface-grass"),
-                    ("Terre battue", "surface-clay")]
-        for (s, c) in surfaces:
-            surface = Surface(name=s,
-                              class_name=c)
-            db.session.add(surface)
-        db.session.commit()
 
 
 class Participant(db.Model):
@@ -640,39 +583,6 @@ class Player(db.Model):
                 for p in cls.query.filter(cls.deleted_at.is_(None))
                     .order_by(cls.last_name, cls.first_name).all()]
 
-    @classmethod
-    def get_closest_player(cls, player_name):
-        if "[" in player_name:
-            player_name = player_name[:player_name.find("[")] + player_name[1 + player_name.find("]"):]
-            player_name = player_name.strip()
-        last_name = player_name.split(". ")[-1].lower().replace("-", " ")
-        first_name_initial = player_name.split(". ")[0]
-        closest_player = cls.query.filter(func.lower(cls.last_name) == last_name).filter(
-            cls.first_name.like(first_name_initial + "%")).first()
-        return closest_player
-
-    @staticmethod
-    def get_seed(player_name):
-        if "[" in player_name:
-            between_brackets = player_name[1 + player_name.find("["): player_name.find("]")]
-            try:
-                seed = int(between_brackets)
-                return seed
-            except ValueError:
-                return None
-        return None
-
-    @staticmethod
-    def get_status(player_name):
-        if "[" in player_name:
-            between_brackets = player_name[1 + player_name.find("["): player_name.find("]")]
-            try:
-                seed = int(between_brackets)
-                return None
-            except ValueError:
-                return between_brackets
-        return None
-
 
 class TournamentPlayer(db.Model):
     __tablename__ = "tournament_players"
@@ -776,15 +686,6 @@ class Match(db.Model):
                  .filter(Match.position == 2 * self.position + position)
                  .first())
         return match
-
-    def get_previous_matches(self):
-        if self.round == self.tournament.number_rounds:
-            return None
-        matches = (Match.query
-                   .filter(Match.tournament_id == self.tournament_id)
-                   .filter(or_(Match.position == 2 * self.position, Match.position == 2 * self.position + 1))
-                   .all())
-        return matches
 
     def has_bye(self):
         if self.round < self.tournament.number_rounds:
