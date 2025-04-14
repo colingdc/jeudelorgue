@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, flash, url_for, current_app
 import datetime
+
+from flask import render_template, redirect, request, flash, url_for, current_app
 
 from . import bp
 from .forms import CreatePlayerForm, EditPlayerForm

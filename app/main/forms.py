@@ -3,8 +3,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
-from ..texts import VALIDATION, EMAIL_ALREADY_TAKEN, USERNAME_ALREADY_TAKEN
+
 from ..models import User, Role
+from ..texts import VALIDATION, EMAIL_ALREADY_TAKEN, USERNAME_ALREADY_TAKEN
 
 
 class EditProfileAdminForm(FlaskForm):

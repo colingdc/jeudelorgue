@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+import json
+from math import log, floor
+
 from flask import render_template, redirect, request, flash, url_for, current_app, abort
 from flask_login import login_required, current_user
-import datetime
-from math import log, floor
-import json
 
 from . import bp
-from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, PlayerTournamentDrawForm, FillTournamentDrawForm, TournamentPlayerStatsForm, TournamentPlayerAlphabeticStatsForm
+from .forms import CreateTournamentForm, EditTournamentForm, CreateTournamentDrawForm, FillTournamentDrawForm, \
+    TournamentPlayerStatsForm, TournamentPlayerAlphabeticStatsForm
 from .. import db
 from ..decorators import manager_required
-from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, TournamentCategory, Surface, Ranking
+from ..models import Tournament, TournamentStatus, Participant, Match, TournamentPlayer, Player, Forecast, \
+    TournamentCategory, Surface, Ranking
 from ..texts import (REGISTRATION_CLOSED, REGISTRATION_OPENED, REGISTERED_TO_TOURNAMENT, REGISTRATION_NOT_OPEN,
                      ALREADY_REGISTERED, TOURNAMENT_CLOSED, DRAW_FILLED_COMPLETELY, DRAW_NOT_FILLED_COMPLETELY)
 

@@ -5,12 +5,12 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from . import bp
 from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
+from ..email import send_email
 from ..models import User
 from ..models import db
+from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN, OLD_ACCOUNT_PASSWORD_CHANGE
 from ..texts import CONFIRMATION_MAIL_SENT, LOGIN_SUCCESSFUL, CONFIRMATION_MAIL_RESENT
 from ..texts import INCORRECT_CREDENTIALS, USERNAME_ALREADY_TAKEN, EMAIL_ALREADY_TAKEN
-from ..texts import ACCOUNT_CONFIRMED, INVALID_CONFIRMATION_TOKEN, OLD_ACCOUNT_PASSWORD_CHANGE
-from ..email import send_email
 
 
 @bp.route("/pre_signup")

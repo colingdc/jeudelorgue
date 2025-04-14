@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from flask import abort, render_template, flash, redirect, url_for, request
-from flask_login import login_required, current_user
-from . import bp
-from ..decorators import admin_required, manager_required
-from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
-from .. import db
-from ..texts import PROFILE_UPDATED
-from .forms import EditProfileAdminForm, ContactForm
-from ..email import send_email
 from flask import current_app
+from flask_login import login_required, current_user
+
+from . import bp
+from .forms import EditProfileAdminForm, ContactForm
+from .. import db
+from ..decorators import admin_required, manager_required
+from ..email import send_email
+from ..models import User, Role, Tournament, Participant, TournamentStatus, Ranking
+from ..texts import PROFILE_UPDATED
 
 
 @bp.route("/")

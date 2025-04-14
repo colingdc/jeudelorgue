@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, redirect, request, flash, url_for, current_app
+from flask import abort, render_template, redirect, request, url_for, current_app
 from flask_login import login_required
+
 from . import bp
-from .. import db
-from ..models import User, Tournament, Ranking, TournamentStatus
 from .forms import RankingForm
+from ..models import Tournament, Ranking, TournamentStatus
 
 
 @bp.route("/annual")

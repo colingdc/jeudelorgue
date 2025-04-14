@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import unittest
 import time
+import unittest
+
 from app import create_app, db
 from app.models import User, AnonymousUser, Role, Permission
 

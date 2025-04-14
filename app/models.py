@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from dateutil.relativedelta import relativedelta
-from math import log, exp, floor
+
 import pandas as pd
-from flask import current_app, url_for
+from dateutil.relativedelta import relativedelta
+from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from . import db, bcrypt, login_manager
 from sqlalchemy import or_, func
 
+from . import db, bcrypt, login_manager
 
 
 class User(UserMixin, db.Model):

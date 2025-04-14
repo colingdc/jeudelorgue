@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler
 
+import babel
 from flask import Flask, session, g, request, redirect, url_for, flash
+from flask_babel import Babel
 from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
-from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from flask_babel import Babel
-from flask_debugtoolbar import DebugToolbarExtension
-import babel
-import os
 
 from config import config
 from .texts import OLD_ACCOUNT_PASSWORD_CHANGE
