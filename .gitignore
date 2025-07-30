@@ -117,4 +117,6 @@ fa.txt
 
 instance.txt
 nohup.out
+launch.sh
+kill.sh
 logs/
