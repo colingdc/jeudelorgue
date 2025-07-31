@@ -118,7 +118,7 @@ def view_tournaments():
     pagination = (Tournament.query.order_by(Tournament.started_at.desc())
                   .filter(Tournament.deleted_at == None)
                   .order_by(Tournament.started_at.desc())
-                  .paginate(page, per_page=current_app.config["TOURNAMENTS_PER_PAGE"], error_out=False))
+                  .paginate(page=page, per_page=current_app.config["TOURNAMENTS_PER_PAGE"], error_out=False))
     return render_template(
         "tournament/view_tournaments.html",
         title=title,

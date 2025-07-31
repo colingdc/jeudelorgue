@@ -105,7 +105,7 @@ def view_categories():
     page = request.args.get("page", 1, type=int)
     pagination = (TournamentCategory.query.order_by(TournamentCategory.name)
                   .filter(TournamentCategory.deleted_at.is_(None))
-                  .paginate(page, per_page=current_app.config["CATEGORIES_PER_PAGE"], error_out=False))
+                  .paginate(page=page, per_page=current_app.config["CATEGORIES_PER_PAGE"], error_out=False))
     return render_template(
         "tournament_category/view_categories.html",
         title=WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORIES,

@@ -53,7 +53,7 @@ def historical_annual_ranking(tournament_id):
 
     page = request.args.get("page", 1, type=int)
     pagination = (Ranking.get_historical_annual_ranking(tournament_id)
-                  .paginate(page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
+                  .paginate(page=page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
 
     return render_template(
         "ranking/historical_annual_ranking.html",
@@ -80,7 +80,7 @@ def historical_race_ranking(tournament_id):
 
     page = request.args.get("page", 1, type=int)
     pagination = (Ranking.get_historical_race_ranking(tournament_id)
-                  .paginate(page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
+                  .paginate(page=page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
 
     return render_template(
         "ranking/historical_race_ranking.html",

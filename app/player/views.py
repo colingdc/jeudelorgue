@@ -92,7 +92,7 @@ def view_players():
     page = request.args.get("page", 1, type=int)
     pagination = (Player.query.order_by(Player.last_name, Player.first_name)
                   .filter(Player.deleted_at.is_(None))
-                  .paginate(page, per_page=current_app.config["PLAYERS_PER_PAGE"], error_out=False))
+                  .paginate(page=page, per_page=current_app.config["PLAYERS_PER_PAGE"], error_out=False))
 
     return render_template(
         "player/view_players.html",
