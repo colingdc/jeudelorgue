@@ -14,6 +14,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_babel import Babel
 
 from config import config
+from instance import INSTANCE
 from .lang import WORDINGS
 from .utils import build_error_handler, display_info_toast
 
@@ -28,9 +29,9 @@ login_manager.login_message_category = "danger"
 login_manager.login_message = u"Veuillez vous connecter pour accéder à cette page."
 
 
-def create_app(config_name):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config.get(config_name, "default"))
+    app.config.from_object(config.get(INSTANCE, "default"))
     app.url_map.strict_slashes = False
     CSRFProtect(app)
 
