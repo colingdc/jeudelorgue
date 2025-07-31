@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import URLSafeTimedSerializer as Serializer
 from sqlalchemy import or_, func
 
 from . import db, bcrypt, login_manager
