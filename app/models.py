@@ -2,7 +2,6 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
-import pandas as pd
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import URLSafeTimedSerializer as Serializer
@@ -495,32 +494,21 @@ class Participant(db.Model):
         if self.tournament.participants.count() < 2:
             return 0
 
-        score_per_round = self.tournament.get_risk_coefficient_per_round()
+        participant_forecast = db.session.query(Forecast).filter(Forecast.participant_id == self.id).subquery()
+        other_forecast = db.session.query(Forecast).filter(Forecast.participant_id != self.id).subquery()
 
-        query = (db.session.query(Forecast.winner_id.label("participant_winner_id"),
-                                  Forecast.match_id)
-                 .join(Match, Match.id == Forecast.match_id)
-                 .filter(Match.tournament_id == self.tournament.id)
-                 .filter(Forecast.participant_id == self.id)
-                 )
+        query = (
+            db.session.query(Match.round)
+                .select_from(other_forecast)
+                .join(Match, Match.id == other_forecast.c.match_id)
+                .join(participant_forecast, participant_forecast.c.match_id == other_forecast.c.match_id)
+                .filter(Match.tournament_id == self.tournament.id)
+                .filter(other_forecast.c.winner_id != participant_forecast.c.winner_id)
+        )
 
-        participant_forecasts = pd.read_sql(query.statement, query.session.bind)
+        risk_coefficient_per_round = self.tournament.get_risk_coefficient_per_round()
+        weighted_divergent_forecasts = sum(risk_coefficient_per_round.get(row.round, 0) for row in query.all())
 
-        query = (db.session.query(Forecast.participant_id,
-                                  Forecast.winner_id,
-                                  Forecast.match_id,
-                                  Match.round)
-                 .join(Match, Match.id == Forecast.match_id)
-                 .filter(Match.tournament_id == self.tournament.id)
-                 .filter(Forecast.participant_id != self.id)
-                 )
-
-        other_forecasts = pd.read_sql(query.statement, query.session.bind)
-        other_forecasts["match_score"] = other_forecasts["round"].apply(lambda x: score_per_round[x])
-
-        merged = other_forecasts.merge(participant_forecasts, on="match_id", how="left")
-        weighted_divergent_forecasts = sum(
-            merged[merged["winner_id"] != merged["participant_winner_id"]]["match_score"])
         return weighted_divergent_forecasts / self.tournament.participants.count()
 
     def get_old_website_draw_url(self):
