@@ -63,11 +63,11 @@ class User(UserMixin, db.Model):
         return self.can(Permission.MANAGE_TOURNAMENT)
 
     def generate_confirmation_token(self, expiration=3600):
-        s = Serializer(current_app.config["SECRET_KEY"], expiration)
+        s = Serializer(current_app.config["SECRET_KEY"], str(expiration))
         return s.dumps({"confirm": self.id})
 
     def generate_reset_token(self, expiration=3600):
-        s = Serializer(current_app.config["SECRET_KEY"], expiration)
+        s = Serializer(current_app.config["SECRET_KEY"], str(expiration))
         return s.dumps({"reset": self.id})
 
     def confirm(self, token):
