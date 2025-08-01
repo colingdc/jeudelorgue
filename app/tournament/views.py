@@ -426,7 +426,7 @@ def fill_my_draw(tournament_id, participant_id):
             display_success_toast(WORDINGS.TOURNAMENT.DRAW_FILLED_COMPLETELY)
         else:
             display_warning_toast(WORDINGS.TOURNAMENT.DRAW_NOT_FILLED_COMPLETELY)
-            return routing.redirect_to_view_tournament(tournament_id)
+        return routing.redirect_to_view_tournament(tournament_id)
 
     else:
         return render_template(
@@ -470,8 +470,7 @@ def edit_my_draw(tournament_id, participant_id):
             display_success_toast(WORDINGS.TOURNAMENT.DRAW_FILLED_COMPLETELY)
         else:
             display_warning_toast(WORDINGS.TOURNAMENT.DRAW_NOT_FILLED_COMPLETELY)
-
-            return routing.redirect_to_view_tournament(tournament_id)
+        return routing.redirect_to_view_tournament(tournament_id)
 
     else:
         return render_template(
