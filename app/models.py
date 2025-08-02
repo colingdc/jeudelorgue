@@ -561,12 +561,6 @@ class TournamentPlayer(db.Model):
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.id'))
     position = db.Column(db.Integer)
-    matches_won = db.relationship(
-        "Match",
-        backref="winner_tournament_player",
-        primaryjoin="TournamentPlayer.id==Match.winner_id",
-        lazy="dynamic"
-    )
     matches = db.relationship(
         "Match",
         backref="tournament_player",
