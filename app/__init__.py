@@ -29,9 +29,12 @@ login_manager.login_message_category = "danger"
 login_manager.login_message = u"Veuillez vous connecter pour accéder à cette page."
 
 
-def create_app():
+def create_app(config_name=None):
     app = Flask(__name__)
-    app.config.from_object(config.get(INSTANCE, "default"))
+    if config_name:
+        app.config.from_object(config.get(config_name, "default"))
+    else:
+        app.config.from_object(config.get(INSTANCE, "default"))
     app.url_map.strict_slashes = False
     CSRFProtect(app)
 
