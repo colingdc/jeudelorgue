@@ -34,8 +34,8 @@ class CreateCategoryForm(FlaskForm):
     )
     submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
-    def validate(self):
-        rv = FlaskForm.validate(self)
+    def validate(self, extra_validators=None):
+        rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
         if (TournamentCategory.query.filter_by(name=self.name.data).first()):
@@ -75,8 +75,8 @@ class EditCategoryForm(FlaskForm):
         super(EditCategoryForm, self).__init__(*args, **kwargs)
         self.category = category
 
-    def validate(self):
-        rv = FlaskForm.validate(self)
+    def validate(self, extra_validators=None):
+        rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
         if (self.name.data != self.category["name"]

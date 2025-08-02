@@ -23,8 +23,8 @@ class CreatePlayerForm(FlaskForm):
     )
     submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
-    def validate(self):
-        rv = FlaskForm.validate(self)
+    def validate(self, extra_validators=None):
+        rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
         if (Player.query.filter_by(first_name=self.first_name.data)
@@ -54,8 +54,8 @@ class EditPlayerForm(FlaskForm):
         super(EditPlayerForm, self).__init__(*args, **kwargs)
         self.player = player
 
-    def validate(self):
-        rv = FlaskForm.validate(self)
+    def validate(self, extra_validators=None):
+        rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
         if ((self.first_name.data != self.player["first_name"]
