@@ -151,8 +151,9 @@ def close_registrations(tournament_id):
             db.session.delete(participant)
     db.session.commit()
 
+    risk_coefficient_by_participant = domain.compute_risk_coefficient_by_participant(tournament)
     for participant in tournament.participants:
-        participant.risk_coefficient = participant.get_risk_coefficient()
+        participant.risk_coefficient = risk_coefficient_by_participant[participant.id]
         db.session.add(participant)
     db.session.commit()
 

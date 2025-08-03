@@ -1,3 +1,4 @@
+from .compute_risk_coefficient_by_participant import compute_risk_coefficient_by_participant
 from .create_tournament import create_tournament
 from .create_tournament_draw import create_tournament_draw
 from .edit_tournament import edit_tournament

@@ -303,10 +303,6 @@ class Tournament(db.Model):
         return {round: 2 ** (self.number_rounds - round - 1) if round < self.number_rounds else 1
                 for round in range(1, self.number_rounds + 1)}
 
-    def get_risk_coefficient_per_round(self):
-        return {round: 2 ** (self.number_rounds - round)
-                for round in range(1, self.number_rounds + 1)}
-
     def get_current_maximal_score(self):
         score_per_round = self.get_score_per_round()
         score = 0
@@ -489,27 +485,6 @@ class Participant(db.Model):
             match_score = (scenario[forecast.match.id] == forecast.winner_id) * score_per_round[result.round]
             score += match_score
         return score
-
-    def get_risk_coefficient(self):
-        if self.tournament.participants.count() < 2:
-            return 0
-
-        participant_forecast = db.session.query(Forecast).filter(Forecast.participant_id == self.id).subquery()
-        other_forecast = db.session.query(Forecast).filter(Forecast.participant_id != self.id).subquery()
-
-        query = (
-            db.session.query(Match.round)
-                .select_from(other_forecast)
-                .join(Match, Match.id == other_forecast.c.match_id)
-                .join(participant_forecast, participant_forecast.c.match_id == other_forecast.c.match_id)
-                .filter(Match.tournament_id == self.tournament.id)
-                .filter(other_forecast.c.winner_id != participant_forecast.c.winner_id)
-        )
-
-        risk_coefficient_per_round = self.tournament.get_risk_coefficient_per_round()
-        weighted_divergent_forecasts = sum(risk_coefficient_per_round.get(row.round, 0) for row in query.all())
-
-        return weighted_divergent_forecasts / self.tournament.participants.count()
 
     def get_old_website_draw_url(self):
         return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(
