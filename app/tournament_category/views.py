@@ -19,7 +19,7 @@ from ..utils import display_info_toast
 @bp.route("/create", methods=["GET", "POST"])
 @manager_required
 def create_category():
-    title = u"Créer une catégorie de tournois"
+    title = "Créer une catégorie de tournois"
     form = CreateCategoryForm(request.form)
     if form.validate_on_submit():
         category = TournamentCategory(

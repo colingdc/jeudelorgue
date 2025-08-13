@@ -209,7 +209,7 @@ def register(tournament_id):
 @manager_required
 def create_tournament_draw(tournament_id):
     tournament = domain.get_tournament(tournament_id)
-    title = u"{} - Créer le tableau".format(tournament.name)
+    title = "{} - Créer le tableau".format(tournament.name)
 
     matches = tournament.get_matches_first_round()
 
@@ -449,7 +449,7 @@ def edit_my_draw(tournament_id, participant_id):
     if not tournament.is_open_to_registration():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = u"{} - Modifier mon tableau".format(tournament.name)
+    title = "{} - Modifier mon tableau".format(tournament.name)
     form = FillTournamentDrawForm()
 
     if form.validate_on_submit():
