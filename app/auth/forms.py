@@ -30,6 +30,7 @@ class SignupForm(FlaskForm):
             Length(1, 64)
         ]
     )
+    anti_bot = StringField()
     submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
