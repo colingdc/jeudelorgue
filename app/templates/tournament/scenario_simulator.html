@@ -212,7 +212,7 @@
                         <tbody>
                             {% for participant, score, risk_coefficient in scores %}
                                 <tr>
-                                    <td>{{ loop.index }}</td>
+                                    <td>{{ loop.index }}</td>
                                     <td>
                                         <a href= '{{ url_for("main.view_user", user_id = participant.user.id, _external = True) }}'>
                                         {{ participant.user.username }}</a>
