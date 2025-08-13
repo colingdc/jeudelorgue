@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
 from ..lang import WORDINGS
@@ -30,7 +30,6 @@ class CreateCategoryForm(FlaskForm):
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def validate(self, extra_validators=None):
         rv = FlaskForm.validate(self, extra_validators)
@@ -67,7 +66,6 @@ class EditCategoryForm(FlaskForm):
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, category, *args, **kwargs):
         super(EditCategoryForm, self).__init__(*args, **kwargs)

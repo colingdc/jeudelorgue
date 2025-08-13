@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, PasswordField, SubmitField
+from wtforms import StringField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 from ..lang import WORDINGS
@@ -29,7 +29,6 @@ class SignupForm(FlaskForm):
         ]
     )
     anti_bot = StringField()
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class LoginForm(FlaskForm):
@@ -49,7 +48,6 @@ class LoginForm(FlaskForm):
         WORDINGS.AUTH.REMEMBER_ME,
         default=False
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class ChangePasswordForm(FlaskForm):
@@ -73,7 +71,6 @@ class ChangePasswordForm(FlaskForm):
             DataRequired()
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class PasswordResetRequestForm(FlaskForm):
@@ -85,7 +82,6 @@ class PasswordResetRequestForm(FlaskForm):
             Email()
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class PasswordResetForm(FlaskForm):
@@ -111,4 +107,3 @@ class PasswordResetForm(FlaskForm):
             DataRequired()
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)

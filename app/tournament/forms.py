@@ -6,7 +6,6 @@ from wtforms import (
     IntegerField,
     SelectField,
     StringField,
-    SubmitField,
 )
 from wtforms.validators import (
     DataRequired,
@@ -51,7 +50,6 @@ class CreateTournamentForm(FlaskForm):
             InputRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class EditTournamentForm(FlaskForm):
@@ -94,7 +92,6 @@ class EditTournamentForm(FlaskForm):
             InputRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, tournament, *args, **kwargs):
         super(EditTournamentForm, self).__init__(*args, **kwargs)
@@ -112,12 +109,10 @@ class PlayerTournamentDrawForm(FlaskForm):
 
 class CreateTournamentDrawForm(FlaskForm):
     player = FieldList(FormField(PlayerTournamentDrawForm))
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class FillTournamentDrawForm(FlaskForm):
     forecast = StringField("forecast")
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
 
 class TournamentPlayerStatsForm(FlaskForm):

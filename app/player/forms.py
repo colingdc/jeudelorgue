@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField
 from wtforms.validators import DataRequired, Optional
 
 from ..lang import WORDINGS
@@ -19,7 +19,6 @@ class CreatePlayerForm(FlaskForm):
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def validate(self, extra_validators=None):
         rv = FlaskForm.validate(self, extra_validators)
@@ -46,7 +45,6 @@ class EditPlayerForm(FlaskForm):
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, player, *args, **kwargs):
         super(EditPlayerForm, self).__init__(*args, **kwargs)

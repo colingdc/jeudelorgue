@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
 
 from ..lang import WORDINGS
@@ -24,7 +24,6 @@ class EditProfileAdminForm(FlaskForm):
     )
     confirmed = BooleanField(WORDINGS.MAIN.CONFIRMED)
     role = SelectField(WORDINGS.MAIN.ROLE, coerce=int)
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
 
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
@@ -60,4 +59,3 @@ class ContactForm(FlaskForm):
             Length(max=1000)
         ]
     )
-    submit = SubmitField(WORDINGS.COMMON.VALIDATION)
