@@ -9,6 +9,8 @@ from sqlalchemy import or_, func
 
 from . import db, bcrypt, login_manager
 
+TOKEN_EXPIRATION_DURATION = "3600"
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -61,16 +63,16 @@ class User(UserMixin, db.Model):
     def is_manager(self):
         return self.can(Permission.MANAGE_TOURNAMENT)
 
-    def generate_confirmation_token(self, expiration=3600):
-        s = Serializer(current_app.config["SECRET_KEY"], str(expiration))
+    def generate_confirmation_token(self):
+        s = Serializer(current_app.config["SECRET_KEY"], TOKEN_EXPIRATION_DURATION)
         return s.dumps({"confirm": self.id})
 
-    def generate_reset_token(self, expiration=3600):
-        s = Serializer(current_app.config["SECRET_KEY"], str(expiration))
+    def generate_reset_token(self):
+        s = Serializer(current_app.config["SECRET_KEY"], TOKEN_EXPIRATION_DURATION)
         return s.dumps({"reset": self.id})
 
     def confirm(self, token):
-        s = Serializer(current_app.config["SECRET_KEY"])
+        s = Serializer(current_app.config["SECRET_KEY"], TOKEN_EXPIRATION_DURATION)
         try:
             data = s.loads(token)
         except:
@@ -82,7 +84,7 @@ class User(UserMixin, db.Model):
         return True
 
     def reset_password(self, token, new_password):
-        s = Serializer(current_app.config["SECRET_KEY"])
+        s = Serializer(current_app.config["SECRET_KEY"], TOKEN_EXPIRATION_DURATION)
         try:
             data = s.loads(token)
         except:
