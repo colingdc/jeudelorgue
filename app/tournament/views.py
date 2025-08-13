@@ -2,6 +2,7 @@
 
 import datetime
 import json
+
 from flask import (
     current_app,
     render_template,
@@ -9,6 +10,17 @@ from flask import (
 )
 from flask_login import login_required, current_user
 
+from . import bp
+from . import domain
+from . import routing
+from .forms import (
+    CreateTournamentDrawForm,
+    CreateTournamentForm,
+    EditTournamentForm,
+    FillTournamentDrawForm,
+    TournamentPlayerAlphabeticStatsForm,
+    TournamentPlayerStatsForm,
+)
 from ..decorators import manager_required
 from ..lang import WORDINGS
 from ..models import (
@@ -20,20 +32,8 @@ from ..models import (
     TournamentPlayer,
     TournamentStatus,
 )
-from ..utils import display_info_toast, display_success_toast, display_warning_toast
-
-from . import domain
 from ..ranking import domain as ranking_domain
-from . import routing
-from . import bp
-from .forms import (
-    CreateTournamentDrawForm,
-    CreateTournamentForm,
-    EditTournamentForm,
-    FillTournamentDrawForm,
-    TournamentPlayerAlphabeticStatsForm,
-    TournamentPlayerStatsForm,
-)
+from ..utils import display_info_toast, display_success_toast, display_warning_toast
 
 
 @bp.route("/create", methods=["GET", "POST"])

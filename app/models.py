@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+
 from dateutil.relativedelta import relativedelta
 from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin

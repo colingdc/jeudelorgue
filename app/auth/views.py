@@ -3,6 +3,8 @@
 from flask import abort, render_template, redirect, request, session, url_for, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 
+from . import bp
+from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
 from ..email import send_email
 from ..lang import WORDINGS
 from ..models import db, User
@@ -11,9 +13,6 @@ from ..utils import (
     display_info_toast,
     display_success_toast,
 )
-
-from . import bp
-from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
 
 
 @bp.route("/signup", methods=["GET", "POST"])

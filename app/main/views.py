@@ -9,6 +9,8 @@ from flask import (
 )
 from flask_login import login_required, current_user
 
+from . import bp
+from .forms import EditProfileAdminForm, ContactForm
 from ..decorators import admin_required, manager_required
 from ..email import send_email
 from ..lang import WORDINGS
@@ -26,9 +28,6 @@ from ..utils import (
     display_info_toast,
     display_success_toast,
 )
-
-from . import bp
-from .forms import EditProfileAdminForm, ContactForm
 
 
 @bp.route("/")

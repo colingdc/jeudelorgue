@@ -1,5 +1,5 @@
-from ...models import db, TournamentPlayer
 from .update_tournament_maximal_score import update_tournament_maximal_score
+from ...models import db, TournamentPlayer
 
 
 def create_tournament_draw(tournament, matches, form):

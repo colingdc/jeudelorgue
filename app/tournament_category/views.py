@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+
 from flask import (
     current_app,
     redirect,
@@ -9,13 +10,12 @@ from flask import (
     url_for,
 )
 
+from . import bp
+from .forms import CreateCategoryForm, EditCategoryForm
 from ..decorators import manager_required
 from ..lang import WORDINGS
 from ..models import db, TournamentCategory
 from ..utils import display_info_toast
-
-from . import bp
-from .forms import CreateCategoryForm, EditCategoryForm
 
 
 @bp.route("/create", methods=["GET", "POST"])

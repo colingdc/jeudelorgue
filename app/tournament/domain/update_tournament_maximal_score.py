@@ -1,5 +1,5 @@
-from ...models import db
 from .entities import TournamentPlayer
+from ...models import db
 
 
 def compute_maximal_score(tournament):
