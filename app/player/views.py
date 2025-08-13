@@ -74,18 +74,6 @@ def delete_player(player_id):
     return redirect(url_for(".view_players"))
 
 
-@bp.route("/<player_id>")
-@manager_required
-def view_player(player_id):
-    player = Player.query.get_or_404(player_id)
-    title = player.get_full_name()
-    return render_template(
-        "player/view_player.html",
-        title=title,
-        player=player
-    )
-
-
 @bp.route("/all")
 @manager_required
 def view_players():
