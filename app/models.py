@@ -486,10 +486,6 @@ class Participant(db.Model):
             score += match_score
         return score
 
-    def get_old_website_draw_url(self):
-        return "http://www.jeudelorgue.raidghost.com/voir.php?tournoi={}&participant={}".format(
-            self.tournament.old_website_id, self.old_website_id)
-
 
 class Player(db.Model):
     __tablename__ = "players"

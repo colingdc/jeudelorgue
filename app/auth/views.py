@@ -16,14 +16,6 @@ from . import bp
 from .forms import LoginForm, SignupForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm
 
 
-@bp.route("/pre_signup")
-def pre_signup():
-    return render_template(
-        "auth/pre_signup.html",
-        title=WORDINGS.AUTH.REGISTRATION
-    )
-
-
 @bp.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm(request.form)
