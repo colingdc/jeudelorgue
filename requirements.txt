@@ -9,3 +9,4 @@ Flask-WTF==1.1.1
 email_validator
 mysqlclient==2.1.1
 python-dateutil
+Werkzeug==2.2.3
