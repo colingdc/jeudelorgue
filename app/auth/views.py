@@ -53,13 +53,6 @@ def signup():
                 token=token
             )
 
-            send_email(
-                current_app.config.get("ADMIN_JDL"),
-                "Nouvel inscrit au jeu de L'orgue",
-                "email/new_user",
-                user=user
-            )
-
             display_info_toast(WORDINGS.AUTH.CONFIRMATION_MAIL_SENT)
             session.pop("signed", None)
             session.pop("username", None)
