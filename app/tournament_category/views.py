@@ -76,18 +76,6 @@ def edit_category(category_id):
         )
 
 
-@bp.route("/<category_id>")
-@manager_required
-def view_category(category_id):
-    category = TournamentCategory.query.get_or_404(category_id)
-    title = category.name
-    return render_template(
-        "tournament_category/view_category.html",
-        title=title,
-        category=category
-    )
-
-
 @bp.route("/<category_id>/delete")
 @manager_required
 def delete_category(category_id):
