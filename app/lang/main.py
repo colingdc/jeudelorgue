@@ -1,7 +1,6 @@
 from types import SimpleNamespace
 
 wordings = SimpleNamespace(
-    ADMIN_DASHBOARD="Admin dashboard",
     CONFIRMED="Confirmé",
     FAQ="FAQ",
     HOMEPAGE="Accueil",

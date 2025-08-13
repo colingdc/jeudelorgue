@@ -117,7 +117,4 @@ def create_app(config_name=None):
     from .tournament_category import bp as tournament_category_blueprint
     app.register_blueprint(tournament_category_blueprint, url_prefix="/tournament_category")
 
-    from .admin import bp as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix="/admin")
-
     return app
