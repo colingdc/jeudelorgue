@@ -2,49 +2,15 @@
 
 {% block content %}
 
-<div class="alert alert-info">
-    <p>Un bug à signaler ? Une remarque, une question, une proposition d'amélioration ? Envoyez-nous un message</p>
-</div>
-
 <div class="panel panel-default">
-
     <div class="panel-heading">
         <h3 class="panel-title">Contact</h3>
     </div>
 
-    <form action="{{ url_for('main.contact') }}" class="form-horizontal" method="POST">
-        {{ form.hidden_tag() }}
-
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-
-                    <div class="form-group {% if form.email.errors %} has-error {% endif %}">
-                        {{form.email.label()}}
-                        <div>
-                            {{form.email(class="form-control", rows = "10")}}
-                        </div>
-                        <p class="help-block">
-                            {{ form.email.errors[0] }}
-                    </div>
-
-                    <div class="form-group {% if form.message.errors %} has-error {% endif %}">
-                        {{form.message.label()}}
-                        <div>
-                            {{form.message(class="form-control", rows = "10")}}
-                        </div>
-                        <p class="help-block">
-                            {{ form.message.errors[0] }}
-                    </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-success" type="submit">Envoyer</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </form>
+    <div class="panel-body">
+        <p>Un bug à signaler ? Une remarque, une question, une proposition d'amélioration ?</p>
+        <p>Envoyez-nous un message : jeudelorgue [at] gmail.com</p>
+    </div>
 </div>
 
 {% endblock %}
