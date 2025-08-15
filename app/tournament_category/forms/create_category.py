@@ -2,8 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
+from ..domain import does_category_exist
 from ...lang import WORDINGS
-from ...models import TournamentCategory
 
 
 class CreateCategoryForm(FlaskForm):
@@ -35,7 +35,9 @@ class CreateCategoryForm(FlaskForm):
         rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
-        if (TournamentCategory.query.filter_by(name=self.name.data).first()):
+
+        if does_category_exist(self.name.data):
             self.name.errors.append(WORDINGS.TOURNAMENT.CATEGORY_ALREADY_EXISTS)
             return False
-        return True 
+
+        return True

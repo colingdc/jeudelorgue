@@ -2,8 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
+from ..domain import does_category_exist
 from ...lang import WORDINGS
-from ...models import TournamentCategory
 
 
 class EditCategoryForm(FlaskForm):
@@ -40,8 +40,15 @@ class EditCategoryForm(FlaskForm):
         rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
-        if (self.name.data != self.category["name"]
-                and (TournamentCategory.query.filter_by(name=self.name.data).first())):
+
+        if not self.has_name_changed():
+            return True
+
+        if does_category_exist(self.name.data):
             self.name.errors.append(WORDINGS.TOURNAMENT.CATEGORY_ALREADY_EXISTS)
             return False
-        return True 
+
+        return True
+
+    def has_name_changed(self):
+        return self.name.data != self.category["name"]
