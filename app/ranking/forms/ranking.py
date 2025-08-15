@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectField
 
-from ..lang import WORDINGS
+from ...lang import WORDINGS
 
 
 class RankingForm(FlaskForm):
@@ -15,4 +15,4 @@ class RankingForm(FlaskForm):
             ("race", WORDINGS.RANKING.RACE_RANKING),
             ("annual", WORDINGS.RANKING.ANNUAL_RANKING)
         ]
-    )
+    ) 
