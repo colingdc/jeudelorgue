@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SelectField, TextAreaField
-from wtforms.validators import DataRequired, Email, Length, ValidationError, Optional
+from wtforms import StringField, BooleanField, SelectField
+from wtforms.validators import DataRequired, Email, Length, ValidationError
 
-from ..lang import WORDINGS
-from ..models import User, Role
+from ...lang import WORDINGS
+from ...models import User, Role
 
 
 class EditProfileAdminForm(FlaskForm):
@@ -40,22 +40,4 @@ class EditProfileAdminForm(FlaskForm):
 
     def validate_username(self, field):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
-            raise ValidationError(WORDINGS.AUTH.USERNAME_ALREADY_TAKEN)
-
-
-class ContactForm(FlaskForm):
-    email = StringField(
-        WORDINGS.AUTH.EMAIL,
-        validators=[
-            Optional(),
-            Length(1, 64),
-            Email()
-        ]
-    )
-    message = TextAreaField(
-        WORDINGS.MAIN.MESSAGE,
-        validators=[
-            DataRequired(),
-            Length(max=1000)
-        ]
-    )
+            raise ValidationError(WORDINGS.AUTH.USERNAME_ALREADY_TAKEN) 
