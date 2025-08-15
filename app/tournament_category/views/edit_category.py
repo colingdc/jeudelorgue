@@ -21,7 +21,6 @@ def edit_category(category_id):
         form.minimal_score.data = category.minimal_score
     if form.validate_on_submit():
         category.name = form.name.data
-        category.number_rounds = form.number_rounds.data
         category.maximal_score = form.maximal_score.data
         category.minimal_score = form.minimal_score.data
         db.session.add(category)

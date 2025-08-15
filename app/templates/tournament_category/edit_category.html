@@ -28,7 +28,7 @@
                     <div class="form-group {% if form.number_rounds.errors %} has-error {% endif %}">
                         {{form.number_rounds.label()}}
                         <div>
-                            {{form.number_rounds(class="form-control")}}
+                            {{form.number_rounds(class="form-control", disabled="disabled")}}
                         </div>
                         <p class="help-block">
                             {{ form.number_rounds.errors[0] }}

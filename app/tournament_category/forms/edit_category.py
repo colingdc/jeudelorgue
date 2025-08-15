@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional
 
 from ..domain import does_category_exist
 from ...lang import WORDINGS
@@ -16,7 +16,7 @@ class EditCategoryForm(FlaskForm):
     number_rounds = IntegerField(
         WORDINGS.TOURNAMENT.NUMBER_OF_ROUNDS,
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            Optional()
         ]
     )
     maximal_score = IntegerField(
