@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, url_for
-from flask_babel import _
+from flask_babel import gettext as _
 
 from .. import bp
 from ..forms import EditPlayerForm

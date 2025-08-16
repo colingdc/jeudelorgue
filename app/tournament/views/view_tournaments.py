@@ -1,5 +1,5 @@
 from flask import render_template, request, current_app
-from flask_babel import _
+from flask_babel import gettext as _
 from flask_login import login_required
 
 from .. import bp

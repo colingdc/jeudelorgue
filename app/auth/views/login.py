@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, session, url_for
-from flask_babel import _
+from flask_babel import gettext as _
 from flask_login import login_user, current_user
 
 from .. import bp

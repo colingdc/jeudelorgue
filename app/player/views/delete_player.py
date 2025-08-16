@@ -1,7 +1,7 @@
 import datetime
 
 from flask import redirect, url_for
-from flask_babel import _
+from flask_babel import gettext as _
 
 from .. import bp
 from ...decorators import manager_required

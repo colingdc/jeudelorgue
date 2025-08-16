@@ -1,4 +1,4 @@
-from flask_babel import _
+from flask_babel import gettext as _
 
 from .. import bp
 from .. import domain

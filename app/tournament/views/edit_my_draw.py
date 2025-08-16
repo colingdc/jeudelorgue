@@ -1,7 +1,7 @@
 import json
 
 from flask import render_template
-from flask_babel import _
+from flask_babel import gettext as _
 from flask_login import login_required, current_user
 
 from .. import bp

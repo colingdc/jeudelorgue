@@ -1,5 +1,5 @@
 from flask import redirect, render_template, request, url_for
-from flask_babel import _
+from flask_babel import gettext as _
 
 from .. import bp
 from ..forms import CreateCategoryForm
