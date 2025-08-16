@@ -1,10 +1,10 @@
 from flask import render_template, redirect, request, url_for
+from flask_babel import _
 from flask_login import current_user
 
 from .. import bp
 from ..forms import PasswordResetRequestForm
 from ...email import send_email
-from ...lang import WORDINGS
 from ...models import User
 from ...utils import display_info_toast
 
@@ -24,11 +24,11 @@ def reset_password_request():
                        "email/reset_password",
                        user=user, token=token,
                        next=request.args.get("next"))
-            display_info_toast(WORDINGS.AUTH.RESET_PASSWORD_EMAIL_SENT)
+            display_info_toast(_("reset_password_email_sent"))
         return redirect(url_for("auth.login"))
 
     return render_template(
         "auth/reset_password_request.html",
         form=form,
-        title=WORDINGS.AUTH.PASSWORD_CHANGE
+        title=_("password_change")
     )

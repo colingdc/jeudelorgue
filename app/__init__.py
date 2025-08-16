@@ -3,7 +3,7 @@ from datetime import timedelta
 
 import babel
 from flask import Flask, session, g, request, redirect, url_for
-from flask_babel import Babel
+from flask_babel import Babel, _
 from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
@@ -67,7 +67,7 @@ def create_app(config_name=None):
                 current_user.is_old_account and
                 request.endpoint[:5] != 'auth.' and
                 not request.path.startswith('/static')):
-            display_info_toast(WORDINGS.AUTH.OLD_ACCOUNT_PASSWORD_CHANGE)
+            display_info_toast(_("old_account_password_change"))
             return redirect(url_for('auth.change_password'))
 
         if (current_user.is_authenticated and

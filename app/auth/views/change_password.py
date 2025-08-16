@@ -1,10 +1,10 @@
 from flask import render_template, redirect, url_for, current_app
+from flask_babel import _
 from flask_login import login_required, current_user
 
 from .. import bp
 from ..forms import ChangePasswordForm
 from ...email import send_email
-from ...lang import WORDINGS
 from ...models import db
 from ...utils import display_success_toast
 
@@ -25,13 +25,13 @@ def change_password():
                     user=current_user
                 )
             db.session.add(current_user)
-            display_success_toast(WORDINGS.AUTH.PASSWORD_UPDATED)
+            display_success_toast(_("password_updated"))
             return redirect(url_for("main.index"))
         else:
             form.old_password.errors.append("Mot de passe incorrect")
     return render_template(
         "auth/change_password.html",
         form=form,
-        title=WORDINGS.AUTH.PASSWORD_CHANGE,
+        title=_("password_change"),
         user=current_user
     ) 

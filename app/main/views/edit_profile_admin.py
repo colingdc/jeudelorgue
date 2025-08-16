@@ -1,10 +1,10 @@
 from flask import render_template, request, redirect, url_for
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
 from ..forms import EditProfileAdminForm
 from ...decorators import admin_required
-from ...lang import WORDINGS
 from ...models import db, User, Role
 from ...utils import display_success_toast
 
@@ -28,7 +28,7 @@ def edit_profile_admin(user_id):
         user.confirmed = form.confirmed.data
         user.role = Role.query.get(form.role.data)
         db.session.add(user)
-        display_success_toast(WORDINGS.AUTH.PROFILE_UPDATED)
+        display_success_toast(_("profile_updated"))
         return redirect(
             url_for(
                 ".view_user",

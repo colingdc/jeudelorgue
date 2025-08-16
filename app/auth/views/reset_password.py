@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for
+from flask_babel import _
 from flask_login import current_user
 
 from .. import bp
 from ..forms import PasswordResetForm
-from ...lang import WORDINGS
 from ...models import User
 from ...utils import display_success_toast
 
@@ -19,7 +19,7 @@ def reset_password(token):
         if user is None:
             return redirect(url_for("main.index"))
         if user.reset_password(token, form.password.data):
-            display_success_toast(WORDINGS.AUTH.PASSWORD_UPDATED)
+            display_success_toast(_("password_updated"))
             return redirect(url_for("auth.login"))
         else:
             return redirect(url_for("main.index"))
@@ -27,5 +27,5 @@ def reset_password(token):
         "auth/reset_password.html",
         form=form,
         token=token,
-        title=WORDINGS.AUTH.PASSWORD_CHANGE
+        title=_("password_change")
     )

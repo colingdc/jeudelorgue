@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, session, url_for
+from flask_babel import _
 from flask_login import login_user, current_user
 
 from .. import bp
 from ..forms import LoginForm
-from ...lang import WORDINGS
 from ...models import User
 from ...utils import display_success_toast, display_info_toast
 
@@ -22,22 +22,22 @@ def login():
 
         # If the credentials are incorrect, render the login page with an error message
         if user is None:
-            form.username.errors.append(WORDINGS.AUTH.INCORRECT_CREDENTIALS)
+            form.username.errors.append(_("incorrect_credentials"))
             form.password.errors.append("")
             return render_template(
                 "auth/login.html",
                 form=form,
-                title=WORDINGS.AUTH.LOGIN
+                title=_("login")
             )
 
         is_password_correct = user.verify_password(form.password.data)
         if not is_password_correct:
-            form.username.errors.append(WORDINGS.AUTH.INCORRECT_CREDENTIALS)
+            form.username.errors.append(_("incorrect_credentials"))
             form.password.errors.append("")
             return render_template(
                 "auth/login.html",
                 form=form,
-                title=WORDINGS.AUTH.LOGIN
+                title=_("login")
             )
 
         # Otherwise log the user in
@@ -47,10 +47,10 @@ def login():
         )
         session["signed"] = True
         session["username"] = user.username
-        display_success_toast(WORDINGS.AUTH.LOGIN_SUCCESSFUL)
+        display_success_toast(_("login_successful"))
 
         if user.is_old_account and not user.confirmed:
-            display_info_toast(WORDINGS.AUTH.OLD_ACCOUNT_PASSWORD_CHANGE)
+            display_info_toast(_("old_account_password_change"))
             return redirect(url_for(".change_password"))
 
         # Redirect the user to the page he initially wanted to access
@@ -65,5 +65,5 @@ def login():
     return render_template(
         "auth/login.html",
         form=form,
-        title=WORDINGS.AUTH.LOGIN
+        title=_("login")
     ) 

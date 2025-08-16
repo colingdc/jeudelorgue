@@ -1,8 +1,8 @@
 from flask import redirect, url_for
+from flask_babel import _
 from flask_login import login_required, current_user
 
 from .. import bp
-from ...lang import WORDINGS
 from ...utils import display_success_toast, display_error_toast
 
 
@@ -12,7 +12,7 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for("main.index"))
     if current_user.confirm(token):
-        display_success_toast(WORDINGS.AUTH.ACCOUNT_CONFIRMED)
+        display_success_toast(_("account_confirmed"))
     else:
-        display_error_toast(WORDINGS.AUTH.INVALID_CONFIRMATION_TOKEN)
+        display_error_toast(_("invalid_confirmation_token"))
     return redirect(url_for("main.index")) 

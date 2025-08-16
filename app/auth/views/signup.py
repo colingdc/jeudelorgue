@@ -5,7 +5,6 @@ from flask_login import logout_user
 from .. import bp
 from ..forms import SignupForm
 from ...email import send_email
-from ...lang import WORDINGS
 from ...models import db, User
 from ...utils import display_info_toast
 
@@ -28,7 +27,7 @@ def signup():
             return render_template(
                 "auth/signup.html",
                 form=form,
-                title=WORDINGS.AUTH.REGISTRATION
+                title=_("registration")
             )
         else:
             user = User(
@@ -47,7 +46,7 @@ def signup():
                 token=token
             )
 
-            display_info_toast(WORDINGS.AUTH.CONFIRMATION_MAIL_SENT)
+            display_info_toast(_("confirmation_mail_sent"))
             session.pop("signed", None)
             session.pop("username", None)
             logout_user()
@@ -56,5 +55,5 @@ def signup():
         return render_template(
             "auth/signup.html",
             form=form,
-            title=WORDINGS.AUTH.REGISTRATION
+            title=_("registration")
         )

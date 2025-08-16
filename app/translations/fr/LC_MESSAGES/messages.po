@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 17:25+0200\n"
+"POT-Creation-Date: 2025-08-16 17:48+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -18,6 +18,13 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
+
+#: app/__init__.py:70 app/auth/views/login.py:53
+msgid "old_account_password_change"
+msgstr ""
+"Afin de valider la création de votre nouveau "
+"compte et d'accéder aux fonctionnalités du "
+"site, merci de changer votre mot de passe"
 
 #: app/auth/forms/change_password.py:9
 msgid "current_password"
@@ -95,15 +102,82 @@ msgstr "Cette adresse n'est pas valide"
 msgid "missing_email_address"
 msgstr "Merci de renseigner une adresse email valide"
 
-#: app/auth/views/signup.py:24
+#: app/auth/views/change_password.py:28
+#: app/auth/views/reset_password.py:22
+msgid "password_updated"
+msgstr "Votre mot de passe a été mis à jour"
+
+#: app/auth/views/change_password.py:35
+#: app/auth/views/reset_password.py:30
+#: app/auth/views/reset_password_request.py:33
+msgid "password_change"
+msgstr "Changement de mot de passe"
+
+#: app/auth/views/confirm.py:15
+msgid "account_confirmed"
+msgstr "Votre compte est à présent validé. Merci !"
+
+#: app/auth/views/confirm.py:17
+msgid "invalid_confirmation_token"
+msgstr ""
+"Le lien de confirmation est invalide ou a "
+"expiré."
+
+#: app/auth/views/login.py:25
+#: app/auth/views/login.py:35
+msgid "incorrect_credentials"
+msgstr ""
+"Le nom d'utilisateur ou le mot de passe est "
+"incorrect"
+
+#: app/auth/views/login.py:30
+#: app/auth/views/login.py:40
+#: app/auth/views/login.py:68
+msgid "login"
+msgstr "Connexion"
+
+#: app/auth/views/login.py:50
+msgid "login_successful"
+msgstr "Vous êtes à présent connecté"
+
+#: app/auth/views/resend_confirmation.py:21
+msgid "confirmation_mail_resent"
+msgstr ""
+"Un email vous a été renvoyé afin de valider "
+"votre adresse email"
+
+#: app/auth/views/reset_password_request.py:27
+msgid "reset_password_email_sent"
+msgstr ""
+"Un email contenant des instructions pour "
+"réinitialiser votre mot de passe vous a été "
+"envoyé."
+
+#: app/auth/views/signup.py:23
 #: app/main/forms/edit_profile_admin.py:44
 msgid "username_already_taken"
 msgstr "Ce pseudo est déjà utilisé"
 
-#: app/auth/views/signup.py:26
+#: app/auth/views/signup.py:25
 #: app/main/forms/edit_profile_admin.py:40
 msgid "email_already_taken"
 msgstr "Cette adresse email est déjà utilisée"
+
+#: app/auth/views/signup.py:30
+#: app/auth/views/signup.py:58
+msgid "registration"
+msgstr "Inscription"
+
+#: app/auth/views/signup.py:49
+msgid "confirmation_mail_sent"
+msgstr ""
+"Votre compte a bien été créé !\n"
+"Un email vous a été envoyé afin de valider "
+"votre adresse email."
+
+#: app/main/views/edit_profile_admin.py:31
+msgid "profile_updated"
+msgstr "Le profil a été mis à jour."
 
 #: app/player/forms/create_player.py:12
 #: app/player/forms/edit_player.py:12
