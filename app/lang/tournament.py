@@ -2,7 +2,6 @@ from types import SimpleNamespace
 
 wordings = SimpleNamespace(
     ALREADY_REGISTERED="Vous êtes déjà inscrit à ce tournoi",
-    CATEGORY="Catégorie",
     CREATE_TOURNAMENT="Créer un tournoi",
     CREATE_TOURNAMENT_DRAW="Créer le tableau du tournoi",
     DRAW_FILLED_COMPLETELY="Votre tableau est complet !",
@@ -10,18 +9,12 @@ wordings = SimpleNamespace(
     FILL_MY_DRAW="{} - Remplir mon tableau",
     FORECAST_BY_PLAYER="{} - Pronostics par joueur ATP",
     GLOBAL_FORECASTS="{} - Pronostics globaux",
-    ORDER_ALPHABETICAL="Ordre alphabétique",
-    ORDER_DRAW="Ordre du tableau",
-    NAME="Nom",
-    NUMBER_OF_ROUNDS="Nombre de tours",
     PARTICIPANT_DRAW="{} - Tableau de {}",
     REGISTERED_TO_TOURNAMENT="Vous êtes inscrit au tournoi, vous pouvez désormais remplir votre tableau.",
     REGISTRATION_CLOSED="Les inscriptions au tournoi sont closes",
     REGISTRATION_NOT_OPEN="Les inscriptions à ce tournoi ne sont pas ouvertes",
     REGISTRATION_OPENED="Les inscriptions au tournoi sont ouvertes",
     SCENARIO_SIMULATOR="{} - Simulateur de scénarios",
-    START_DATE="Date de début",
-    SURFACE="Surface",
     TOURNAMENT="Tournoi",
     TOURNAMENT_CATEGORIES="Catégories de tournois",
     TOURNAMENT_CATEGORY_CREATED="La catégorie de tournois {} a été créée",
@@ -35,6 +28,4 @@ wordings = SimpleNamespace(
     TOURNAMENT_DRAW_UPDATED="Le tableau du tournoi {} a été modifié",
     TOURNAMENT_UPDATED="Le tournoi {} a été mis à jour",
     UPDATE_TOURNAMENT_DRAW="Mettre à jour le tableau du tournoi",
-    URL_JVC="Lien du topic du tournoi sur JVC",
-    URL_JDL_JVC="Lien du topic du jeu de L-orgue sur JVC",
 )

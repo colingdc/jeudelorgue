@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 17:20+0200\n"
+"POT-Creation-Date: 2025-08-16 17:25+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -35,10 +35,10 @@ msgstr "Nouveau mot de passe"
 #: app/auth/forms/signup.py:26
 #: app/player/forms/create_player.py:20
 #: app/player/forms/edit_player.py:20
-#: app/tournament/forms/create_tournament.py:12
-#: app/tournament/forms/create_tournament.py:39
-#: app/tournament/forms/edit_tournament.py:12
-#: app/tournament/forms/edit_tournament.py:45
+#: app/tournament/forms/create_tournament.py:11
+#: app/tournament/forms/create_tournament.py:38
+#: app/tournament/forms/edit_tournament.py:11
+#: app/tournament/forms/edit_tournament.py:44
 #: app/tournament_category/forms/create_category.py:13
 #: app/tournament_category/forms/create_category.py:19
 #: app/tournament_category/forms/create_category.py:25
@@ -114,6 +114,59 @@ msgstr "Prénom"
 #: app/player/forms/edit_player.py:18
 msgid "player_last_name"
 msgstr "Nom"
+
+#: app/tournament/forms/create_tournament.py:9
+#: app/tournament/forms/edit_tournament.py:9
+msgid "tournament_name"
+msgstr "Nom"
+
+#: app/tournament/forms/create_tournament.py:15
+#: app/tournament/forms/edit_tournament.py:15
+msgid "tournament_url_jvc"
+msgstr "Lien du topic du tournoi sur JVC"
+
+#: app/tournament/forms/create_tournament.py:21
+#: app/tournament/forms/edit_tournament.py:21
+msgid "tournament_url_jdl_jvc"
+msgstr "Lien du topic du jeu de L-orgue sur JVC"
+
+#: app/tournament/forms/create_tournament.py:27
+#: app/tournament/forms/edit_tournament.py:27
+msgid "tournament_category"
+msgstr "Catégorie"
+
+#: app/tournament/forms/create_tournament.py:31
+#: app/tournament/forms/edit_tournament.py:34
+msgid "tournament_surface"
+msgstr "Surface"
+
+#: app/tournament/forms/create_tournament.py:35
+#: app/tournament/forms/edit_tournament.py:41
+msgid "tournament_start_date"
+msgstr "Date de début"
+
+#: app/tournament/forms/tournament_draw.py:8
+#: app/tournament/forms/tournament_draw.py:9
+msgid "player"
+msgstr "Joueur"
+
+#: app/tournament/forms/tournament_draw.py:10
+#: app/tournament/forms/tournament_draw.py:11
+msgid "player_status"
+msgstr "Statut"
+
+#: app/tournament/forms/tournament_draw.py:12
+#: app/tournament/forms/tournament_draw.py:13
+msgid "player_seed"
+msgstr "Tête de série"
+
+#: app/tournament/forms/tournament_player_stats.py:8
+msgid "tournament_stats_order_draw"
+msgstr "Ordre du tableau"
+
+#: app/tournament/forms/tournament_player_stats.py:15
+msgid "tournament_stats_order_alphabetical"
+msgstr "Ordre alphabétique"
 
 #: app/tournament_category/forms/create_category.py:11
 #: app/tournament_category/forms/edit_category.py:11
