@@ -1,8 +1,8 @@
 from flask import render_template, request, current_app
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
-from ...lang import WORDINGS
 from ...models import User, Participant, Tournament, TournamentStatus, Ranking
 
 
@@ -34,7 +34,7 @@ def view_user(user_id):
             ]
         },
         {
-            "name": WORDINGS.RANKING.RACE_RANKING,
+            "name": _("race_ranking"),
             "data": [
                 {
                     "x": int(t.started_at.strftime("%s")) * 1000,

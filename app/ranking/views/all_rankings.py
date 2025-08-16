@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, url_for
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
 from ..forms import RankingForm
-from ...lang import WORDINGS
 from ...models import Tournament, TournamentStatus
 
 
@@ -54,6 +54,6 @@ def all_rankings():
 
     return render_template(
         "ranking/all_rankings.html",
-        title=WORDINGS.RANKING.RANKINGS,
+        title=_("rankings"),
         form=form
     ) 

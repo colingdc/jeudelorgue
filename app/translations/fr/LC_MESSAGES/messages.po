@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 17:48+0200\n"
+"POT-Creation-Date: 2025-08-16 18:01+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -179,6 +179,13 @@ msgstr ""
 msgid "profile_updated"
 msgstr "Le profil a été mis à jour."
 
+#: app/main/views/view_user.py:37
+#: app/ranking/forms/ranking.py:14
+#: app/ranking/views/historical_annual_ranking.py:30
+#: app/ranking/views/historical_race_ranking.py:30
+msgid "race_ranking"
+msgstr "Classement Race"
+
 #: app/player/forms/create_player.py:12
 #: app/player/forms/edit_player.py:12
 msgid "player_first_name"
@@ -188,6 +195,22 @@ msgstr "Prénom"
 #: app/player/forms/edit_player.py:18
 msgid "player_last_name"
 msgstr "Nom"
+
+#: app/ranking/forms/ranking.py:8
+msgid "tournament"
+msgstr "Tournoi"
+
+#: app/ranking/forms/ranking.py:12
+msgid "ranking_type"
+msgstr "Type de classement"
+
+#: app/ranking/forms/ranking.py:15
+msgid "annual_ranking"
+msgstr "Classement annuel"
+
+#: app/ranking/views/all_rankings.py:57
+msgid "rankings"
+msgstr "Classements"
 
 #: app/tournament/forms/create_tournament.py:9
 #: app/tournament/forms/edit_tournament.py:9

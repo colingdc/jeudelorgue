@@ -1,8 +1,8 @@
 from flask import abort, render_template, redirect, request, url_for, current_app
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
-from ...lang import WORDINGS
 from ...models import Tournament, Ranking
 
 
@@ -27,7 +27,7 @@ def historical_race_ranking(tournament_id):
 
     return render_template(
         "ranking/historical_race_ranking.html",
-        title=WORDINGS.RANKING.RACE_RANKING,
+        title=_("race_ranking"),
         pagination=pagination,
         tournament=tournament
     ) 
