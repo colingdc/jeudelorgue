@@ -1,7 +1,7 @@
 import unittest
 import time
 from app import create_app, db
-from app.models import User, AnonymousUser, Role, Permission
+from app.models import User, AnonymousUser
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -10,7 +10,6 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        Role.insert_roles()
 
     def tearDown(self):
         db.session.remove()
@@ -80,10 +79,10 @@ class UserModelTestCase(unittest.TestCase):
 
     def test_roles_and_permissions(self):
         u = User(email = "john@example.com", password = "cat")
-        self.assertTrue(u.can(Permission.PARTICIPATE_TOURNAMENT))
-        self.assertFalse(u.can(Permission.MANAGE_TOURNAMENT))
-        self.assertFalse(u.can(Permission.ADMINISTER))
+        self.assertFalse(u.is_manager())
+        self.assertFalse(u.is_administrator())
 
     def test_anonymous_user(self):
         u = AnonymousUser()
-        self.assertFalse(u.can(Permission.PARTICIPATE_TOURNAMENT))
+        self.assertFalse(u.is_manager())
+        self.assertFalse(u.is_administrator())

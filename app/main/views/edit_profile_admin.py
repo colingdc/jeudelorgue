@@ -5,7 +5,7 @@ from flask_login import login_required
 from .. import bp
 from ..forms import EditProfileAdminForm
 from ...decorators import admin_required
-from ...models import db, User, Role
+from ...models import db, User
 from ...utils import display_success_toast
 
 
@@ -20,12 +20,12 @@ def edit_profile_admin(user_id):
         form.email.data = user.email
         form.username.data = user.username
         form.confirmed.data = user.confirmed
-        form.role.data = user.role
+        form.role.data = user.role_id
     if form.validate_on_submit():
         user.email = form.email.data
         user.username = form.username.data
         user.confirmed = form.confirmed.data
-        user.role = Role.query.get(form.role.data)
+        user.role_id = form.role.data
         db.session.add(user)
         display_success_toast(_("profile_updated"))
         return redirect(

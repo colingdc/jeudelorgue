@@ -3,7 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 
-from ...models import User, Role
+from ...models import User
+from ...roles import Role
 
 
 class EditProfileAdminForm(FlaskForm):
@@ -28,10 +29,7 @@ class EditProfileAdminForm(FlaskForm):
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
 
-        self.role.choices = [
-            (role.id, role.name)
-            for role in Role.query.order_by(Role.name).all()
-        ]
+        self.role.choices = Role.get_all()
         self.user = user
 
     def validate_email(self, field):
