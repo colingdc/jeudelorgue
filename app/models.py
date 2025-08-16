@@ -39,9 +39,6 @@ class User(UserMixin, db.Model):
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
 
-    def is_anonymous(self):
-        return False
-
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -160,17 +157,16 @@ class User(UserMixin, db.Model):
 
 
 class AnonymousUser(AnonymousUserMixin):
-    def can(self, permissions):
+    def can(self, _permissions):
         return False
 
-    def is_administrator(self):
+    @staticmethod
+    def is_administrator():
         return False
 
-    def is_manager(self):
+    @staticmethod
+    def is_manager():
         return False
-
-    def is_anonymous(self):
-        return True
 
 
 login_manager.anonymous_user = AnonymousUser
@@ -363,9 +359,9 @@ class Tournament(db.Model):
             stats[tournament_player] = {}
             for round_number in range(1, self.number_rounds + 1):
                 stats[tournament_player][round_number] = (forecasts
-                                                   .filter(Match.round == round_number)
-                                                   .filter(Forecast.winner_id == tournament_player.id)
-                                                   .count())
+                                                          .filter(Match.round == round_number)
+                                                          .filter(Forecast.winner_id == tournament_player.id)
+                                                          .count())
 
         self.overall_forecasts_stats = stats
         return stats
