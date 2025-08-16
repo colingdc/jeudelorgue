@@ -25,6 +25,7 @@ def change_password():
                     user=current_user
                 )
             db.session.add(current_user)
+            db.session.commit()
             display_success_toast(_("password_updated"))
             return redirect(url_for("main.index"))
         else:

@@ -27,6 +27,7 @@ def edit_profile_admin(user_id):
         user.confirmed = form.confirmed.data
         user.role_id = form.role.data
         db.session.add(user)
+        db.session.commit()
         display_success_toast(_("profile_updated"))
         return redirect(
             url_for(
