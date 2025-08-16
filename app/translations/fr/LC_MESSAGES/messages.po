@@ -1,13 +1,14 @@
 # French translations for PROJECT.
 # Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license
+# as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 17:16+0200\n"
+"POT-Creation-Date: 2025-08-16 17:20+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -113,4 +114,28 @@ msgstr "Prénom"
 #: app/player/forms/edit_player.py:18
 msgid "player_last_name"
 msgstr "Nom"
+
+#: app/tournament_category/forms/create_category.py:11
+#: app/tournament_category/forms/edit_category.py:11
+msgid "tournament_category_name"
+msgstr "Nom"
+
+#: app/tournament_category/forms/create_category.py:17
+#: app/tournament_category/forms/edit_category.py:17
+msgid "tournament_number_of_rounds"
+msgstr "Nombre de tours"
+
+#: app/tournament_category/forms/create_category.py:23
+#: app/tournament_category/forms/edit_category.py:23
+msgid "tournament_number_of_points_max"
+msgstr "Nombre de points du vainqueur"
+
+#: app/tournament_category/forms/create_category.py:40
+#: app/tournament_category/forms/edit_category.py:48
+msgid "tournament_category_already_exists"
+msgstr "Cette catégorie de tournois existe déjà"
+
+#: app/tournament_category/forms/edit_category.py:29
+msgid "tournament_number_of_points_min"
+msgstr "Nombre de points du dernier participant"
 

@@ -1,33 +1,33 @@
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
 from ..domain import does_category_exist
-from ...lang import WORDINGS
 
 
 class CreateCategoryForm(FlaskForm):
     name = StringField(
-        WORDINGS.TOURNAMENT.NAME,
+        _l("tournament_category_name"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
     number_rounds = IntegerField(
-        WORDINGS.TOURNAMENT.NUMBER_OF_ROUNDS,
+        _l("tournament_number_of_rounds"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
     maximal_score = IntegerField(
-        WORDINGS.TOURNAMENT.NUMBER_OF_POINTS_MAX,
+        _l("tournament_number_of_points_max"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
     minimal_score = IntegerField(
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
 
@@ -37,7 +37,7 @@ class CreateCategoryForm(FlaskForm):
             return False
 
         if does_category_exist(self.name.data):
-            self.name.errors.append(WORDINGS.TOURNAMENT.CATEGORY_ALREADY_EXISTS)
+            self.name.errors.append(_l("tournament_category_already_exists"))
             return False
 
         return True

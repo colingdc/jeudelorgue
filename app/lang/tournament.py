@@ -3,8 +3,6 @@ from types import SimpleNamespace
 wordings = SimpleNamespace(
     ALREADY_REGISTERED="Vous êtes déjà inscrit à ce tournoi",
     CATEGORY="Catégorie",
-    CATEGORY_ALREADY_EXISTS="Cette catégorie de tournois existe déjà",
-    CATEGORY_NAME="Nom",
     CREATE_TOURNAMENT="Créer un tournoi",
     CREATE_TOURNAMENT_DRAW="Créer le tableau du tournoi",
     DRAW_FILLED_COMPLETELY="Votre tableau est complet !",
@@ -15,8 +13,6 @@ wordings = SimpleNamespace(
     ORDER_ALPHABETICAL="Ordre alphabétique",
     ORDER_DRAW="Ordre du tableau",
     NAME="Nom",
-    NUMBER_OF_POINTS_MAX="Nombre de points du vainqueur",
-    NUMBER_OF_POINTS_MIN="Nombre de points du dernier participant",
     NUMBER_OF_ROUNDS="Nombre de tours",
     PARTICIPANT_DRAW="{} - Tableau de {}",
     REGISTERED_TO_TOURNAMENT="Vous êtes inscrit au tournoi, vous pouvez désormais remplir votre tableau.",
