@@ -27,7 +27,7 @@
                             {% for user in race_ranking %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td><a href= '{{ url_for("main.view_user", user_id = user.id, _external = True) }}'>{{ user.username }}</td>
+                                    <td><a href= '{{ url_for("main.view_user", user_id = user.id, _external = True) }}'>{{ user.username }}</a></td>
                                     <td>
                                         {% if user.year_to_date_points is none %}
                                             0
