@@ -1,13 +1,13 @@
 import json
 
 from flask import render_template, request
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
 from .. import domain
 from .. import routing
 from ..forms import FillTournamentDrawForm
-from ...lang import WORDINGS
 from ...models import TournamentPlayer
 
 
@@ -19,7 +19,7 @@ def scenario_simulator(tournament_id):
     if tournament.are_draws_private():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = WORDINGS.TOURNAMENT.SCENARIO_SIMULATOR.format(tournament.name)
+    title = _("scenario_simulator {name}").format(name=tournament.name)
 
     form = FillTournamentDrawForm()
 

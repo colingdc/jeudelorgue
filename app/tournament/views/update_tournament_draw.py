@@ -1,13 +1,13 @@
 import json
 
 from flask import render_template
+from flask_babel import _
 
 from .. import bp
 from .. import domain
 from .. import routing
 from ..forms import FillTournamentDrawForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db
 
 
@@ -68,7 +68,7 @@ def update_tournament_draw(tournament_id):
     else:
         return render_template(
             "tournament/update_tournament_draw.html",
-            title=WORDINGS.TOURNAMENT.UPDATE_TOURNAMENT_DRAW,
+            title=_("update_tournament_draw"),
             tournament=tournament,
             form=form,
             surface=tournament.surface.class_name

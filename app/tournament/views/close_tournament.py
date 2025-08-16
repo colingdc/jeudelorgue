@@ -1,10 +1,11 @@
 import datetime
 
+from flask_babel import _
+
 from .. import bp
 from .. import domain
 from .. import routing
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, TournamentStatus
 from ...ranking import domain as ranking_domain
 from ...utils import display_info_toast
@@ -30,5 +31,5 @@ def close_tournament(tournament_id):
 
     ranking_domain.compute_historical_rankings(tournament)
 
-    display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CLOSED)
+    display_info_toast(_("tournament_closed"))
     return routing.redirect_to_view_tournament(tournament.id) 

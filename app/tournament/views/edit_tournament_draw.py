@@ -6,7 +6,6 @@ from .. import domain
 from .. import routing
 from ..forms import CreateTournamentDrawForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import Player
 from ...utils import display_info_toast
 
@@ -48,12 +47,12 @@ def edit_tournament_draw(tournament_id):
     if form.validate_on_submit():
         domain.edit_tournament_draw(tournament, matches, form)
 
-        display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_DRAW_UPDATED.format(tournament.name))
+        display_info_toast(_("tournament_draw_updated {name}").format(name=tournament.name))
         return routing.redirect_to_view_tournament(tournament_id)
     else:
         return render_template(
             "tournament/edit_tournament_draw.html",
-            title=WORDINGS.TOURNAMENT.CREATE_TOURNAMENT_DRAW,
+            title=_("create_tournament_draw"),
             form=form,
             tournament=tournament,
             surface=tournament.surface.class_name

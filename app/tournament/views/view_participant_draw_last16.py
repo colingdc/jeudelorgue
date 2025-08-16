@@ -1,10 +1,10 @@
 from flask import render_template
+from flask_babel import _
 from flask_login import login_required, current_user
 
 from .. import bp
 from .. import domain
 from .. import routing
-from ...lang import WORDINGS
 from ...models import Participant
 
 
@@ -22,7 +22,7 @@ def view_participant_draw_last16(tournament_id, participant_id):
         if participant.user_id != current_user.id:
             return routing.redirect_to_view_tournament(tournament_id)
 
-    title = WORDINGS.TOURNAMENT.PARTICIPANT_DRAW.format(tournament.name, participant.user.username)
+    title = _("participant_draw {tournament_name} {participant_name}").format(tournament_name=tournament.name, participant_name=participant.name)
 
     return render_template(
         "tournament/view_participant_draw_last16.html",

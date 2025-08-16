@@ -1,11 +1,11 @@
 from flask import render_template, request
+from flask_babel import _
 
 from .. import bp
 from .. import domain
 from .. import routing
 from ..forms import EditTournamentForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...utils import display_info_toast
 
 
@@ -28,7 +28,7 @@ def edit_tournament(tournament_id):
         form.jeudelorgue_topic_url.data = tournament.jeudelorgue_topic_url
     if form.validate_on_submit():
         domain.edit_tournament(tournament, form)
-        display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_UPDATED.format(form.name.data))
+        display_info_toast(_("tournament_updated {name}").format(name=form.name.data))
         return routing.redirect_to_edit_tournament(tournament_id)
     else:
         return render_template(

@@ -1,8 +1,9 @@
+from flask_babel import _
+
 from .. import bp
 from .. import domain
 from .. import routing
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, TournamentStatus
 from ...utils import display_info_toast
 
@@ -26,5 +27,5 @@ def close_registrations(tournament_id):
         db.session.add(participant)
     db.session.commit()
 
-    display_info_toast(WORDINGS.TOURNAMENT.REGISTRATION_CLOSED)
+    display_info_toast(_("registration_closed"))
     return routing.redirect_to_view_tournament(tournament.id) 

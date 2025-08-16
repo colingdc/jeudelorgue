@@ -1,9 +1,10 @@
+from flask import render_template
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
 from .. import domain
 from .. import routing
-from ...lang import WORDINGS
 
 
 @bp.route("/<tournament_id>/draw/last16")
@@ -16,7 +17,7 @@ def view_tournament_draw_last16(tournament_id):
 
     return render_template(
         "tournament/view_tournament_draw_last16.html",
-        title=WORDINGS.TOURNAMENT.TOURNAMENT_DRAW,
+        title=_("tournament_draw"),
         tournament=tournament,
         surface=tournament.surface.class_name
     ) 

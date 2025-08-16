@@ -1,13 +1,13 @@
 import json
 
 from flask import render_template
+from flask_babel import _
 from flask_login import login_required, current_user
 
 from .. import bp
 from .. import domain
 from .. import routing
 from ..forms import FillTournamentDrawForm
-from ...lang import WORDINGS
 from ...models import db, Participant, Forecast
 from ...utils import display_success_toast, display_warning_toast
 
@@ -23,7 +23,7 @@ def fill_my_draw(tournament_id, participant_id):
     if not tournament.is_open_to_registration():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = WORDINGS.TOURNAMENT.FILL_MY_DRAW.format(tournament.name)
+    title = _("fill_my_draw {name}").format(name=tournament.name)
 
     if participant.has_filled_draw():
         return routing.redirect_to_edit_my_draw(tournament_id, participant_id)
@@ -49,9 +49,9 @@ def fill_my_draw(tournament_id, participant_id):
         db.session.commit()
 
         if participant.has_completely_filled_draw():
-            display_success_toast(WORDINGS.TOURNAMENT.DRAW_FILLED_COMPLETELY)
+            display_success_toast(_("draw_filled_completely"))
         else:
-            display_warning_toast(WORDINGS.TOURNAMENT.DRAW_NOT_FILLED_COMPLETELY)
+            display_warning_toast(_("draw_not_filled_completely"))
         return routing.redirect_to_view_tournament(tournament_id)
 
     else:

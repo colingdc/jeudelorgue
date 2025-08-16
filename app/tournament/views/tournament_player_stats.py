@@ -6,7 +6,6 @@ from .. import bp
 from .. import domain
 from .. import routing
 from ..forms import TournamentPlayerStatsForm, TournamentPlayerAlphabeticStatsForm
-from ...lang import WORDINGS
 from ...models import TournamentPlayer
 
 
@@ -18,7 +17,7 @@ def tournament_player_stats(tournament_id):
     if tournament.are_draws_private():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = WORDINGS.TOURNAMENT.FORECAST_BY_PLAYER.format(tournament.name)
+    title = _("forecasts_by_player {name}").format(name=tournament.name)
 
     form = TournamentPlayerStatsForm()
     tournament_players = [(-1, _("choose_player"))] + [

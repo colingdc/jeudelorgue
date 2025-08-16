@@ -14,7 +14,6 @@ from flask_wtf.csrf import CSRFProtect
 from config import config
 from instance import INSTANCE
 from .cli import register_commands
-from .lang import WORDINGS
 from .utils import build_error_handler, display_info_toast
 
 db = SQLAlchemy()
