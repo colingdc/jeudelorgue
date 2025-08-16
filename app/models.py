@@ -134,7 +134,7 @@ class User(UserMixin, db.Model):
         return points
 
     def participants_sorted(self):
-        return (self.participants.order_by(Participant.created_at.desc()))
+        return self.participants.order_by(Participant.created_at.desc())
 
     def get_titles(self):
         return self.participants.join(Tournament, Tournament.id == Participant.tournament_id).filter(
@@ -249,7 +249,8 @@ class Tournament(db.Model):
         else:
             return names[:self.number_rounds][::-1]
 
-    def get_round_names_last16(self):
+    @staticmethod
+    def get_round_names_last16():
         names = ["F", "DF", "QF", "HF"]
         return names[::-1]
 
@@ -323,7 +324,6 @@ class Tournament(db.Model):
                                                           .filter(Forecast.winner_id == tournament_player.id)
                                                           .count())
 
-        self.overall_forecasts_stats = stats
         return stats
 
     def distribute_points(self):

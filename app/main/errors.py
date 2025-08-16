@@ -9,7 +9,7 @@ def forbidden(e):
         response = jsonify({'error': 'forbidden'})
         response.status_code = 403
         return response
-    current_app.logger.error('Unauthorized: %s', (request.path))
+    current_app.logger.error('Unauthorized: %s', request.path)
     return render_template('errors/403.html'), 403
 
 
@@ -20,7 +20,7 @@ def page_not_found(e):
         response.status_code = 404
         return response
     if not request.path.endswith("robots.txt"):
-        current_app.logger.error('Page not found: %s', (request.path))
+        current_app.logger.error('Page not found: %s', request.path)
     return render_template('errors/404.html'), 404
 
 
@@ -30,7 +30,7 @@ def forbidden(e):
         response = jsonify({'error': 'bad request'})
         response.status_code = 400
         return response
-    current_app.logger.error('Bad request: %s', (request.path))
+    current_app.logger.error('Bad request: %s', request.path)
     return render_template('errors/500.html'), 400
 
 
