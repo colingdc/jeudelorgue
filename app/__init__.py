@@ -55,7 +55,8 @@ def create_app(config_name=None):
     def load_user(user_id):
         return User.query.filter(User.id == int(user_id)).first()
 
-    app.logger.addHandler(build_error_handler())
+    if config_name != "testing":
+        app.logger.addHandler(build_error_handler())
 
     @app.before_request
     def before_request():

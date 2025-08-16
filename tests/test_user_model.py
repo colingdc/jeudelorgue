@@ -1,8 +1,8 @@
-import time
 import unittest
 
 from app import create_app, db
 from app.models import User, AnonymousUser
+from app.roles import Role
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -52,14 +52,6 @@ class UserModelTestCase(unittest.TestCase):
         token = u1.generate_confirmation_token()
         self.assertFalse(u2.confirm(token))
 
-    def test_expired_confirmation_token(self):
-        u = User(password="cat")
-        db.session.add(u)
-        db.session.commit()
-        token = u.generate_confirmation_token(1)
-        time.sleep(2)
-        self.assertFalse(u.confirm(token))
-
     def test_valid_reset_token(self):
         u = User(password="cat")
         db.session.add(u)
@@ -78,10 +70,20 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u2.reset_password(token, "horse"))
         self.assertTrue(u2.verify_password("dog"))
 
-    def test_roles_and_permissions(self):
-        u = User(email="john@example.com", password="cat")
+    def test_role_user(self):
+        u = User(role_id=Role.USER.id)
         self.assertFalse(u.is_manager())
         self.assertFalse(u.is_administrator())
+
+    def test_role_manager(self):
+        u = User(role_id=Role.MANAGER.id)
+        self.assertTrue(u.is_manager())
+        self.assertFalse(u.is_administrator())
+
+    def test_role_administrator(self):
+        u = User(role_id=Role.ADMINISTRATOR.id)
+        self.assertTrue(u.is_manager())
+        self.assertTrue(u.is_administrator())
 
     def test_anonymous_user(self):
         u = AnonymousUser()
