@@ -18,20 +18,10 @@ def tournament_player_stats(tournament_id):
         return routing.redirect_to_view_tournament(tournament_id)
 
     form = TournamentPlayerStatsForm()
-    tournament_players = [(-1, _("choose_player"))] + [
-        (p.id, p.get_full_name())
-        for p in tournament.players
-        if (p.player is None or p.player.last_name.lower() != "bye")
-    ]
-    form.player_name.choices = tournament_players
+    form.player_name.choices = build_player_choices(tournament.players)
 
     form_alphabetic = TournamentPlayerAlphabeticStatsForm()
-    tournament_players_alphabetic = [(-1, _("choose_player"))] + [
-        (p.id, p.get_full_name_surname_first())
-        for p in tournament.players_alphabetic
-        if (p.player is None or p.player.last_name.lower() != "bye")
-    ]
-    form_alphabetic.player_name.choices = tournament_players_alphabetic
+    form_alphabetic.player_name.choices = build_player_choices(tournament.players_alphabetic)
 
     tournament_player_id = request.args.get("tournament_player_id")
 
@@ -55,4 +45,12 @@ def tournament_player_stats(tournament_id):
         form_alphabetic=form_alphabetic,
         tournament_player=tournament_player,
         surface=tournament.surface.class_name
-    ) 
+    )
+
+
+def build_player_choices(players):
+    return [(-1, _("choose_player"))] + [
+        (p.id, p.get_full_name_surname_first())
+        for p in players
+        if (p.player is None or p.player.last_name.lower() != "bye")
+    ]
