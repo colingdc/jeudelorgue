@@ -108,7 +108,7 @@ tmp/coverage/
 instance.py
 run.sh
 
-# csv files used to migrate data
+# csv files used to migrate data
 *.csv*
 *.sql
 

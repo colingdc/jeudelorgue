@@ -34,7 +34,7 @@
                     {% for player in pagination.items %}
                         <tr>
                             <td>{{ player.first_name }}</td>
-                            <td>{{ player.last_name }}</td>
+                            <td>{{ player.last_name }}</td>
                             {% if current_user.is_manager() %}
                                 <td>
                                     <div class="btn-group" role="group">

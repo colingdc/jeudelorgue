@@ -66,7 +66,7 @@
                                         <ul>
                                             {% for t in titles %}
                                                 <li><span class="fa fa-chevron-right"></span><a href= '{{ url_for("tournament.view_tournament", tournament_id = t.tournament.id, _external = True) }}'>
-                                                {{ t.tournament.name }}</a></li>
+                                                {{ t.tournament.name }}</a></li>
                                             {% endfor %}
                                         </ul>
                                     {% endif %}</p>
@@ -75,7 +75,7 @@
                             <div class="col-md-12">
                                 {% with best_rank = user.get_best_tournament_rank() %}
                                     {% if best_rank %}
-                                        <h5>Meilleur classement en tournoi : #{{ best_rank.ranking }} (<a href= '{{ url_for("tournament.view_tournament", tournament_id = best_rank.tournament.id, _external = True) }}'>{{ best_rank.tournament.name }}</a>)</h5>
+                                        <h5>Meilleur classement en tournoi : #{{ best_rank.ranking }} (<a href= '{{ url_for("tournament.view_tournament", tournament_id = best_rank.tournament.id, _external = True) }}'>{{ best_rank.tournament.name }}</a>)</h5>
                                     {% else %}
                                         <h5>Meilleur classement en tournoi : #-</h5>
                                     {% endif %}
