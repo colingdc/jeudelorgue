@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 17:05+0200\n"
+"POT-Creation-Date: 2025-08-16 17:11+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -28,7 +28,8 @@ msgstr "Nouveau mot de passe"
 
 #: app/auth/forms/change_password.py:17 app/auth/forms/login.py:11
 #: app/auth/forms/login.py:17 app/auth/forms/signup.py:19
-#: app/auth/forms/signup.py:26
+#: app/auth/forms/signup.py:26 app/player/forms/create_player.py:20
+#: app/player/forms/edit_player.py:20
 #: app/tournament/forms/create_tournament.py:12
 #: app/tournament/forms/create_tournament.py:39
 #: app/tournament/forms/edit_tournament.py:12
@@ -90,4 +91,12 @@ msgstr "Ce pseudo est déjà utilisé"
 #: app/auth/views/signup.py:26 app/main/forms/edit_profile_admin.py:40
 msgid "email_already_taken"
 msgstr "Cette adresse email est déjà utilisée"
+
+#: app/player/forms/create_player.py:12 app/player/forms/edit_player.py:12
+msgid "player_first_name"
+msgstr "Prénom"
+
+#: app/player/forms/create_player.py:18 app/player/forms/edit_player.py:18
+msgid "player_last_name"
+msgstr "Nom"
 

@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, Optional
@@ -8,15 +9,15 @@ from ...lang import WORDINGS
 
 class EditPlayerForm(FlaskForm):
     first_name = StringField(
-        WORDINGS.PLAYER.FIRST_NAME,
+        _l("player_first_name"),
         validators=[
             Optional()
         ]
     )
     last_name = StringField(
-        WORDINGS.PLAYER.LAST_NAME,
+        _l("player_last_name"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
 
