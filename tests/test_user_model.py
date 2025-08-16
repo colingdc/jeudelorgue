@@ -1,5 +1,6 @@
-import unittest
 import time
+import unittest
+
 from app import create_app, db
 from app.models import User, AnonymousUser
 
@@ -17,34 +18,34 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_password_setter(self):
-        u = User(password = "cat")
+        u = User(password="cat")
         self.assertTrue(u.password_hash is not None)
 
     def test_no_password_getter(self):
-        u = User(password = "cat")
+        u = User(password="cat")
         with self.assertRaises(AttributeError):
             print(u.password)
 
     def test_password_verification(self):
-        u = User(password = "cat")
+        u = User(password="cat")
         self.assertTrue(u.verify_password("cat"))
         self.assertFalse(u.verify_password("dog"))
 
     def test_password_salts_are_random(self):
-        u = User(password = "cat")
-        u2 = User(password = "cat")
+        u = User(password="cat")
+        u2 = User(password="cat")
         self.assertTrue(u.password_hash != u2.password_hash)
 
     def test_valid_confirmation_token(self):
-        u = User(password = "cat")
+        u = User(password="cat")
         db.session.add(u)
         db.session.commit()
         token = u.generate_confirmation_token()
         self.assertTrue(u.confirm(token))
 
     def test_invalid_confirmation_token(self):
-        u1 = User(password = "cat")
-        u2 = User(password = "dog")
+        u1 = User(password="cat")
+        u2 = User(password="dog")
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
@@ -52,7 +53,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u2.confirm(token))
 
     def test_expired_confirmation_token(self):
-        u = User(password = "cat")
+        u = User(password="cat")
         db.session.add(u)
         db.session.commit()
         token = u.generate_confirmation_token(1)
@@ -60,7 +61,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u.confirm(token))
 
     def test_valid_reset_token(self):
-        u = User(password = "cat")
+        u = User(password="cat")
         db.session.add(u)
         db.session.commit()
         token = u.generate_reset_token()
@@ -68,8 +69,8 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue(u.verify_password("dog"))
 
     def test_invalid_reset_token(self):
-        u1 = User(password = "cat")
-        u2 = User(password = "dog")
+        u1 = User(password="cat")
+        u2 = User(password="dog")
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
@@ -78,7 +79,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue(u2.verify_password("dog"))
 
     def test_roles_and_permissions(self):
-        u = User(email = "john@example.com", password = "cat")
+        u = User(email="john@example.com", password="cat")
         self.assertFalse(u.is_manager())
         self.assertFalse(u.is_administrator())
 
