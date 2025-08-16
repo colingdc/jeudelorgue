@@ -1,9 +1,9 @@
 from flask import redirect, render_template, request, url_for
+from flask_babel import _
 
 from .. import bp
 from ..forms import CreateCategoryForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, TournamentCategory
 from ...utils import display_info_toast
 
@@ -22,7 +22,7 @@ def create_category():
         )
         db.session.add(category)
         db.session.commit()
-        display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORY_CREATED.format(category.name))
+        display_info_toast(_("category_created {name}").format(name=category.name))
         return redirect(url_for(".create_category"))
     else:
         return render_template(

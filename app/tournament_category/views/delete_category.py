@@ -1,10 +1,10 @@
 import datetime
 
 from flask import redirect, url_for
+from flask_babel import _
 
 from .. import bp
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, TournamentCategory
 from ...utils import display_info_toast
 
@@ -16,5 +16,5 @@ def delete_category(category_id):
     category.deleted_at = datetime.datetime.now()
     db.session.add(category)
     db.session.commit()
-    display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORY_DELETED.format(category.name))
+    display_info_toast(_("category_deleted {name}").format(name=category.name))
     return redirect(url_for(".view_categories")) 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 18:01+0200\n"
+"POT-Creation-Date: 2025-08-16 20:11+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: app/__init__.py:70 app/auth/views/login.py:53
+#: app/__init__.py:73 app/auth/views/login.py:53
 msgid "old_account_password_change"
 msgstr ""
 "Afin de valider la création de votre nouveau "
@@ -288,4 +288,20 @@ msgstr "Cette catégorie de tournois existe déjà"
 #: app/tournament_category/forms/edit_category.py:29
 msgid "tournament_number_of_points_min"
 msgstr "Nombre de points du dernier participant"
+
+#: app/tournament_category/views/create_category.py:25
+msgid "category_created {name}"
+msgstr "La catégorie de tournois {name} a été créée"
+
+#: app/tournament_category/views/delete_category.py:19
+msgid "category_deleted {name}"
+msgstr "La catégorie de tournois {name} a été supprimée"
+
+#: app/tournament_category/views/edit_category.py:28
+msgid "category_updated {name}"
+msgstr "La catégorie de tournois {name} a été mise à jour"
+
+#: app/tournament_category/views/view_categories.py:18
+msgid "tournament_categories"
+msgstr "Catégories de tournois"
 

@@ -1,9 +1,9 @@
 from flask import redirect, render_template, request, url_for
+from flask_babel import _
 
 from .. import bp
 from ..forms import EditCategoryForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, TournamentCategory
 from ...utils import display_info_toast
 
@@ -25,7 +25,7 @@ def edit_category(category_id):
         category.minimal_score = form.minimal_score.data
         db.session.add(category)
         db.session.commit()
-        display_info_toast(WORDINGS.TOURNAMENT.TOURNAMENT_CATEGORY_UPDATED.format(category.name))
+        display_info_toast(_("category_updated {name}").format(name=category.name))
         return redirect(
             url_for(
                 ".edit_category",
