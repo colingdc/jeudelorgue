@@ -299,10 +299,10 @@ class Tournament(db.Model):
 
     def get_score_per_round(self):
         if self.number_rounds < 7:
-            return {round: 2 ** (self.number_rounds - round)
-                    for round in range(1, self.number_rounds + 1)}
-        return {round: 2 ** (self.number_rounds - round - 1) if round < self.number_rounds else 1
-                for round in range(1, self.number_rounds + 1)}
+            return {round_number: 2 ** (self.number_rounds - round_number)
+                    for round_number in range(1, self.number_rounds + 1)}
+        return {round_number: 2 ** (self.number_rounds - round_number - 1) if round_number < self.number_rounds else 1
+                for round_number in range(1, self.number_rounds + 1)}
 
     def get_current_maximal_score(self):
         score_per_round = self.get_score_per_round()
@@ -343,13 +343,13 @@ class Tournament(db.Model):
             return None
 
         stats = {}
-        for round in range(1, self.number_rounds + 1):
-            position = first_match.position // 2 ** (self.number_rounds - round)
+        for round_number in range(1, self.number_rounds + 1):
+            position = first_match.position // 2 ** (self.number_rounds - round_number)
             match = self.matches.filter(Match.position == position)
 
             round_stats = {f.participant: f.winner
                            for f in match.first().forecasts}
-            stats[round] = round_stats
+            stats[round_number] = round_stats
 
         return stats
 
@@ -361,9 +361,9 @@ class Tournament(db.Model):
 
         for tournament_player in self.players:
             stats[tournament_player] = {}
-            for round in range(1, self.number_rounds + 1):
-                stats[tournament_player][round] = (forecasts
-                                                   .filter(Match.round == round)
+            for round_number in range(1, self.number_rounds + 1):
+                stats[tournament_player][round_number] = (forecasts
+                                                   .filter(Match.round == round_number)
                                                    .filter(Forecast.winner_id == tournament_player.id)
                                                    .count())
 

@@ -11,7 +11,7 @@ from ...models import Tournament
 def view_tournaments():
     page = request.args.get("page", 1, type=int)
     pagination = (Tournament.query.order_by(Tournament.started_at.desc())
-                  .filter(Tournament.deleted_at == None)
+                  .filter(Tournament.deleted_at.is_(None))
                   .order_by(Tournament.started_at.desc())
                   .paginate(page=page, per_page=current_app.config["TOURNAMENTS_PER_PAGE"], error_out=False))
 
