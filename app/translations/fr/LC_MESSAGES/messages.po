@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 16:55+0200\n"
+"POT-Creation-Date: 2025-08-16 17:05+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -18,42 +18,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: app/auth/forms/change_password.py:11
+#: app/auth/forms/change_password.py:9
 msgid "current_password"
 msgstr "Mot de passe actuel"
 
-#: app/auth/forms/change_password.py:17 app/auth/forms/password_reset.py:19
+#: app/auth/forms/change_password.py:15 app/auth/forms/password_reset.py:17
 msgid "new_password"
 msgstr "Nouveau mot de passe"
 
-#: app/auth/forms/change_password.py:25 app/auth/forms/password_reset.py:27
+#: app/auth/forms/change_password.py:17 app/auth/forms/login.py:11
+#: app/auth/forms/login.py:17 app/auth/forms/signup.py:19
+#: app/auth/forms/signup.py:26
+#: app/tournament/forms/create_tournament.py:12
+#: app/tournament/forms/create_tournament.py:39
+#: app/tournament/forms/edit_tournament.py:12
+#: app/tournament/forms/edit_tournament.py:45
+#: app/tournament_category/forms/create_category.py:13
+#: app/tournament_category/forms/create_category.py:19
+#: app/tournament_category/forms/create_category.py:25
+#: app/tournament_category/forms/create_category.py:30
+#: app/tournament_category/forms/edit_category.py:13
+#: app/tournament_category/forms/edit_category.py:25
+#: app/tournament_category/forms/edit_category.py:31
+msgid "missing_field"
+msgstr "Ce champ est obligatoire"
+
+#: app/auth/forms/change_password.py:18 app/auth/forms/password_reset.py:20
+#: app/auth/forms/signup.py:20
+msgid "invalid_password"
+msgstr "Nouveau mot de passe"
+
+#: app/auth/forms/change_password.py:19 app/auth/forms/password_reset.py:21
+msgid "passwords_do_not_match"
+msgstr "Les mots de passe entrés sont différents"
+
+#: app/auth/forms/change_password.py:23 app/auth/forms/password_reset.py:25
 msgid "confirm_new_password"
 msgstr "Confirmer le nouveau mot de passe"
 
-#: app/auth/forms/login.py:11 app/auth/forms/signup.py:26
-#: app/main/forms/edit_profile_admin.py:19
+#: app/auth/forms/login.py:9 app/auth/forms/signup.py:24
+#: app/main/forms/edit_profile_admin.py:20
 msgid "username"
 msgstr "Pseudo"
 
-#: app/auth/forms/login.py:17 app/auth/forms/signup.py:19
+#: app/auth/forms/login.py:15 app/auth/forms/signup.py:17
 msgid "password"
 msgstr "Mot de passe"
 
-#: app/auth/forms/login.py:23
+#: app/auth/forms/login.py:21
 msgid "remember_me"
 msgstr "Se souvenir de moi"
 
-#: app/auth/forms/password_reset.py:11
-#: app/auth/forms/password_reset_request.py:9 app/auth/forms/signup.py:11
-#: app/main/forms/edit_profile_admin.py:11
+#: app/auth/forms/password_reset.py:9
+#: app/auth/forms/password_reset_request.py:9 app/auth/forms/signup.py:9
+#: app/main/forms/edit_profile_admin.py:12
 msgid "email"
 msgstr "Email"
 
-#: app/auth/views/signup.py:24 app/main/forms/edit_profile_admin.py:43
+#: app/auth/forms/signup.py:11
+msgid "invalid_email_address"
+msgstr "Cette adresse n'est pas valide"
+
+#: app/auth/forms/signup.py:13
+msgid "missing_email_address"
+msgstr "Merci de renseigner une adresse email valide"
+
+#: app/auth/views/signup.py:24 app/main/forms/edit_profile_admin.py:44
 msgid "username_already_taken"
 msgstr "Ce pseudo est déjà utilisé"
 
-#: app/auth/views/signup.py:26 app/main/forms/edit_profile_admin.py:39
+#: app/auth/views/signup.py:26 app/main/forms/edit_profile_admin.py:40
 msgid "email_already_taken"
 msgstr "Cette adresse email est déjà utilisée"
 

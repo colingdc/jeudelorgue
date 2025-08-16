@@ -3,20 +3,18 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField
 from wtforms.validators import DataRequired
 
-from ...lang import WORDINGS
-
 
 class LoginForm(FlaskForm):
     username = StringField(
         _l("username"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
     password = PasswordField(
         _l("password"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD)
+            DataRequired(message=_l("missing_field"))
         ]
     )
     remember_me = BooleanField(

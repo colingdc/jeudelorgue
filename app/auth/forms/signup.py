@@ -3,29 +3,27 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 
-from ...lang import WORDINGS
-
 
 class SignupForm(FlaskForm):
     email = StringField(
         _l("email"),
         validators=[
-            DataRequired(WORDINGS.AUTH.INVALID_EMAIL_ADDRESS),
+            DataRequired(_l("invalid_email_address")),
             Length(1, 64),
-            Email(message=WORDINGS.AUTH.MISSING_EMAIL_ADDRESS)
+            Email(message=_l("missing_email_address"))
         ]
     )
     password = PasswordField(
         _l("password"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
-            Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD)
+            DataRequired(message=_l("missing_field")),
+            Length(min=8, message=_l("invalid_password"))
         ]
     )
     username = StringField(
         _l("username"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
+            DataRequired(message=_l("missing_field")),
             Length(1, 64)
         ]
     )

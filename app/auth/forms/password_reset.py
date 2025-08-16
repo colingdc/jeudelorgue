@@ -3,8 +3,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
-from ...lang import WORDINGS
-
 
 class PasswordResetForm(FlaskForm):
     email = StringField(
@@ -19,8 +17,8 @@ class PasswordResetForm(FlaskForm):
         _l("new_password"),
         validators=[
             DataRequired(),
-            Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD),
-            EqualTo("password2", message=WORDINGS.AUTH.PASSWORDS_DO_NOT_MATCH)
+            Length(min=8, message=_l("invalid_password")),
+            EqualTo("password2", message=_l("passwords_do_not_match"))
         ]
     )
     password2 = PasswordField(

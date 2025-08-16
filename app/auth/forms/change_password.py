@@ -3,8 +3,6 @@ from flask_wtf import FlaskForm
 from wtforms import PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo
 
-from ...lang import WORDINGS
-
 
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField(
@@ -16,9 +14,9 @@ class ChangePasswordForm(FlaskForm):
     password = PasswordField(
         _l("new_password"),
         validators=[
-            DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
-            Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD),
-            EqualTo('password2', message=WORDINGS.AUTH.PASSWORDS_DO_NOT_MATCH)
+            DataRequired(message=_l("missing_field")),
+            Length(min=8, message=_l("invalid_password")),
+            EqualTo('password2', message=_l("passwords_do_not_match"))
         ]
     )
     password2 = PasswordField(
