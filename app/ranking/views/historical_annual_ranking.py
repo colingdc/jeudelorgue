@@ -27,7 +27,7 @@ def historical_annual_ranking(tournament_id):
 
     return render_template(
         "ranking/historical_annual_ranking.html",
-        title=_("race_ranking"),
+        title=_("rankings"),
         pagination=pagination,
         tournament=tournament
     ) 

@@ -14,7 +14,6 @@ from ...utils import display_info_toast
 @manager_required
 def create_tournament_draw(tournament_id):
     tournament = domain.get_tournament(tournament_id)
-    title = "{} - Créer le tableau".format(tournament.name)
 
     matches = tournament.get_matches_first_round()
 

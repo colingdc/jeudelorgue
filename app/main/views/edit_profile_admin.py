@@ -13,7 +13,6 @@ from ...utils import display_success_toast
 @login_required
 @admin_required
 def edit_profile_admin(user_id):
-    title = "Modification de profil"
     user = User.query.get_or_404(user_id)
     form = EditProfileAdminForm(user=user)
 
@@ -45,6 +44,6 @@ def edit_profile_admin(user_id):
         "main/edit_profile.html",
         form=form,
         user=user,
-        title=title
+        title=user.username
     ) 
 

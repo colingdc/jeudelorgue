@@ -10,7 +10,6 @@ from ...models import User, Participant, Tournament, TournamentStatus, Ranking
 @login_required
 def view_user(user_id):
     user = User.query.get_or_404(user_id)
-    title = "Profil de {}".format(user.username)
     page = request.args.get("page", 1, type=int)
     pagination = (user.participants_sorted()
                   .join(Tournament, Tournament.id == Participant.tournament_id)
@@ -48,7 +47,7 @@ def view_user(user_id):
 
     return render_template(
         "main/view_user.html",
-        title=title,
+        title=user.username,
         user=user,
         series=series,
         pagination=pagination

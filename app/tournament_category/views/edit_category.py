@@ -12,7 +12,6 @@ from ...utils import display_info_toast
 @manager_required
 def edit_category(category_id):
     category = TournamentCategory.query.get_or_404(category_id)
-    title = category.name
     form = EditCategoryForm(request.form)
     if request.method == "GET":
         form.name.data = category.name
@@ -35,7 +34,7 @@ def edit_category(category_id):
     else:
         return render_template(
             "tournament_category/edit_category.html",
-            title=title,
+            title=_("tournament_categories"),
             form=form,
             category=category
         ) 

@@ -1,7 +1,6 @@
 import json
 
 from flask import render_template, request
-from flask_babel import _
 from flask_login import login_required
 
 from .. import bp

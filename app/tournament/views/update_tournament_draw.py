@@ -1,7 +1,6 @@
 import json
 
 from flask import render_template
-from flask_babel import _
 
 from .. import bp
 from .. import domain

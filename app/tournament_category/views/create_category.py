@@ -11,7 +11,6 @@ from ...utils import display_info_toast
 @bp.route("/create", methods=["GET", "POST"])
 @manager_required
 def create_category():
-    title = "Créer une catégorie de tournois"
     form = CreateCategoryForm(request.form)
     if form.validate_on_submit():
         category = TournamentCategory(
@@ -27,6 +26,6 @@ def create_category():
     else:
         return render_template(
             "tournament_category/create_category.html",
-            title=title,
+            title=_("tournament_categories"),
             form=form
         ) 

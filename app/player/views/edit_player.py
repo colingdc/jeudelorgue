@@ -12,7 +12,6 @@ from ...utils import display_info_toast
 @manager_required
 def edit_player(player_id):
     player = Player.query.get_or_404(player_id)
-    title = player.get_full_name()
     form = EditPlayerForm(request.form)
     if request.method == "GET":
         form.first_name.data = player.first_name
@@ -32,7 +31,7 @@ def edit_player(player_id):
     else:
         return render_template(
             "player/edit_player.html",
-            title=title,
+            title=_("players"),
             form=form,
             player=player
         )

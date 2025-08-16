@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 21:09+0200\n"
+"POT-Creation-Date: 2025-08-16 21:15+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -183,7 +183,11 @@ msgstr "Confirmé"
 msgid "role"
 msgstr "Role"
 
-#: app/main/views/edit_profile_admin.py:31
+#: app/main/views/contact.py:11
+msgid "contact"
+msgstr "Contact"
+
+#: app/main/views/edit_profile_admin.py:30
 msgid "profile_updated"
 msgstr "Le profil a été mis à jour."
 
@@ -196,10 +200,8 @@ msgstr "FAQ"
 msgid "homepage"
 msgstr "Accueil"
 
-#: app/main/views/view_user.py:37
+#: app/main/views/view_user.py:36
 #: app/ranking/forms/ranking.py:14
-#: app/ranking/views/historical_annual_ranking.py:30
-#: app/ranking/views/historical_race_ranking.py:30
 msgid "race_ranking"
 msgstr "Classement Race"
 
@@ -228,20 +230,18 @@ msgid "player_created {name}"
 msgstr "Le joueur {name} a été créé"
 
 #: app/player/views/create_player.py:27
-msgid "create_player"
-msgstr "Créer un joueur"
+#: app/player/views/edit_player.py:34
+#: app/player/views/view_players.py:19
+msgid "players"
+msgstr "Joueurs"
 
 #: app/player/views/delete_player.py:19
 msgid "player_deleted {name}"
 msgstr "Le joueur {name} a été supprimé"
 
-#: app/player/views/edit_player.py:25
+#: app/player/views/edit_player.py:24
 msgid "player_updated {name}"
 msgstr "Le joueur {name} a été mis à jour"
-
-#: app/player/views/view_players.py:19
-msgid "players"
-msgstr "Joueurs"
 
 #: app/ranking/forms/ranking.py:8
 msgid "tournament"
@@ -256,6 +256,8 @@ msgid "annual_ranking"
 msgstr "Classement annuel"
 
 #: app/ranking/views/all_rankings.py:57
+#: app/ranking/views/historical_annual_ranking.py:30
+#: app/ranking/views/historical_race_ranking.py:30
 msgid "rankings"
 msgstr "Classements"
 
@@ -384,6 +386,10 @@ msgstr ""
 "Vous êtes inscrit au tournoi, vous pouvez "
 "désormais remplir votre tableau."
 
+#: app/tournament/views/view_tournaments.py:20
+msgid "tournaments"
+msgstr "Tournois"
+
 #: app/tournament_category/forms/create_category.py:11
 #: app/tournament_category/forms/edit_category.py:11
 msgid "tournament_category_name"
@@ -408,20 +414,22 @@ msgstr "Cette catégorie de tournois existe déjà"
 msgid "tournament_number_of_points_min"
 msgstr "Nombre de points du dernier participant"
 
-#: app/tournament_category/views/create_category.py:25
+#: app/tournament_category/views/create_category.py:24
 msgid "category_created {name}"
 msgstr "La catégorie de tournois {name} a été créée"
+
+#: app/tournament_category/views/create_category.py:29
+#: app/tournament_category/views/edit_category.py:37
+#: app/tournament_category/views/view_categories.py:18
+msgid "tournament_categories"
+msgstr "Catégories de tournois"
 
 #: app/tournament_category/views/delete_category.py:19
 msgid "category_deleted {name}"
 msgstr "La catégorie de tournois {name} a été supprimée"
 
-#: app/tournament_category/views/edit_category.py:28
+#: app/tournament_category/views/edit_category.py:27
 msgid "category_updated {name}"
 msgstr ""
 "La catégorie de tournois {name} a été mise à "
 "jour"
-
-#: app/tournament_category/views/view_categories.py:18
-msgid "tournament_categories"
-msgstr "Catégories de tournois"

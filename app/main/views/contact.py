@@ -1,4 +1,5 @@
 from flask import render_template
+from flask_babel import _
 
 from .. import bp
 
@@ -7,5 +8,5 @@ from .. import bp
 def contact():
     return render_template(
         "main/contact.html",
-        title="Contact"
+        title=_("contact")
     ) 
