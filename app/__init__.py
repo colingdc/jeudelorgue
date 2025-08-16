@@ -3,7 +3,7 @@ from datetime import timedelta
 
 import babel
 from flask import Flask, session, g, request, redirect, url_for
-from flask_babel import Babel, _
+from flask_babel import Babel, gettext as _
 from flask_bcrypt import Bcrypt
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, current_user
