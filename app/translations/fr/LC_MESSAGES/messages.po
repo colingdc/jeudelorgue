@@ -1,0 +1,59 @@
+# French translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-08-16 16:55+0200\n"
+"PO-Revision-Date: 2025-08-16 16:49+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: app/auth/forms/change_password.py:11
+msgid "current_password"
+msgstr "Mot de passe actuel"
+
+#: app/auth/forms/change_password.py:17 app/auth/forms/password_reset.py:19
+msgid "new_password"
+msgstr "Nouveau mot de passe"
+
+#: app/auth/forms/change_password.py:25 app/auth/forms/password_reset.py:27
+msgid "confirm_new_password"
+msgstr "Confirmer le nouveau mot de passe"
+
+#: app/auth/forms/login.py:11 app/auth/forms/signup.py:26
+#: app/main/forms/edit_profile_admin.py:19
+msgid "username"
+msgstr "Pseudo"
+
+#: app/auth/forms/login.py:17 app/auth/forms/signup.py:19
+msgid "password"
+msgstr "Mot de passe"
+
+#: app/auth/forms/login.py:23
+msgid "remember_me"
+msgstr "Se souvenir de moi"
+
+#: app/auth/forms/password_reset.py:11
+#: app/auth/forms/password_reset_request.py:9 app/auth/forms/signup.py:11
+#: app/main/forms/edit_profile_admin.py:11
+msgid "email"
+msgstr "Email"
+
+#: app/auth/views/signup.py:24 app/main/forms/edit_profile_admin.py:43
+msgid "username_already_taken"
+msgstr "Ce pseudo est déjà utilisé"
+
+#: app/auth/views/signup.py:26 app/main/forms/edit_profile_admin.py:39
+msgid "email_already_taken"
+msgstr "Cette adresse email est déjà utilisée"
+

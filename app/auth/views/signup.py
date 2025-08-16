@@ -1,4 +1,5 @@
 from flask import abort, render_template, redirect, request, session, url_for
+from flask_babel import _
 from flask_login import logout_user
 
 from .. import bp
@@ -20,9 +21,9 @@ def signup():
         user_exist = User.query.filter_by(username=form.username.data).first()
         email_exist = User.query.filter_by(email=form.email.data).first()
         if user_exist:
-            form.username.errors.append(WORDINGS.AUTH.USERNAME_ALREADY_TAKEN)
+            form.username.errors.append(_("username_already_taken"))
         if email_exist:
-            form.email.errors.append(WORDINGS.AUTH.EMAIL_ALREADY_TAKEN)
+            form.email.errors.append(_("email_already_taken"))
         if user_exist or email_exist:
             return render_template(
                 "auth/signup.html",

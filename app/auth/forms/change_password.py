@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo
@@ -7,13 +8,13 @@ from ...lang import WORDINGS
 
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField(
-        WORDINGS.AUTH.CURRENT_PASSWORD,
+        _l("current_password"),
         validators=[
             DataRequired()
         ]
     )
     password = PasswordField(
-        WORDINGS.AUTH.NEW_PASSWORD,
+        _l("new_password"),
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
             Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD),
@@ -21,7 +22,7 @@ class ChangePasswordForm(FlaskForm):
         ]
     )
     password2 = PasswordField(
-        WORDINGS.AUTH.CONFIRM_NEW_PASWORD,
+        _l("confirm_new_password"),
         validators=[
             DataRequired()
         ]

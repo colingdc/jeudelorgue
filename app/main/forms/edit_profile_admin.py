@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
@@ -8,7 +9,7 @@ from ...models import User, Role
 
 class EditProfileAdminForm(FlaskForm):
     email = StringField(
-        WORDINGS.AUTH.EMAIL,
+        _l("email"),
         validators=[
             DataRequired(),
             Length(1, 64),
@@ -16,7 +17,7 @@ class EditProfileAdminForm(FlaskForm):
         ]
     )
     username = StringField(
-        WORDINGS.AUTH.USERNAME,
+        _l("username"),
         validators=[
             DataRequired(),
             Length(1, 64)
@@ -36,8 +37,8 @@ class EditProfileAdminForm(FlaskForm):
 
     def validate_email(self, field):
         if field.data != self.user.email and User.query.filter_by(email=field.data).first():
-            raise ValidationError(WORDINGS.AUTH.EMAIL_ALREADY_TAKEN)
+            raise ValidationError(_l("email_already_taken"))
 
     def validate_username(self, field):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
-            raise ValidationError(WORDINGS.AUTH.USERNAME_ALREADY_TAKEN) 
+            raise ValidationError(_l("username_already_taken"))

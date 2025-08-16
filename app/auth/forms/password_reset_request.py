@@ -1,13 +1,12 @@
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, Length, Email
 
-from ...lang import WORDINGS
-
 
 class PasswordResetRequestForm(FlaskForm):
     email = StringField(
-        WORDINGS.AUTH.EMAIL,
+        _l("email"),
         validators=[
             DataRequired(),
             Length(1, 64),

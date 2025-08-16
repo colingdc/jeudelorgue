@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
@@ -7,7 +8,7 @@ from ...lang import WORDINGS
 
 class SignupForm(FlaskForm):
     email = StringField(
-        WORDINGS.AUTH.EMAIL,
+        _l("email"),
         validators=[
             DataRequired(WORDINGS.AUTH.INVALID_EMAIL_ADDRESS),
             Length(1, 64),
@@ -15,14 +16,14 @@ class SignupForm(FlaskForm):
         ]
     )
     password = PasswordField(
-        WORDINGS.AUTH.PASSWORD,
+        _l("password"),
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
             Length(min=8, message=WORDINGS.AUTH.INVALID_PASSWORD)
         ]
     )
     username = StringField(
-        WORDINGS.AUTH.USERNAME,
+        _l("username"),
         validators=[
             DataRequired(message=WORDINGS.COMMON.MISSING_FIELD),
             Length(1, 64)
