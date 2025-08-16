@@ -1,8 +1,8 @@
 from flask import render_template, request, current_app
+from flask_babel import _
 
 from .. import bp
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import Player
 
 
@@ -16,6 +16,6 @@ def view_players():
 
     return render_template(
         "player/view_players.html",
-        title=WORDINGS.PLAYER.PLAYERS,
+        title=_("players"),
         pagination=pagination
     ) 

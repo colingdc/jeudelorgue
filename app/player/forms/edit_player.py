@@ -4,7 +4,6 @@ from wtforms import StringField
 from wtforms.validators import DataRequired, Optional
 
 from ..domain import does_player_exist
-from ...lang import WORDINGS
 
 
 class EditPlayerForm(FlaskForm):
@@ -35,7 +34,7 @@ class EditPlayerForm(FlaskForm):
 
         if does_player_exist(self.first_name.data, self.last_name.data):
             self.first_name.errors.append("")
-            self.last_name.errors.append(WORDINGS.PLAYER.PLAYER_ALREADY_EXISTS)
+            self.last_name.errors.append(_l("player_already_exists"))
             return False
 
         return True

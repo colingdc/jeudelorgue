@@ -1,4 +1,5 @@
 from flask import render_template, request
+from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
@@ -20,7 +21,7 @@ def tournament_player_stats(tournament_id):
     title = WORDINGS.TOURNAMENT.FORECAST_BY_PLAYER.format(tournament.name)
 
     form = TournamentPlayerStatsForm()
-    tournament_players = [(-1, WORDINGS.PLAYER.CHOOSE_PLAYER)] + [
+    tournament_players = [(-1, _("choose_player"))] + [
         (p.id, p.get_full_name())
         for p in tournament.players
         if (p.player is None or p.player.last_name.lower() != "bye")
@@ -28,7 +29,7 @@ def tournament_player_stats(tournament_id):
     form.player_name.choices = tournament_players
 
     form_alphabetic = TournamentPlayerAlphabeticStatsForm()
-    tournament_players_alphabetic = [(-1, WORDINGS.PLAYER.CHOOSE_PLAYER)] + [
+    tournament_players_alphabetic = [(-1, _("choose_player"))] + [
         (p.id, p.get_full_name_surname_first())
         for p in tournament.players_alphabetic
         if (p.player is None or p.player.last_name.lower() != "bye")

@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, url_for
+from flask_babel import _
 
 from .. import bp
 from ..forms import CreatePlayerForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, Player
 from ...utils import display_info_toast
 
@@ -19,11 +19,11 @@ def create_player():
         )
         db.session.add(player)
         db.session.commit()
-        display_info_toast(WORDINGS.PLAYER.PLAYER_CREATED.format(player.get_full_name()))
+        display_info_toast(_("player_created {name}").format(name=player.get_full_name()))
         return redirect(url_for(".create_player"))
     else:
         return render_template(
             "player/create_player.html",
-            title=WORDINGS.PLAYER.CREATE_PLAYER,
+            title=_("create_player"),
             form=form
         ) 

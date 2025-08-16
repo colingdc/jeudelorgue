@@ -1,4 +1,5 @@
 from flask import render_template, request
+from flask_babel import _
 
 from .. import bp
 from .. import domain
@@ -21,13 +22,13 @@ def create_tournament_draw(tournament_id):
     if not request.form:
         form = CreateTournamentDrawForm()
 
-        for _ in matches:
+        for __ in matches:
             form.player.append_entry()
 
     else:
         form = CreateTournamentDrawForm(request.form)
 
-    player_names = [(-1, WORDINGS.PLAYER.CHOOSE_PLAYER)] + Player.get_all_players()
+    player_names = [(-1, _("choose_player"))] + Player.get_all_players()
 
     for p in form.player:
         p.player1_name.choices = player_names

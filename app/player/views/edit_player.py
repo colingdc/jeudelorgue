@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, url_for
+from flask_babel import _
 
 from .. import bp
 from ..forms import EditPlayerForm
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import db, Player
 from ...utils import display_info_toast
 
@@ -22,7 +22,7 @@ def edit_player(player_id):
         player.last_name = form.last_name.data
         db.session.add(player)
         db.session.commit()
-        display_info_toast(WORDINGS.PLAYER.PLAYER_UPDATED.format(player.get_full_name()))
+        display_info_toast(_("player_updated {name}").format(name=player.get_full_name()))
         return redirect(
             url_for(
                 ".edit_player",
@@ -35,4 +35,4 @@ def edit_player(player_id):
             title=title,
             form=form,
             player=player
-        ) 
+        )
