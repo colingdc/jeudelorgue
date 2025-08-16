@@ -1,8 +1,8 @@
 from flask import render_template, request, current_app
+from flask_babel import _
 
 from .. import bp
 from ...decorators import manager_required
-from ...lang import WORDINGS
 from ...models import User
 
 
@@ -17,7 +17,7 @@ def view_validated_users():
 
     return render_template(
         "main/view_users.html",
-        title=WORDINGS.MAIN.USERS,
+        title=_("users"),
         pagination=pagination,
         page_start_index=(page - 1) * current_app.config["USERS_PER_PAGE"]
     ) 

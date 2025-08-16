@@ -3,7 +3,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 
-from ...lang import WORDINGS
 from ...models import User, Role
 
 
@@ -23,8 +22,8 @@ class EditProfileAdminForm(FlaskForm):
             Length(1, 64)
         ]
     )
-    confirmed = BooleanField(WORDINGS.MAIN.CONFIRMED)
-    role = SelectField(WORDINGS.MAIN.ROLE, coerce=int)
+    confirmed = BooleanField(_l("confirmed"))
+    role = SelectField(_l("role"), coerce=int)
 
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)

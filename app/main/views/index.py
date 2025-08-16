@@ -1,7 +1,7 @@
 from flask import render_template
+from flask_babel import _
 
 from .. import bp
-from ...lang import WORDINGS
 from ...models import Tournament, Ranking
 from ...tournament import domain as tournament_domain
 
@@ -15,7 +15,7 @@ def index():
 
     return render_template(
         "main/index.html",
-        title=WORDINGS.MAIN.HOMEPAGE,
+        title=_("homepage"),
         tournaments=tournaments,
         current_tournament=current_tournament,
         race_ranking=race_ranking

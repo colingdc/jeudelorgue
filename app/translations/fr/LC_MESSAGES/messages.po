@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 20:11+0200\n"
+"POT-Creation-Date: 2025-08-16 20:19+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -74,7 +74,7 @@ msgstr "Confirmer le nouveau mot de passe"
 
 #: app/auth/forms/login.py:9
 #: app/auth/forms/signup.py:24
-#: app/main/forms/edit_profile_admin.py:20
+#: app/main/forms/edit_profile_admin.py:19
 msgid "username"
 msgstr "Pseudo"
 
@@ -90,7 +90,7 @@ msgstr "Se souvenir de moi"
 #: app/auth/forms/password_reset.py:9
 #: app/auth/forms/password_reset_request.py:9
 #: app/auth/forms/signup.py:9
-#: app/main/forms/edit_profile_admin.py:12
+#: app/main/forms/edit_profile_admin.py:11
 msgid "email"
 msgstr "Email"
 
@@ -154,12 +154,12 @@ msgstr ""
 "envoyé."
 
 #: app/auth/views/signup.py:23
-#: app/main/forms/edit_profile_admin.py:44
+#: app/main/forms/edit_profile_admin.py:43
 msgid "username_already_taken"
 msgstr "Ce pseudo est déjà utilisé"
 
 #: app/auth/views/signup.py:25
-#: app/main/forms/edit_profile_admin.py:40
+#: app/main/forms/edit_profile_admin.py:39
 msgid "email_already_taken"
 msgstr "Cette adresse email est déjà utilisée"
 
@@ -175,9 +175,26 @@ msgstr ""
 "Un email vous a été envoyé afin de valider "
 "votre adresse email."
 
+#: app/main/forms/edit_profile_admin.py:25
+msgid "confirmed"
+msgstr "Confirmé"
+
+#: app/main/forms/edit_profile_admin.py:26
+msgid "role"
+msgstr "Role"
+
 #: app/main/views/edit_profile_admin.py:31
 msgid "profile_updated"
 msgstr "Le profil a été mis à jour."
+
+#: app/main/views/faq.py:11
+msgid "faq"
+msgstr "FAQ"
+
+#: app/main/views/index.py:18
+#: app/main/views/landing.py:14
+msgid "homepage"
+msgstr "Accueil"
 
 #: app/main/views/view_user.py:37
 #: app/ranking/forms/ranking.py:14
@@ -185,6 +202,11 @@ msgstr "Le profil a été mis à jour."
 #: app/ranking/views/historical_race_ranking.py:30
 msgid "race_ranking"
 msgstr "Classement Race"
+
+#: app/main/views/view_users.py:18
+#: app/main/views/view_validated_users.py:20
+msgid "users"
+msgstr "Utilisateurs"
 
 #: app/player/forms/create_player.py:12
 #: app/player/forms/edit_player.py:12
@@ -299,7 +321,9 @@ msgstr "La catégorie de tournois {name} a été supprimée"
 
 #: app/tournament_category/views/edit_category.py:28
 msgid "category_updated {name}"
-msgstr "La catégorie de tournois {name} a été mise à jour"
+msgstr ""
+"La catégorie de tournois {name} a été mise à "
+"jour"
 
 #: app/tournament_category/views/view_categories.py:18
 msgid "tournament_categories"
