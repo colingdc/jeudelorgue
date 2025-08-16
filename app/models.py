@@ -500,13 +500,11 @@ class Player(db.Model):
     tournament_players = db.relationship("TournamentPlayer", backref="player", lazy="dynamic")
 
     def get_full_name(self):
-        return "{} {}".format(self.first_name,
-                               self.last_name.upper())
+        return "{} {}".format(self.first_name, self.last_name.upper())
 
     def get_draw_name(self):
         if self.first_name:
-            return "{} {}".format(self.first_name[0] + ".",
-                                   self.last_name.upper())
+            return "{} {}".format(self.first_name[0] + ".", self.last_name.upper())
         else:
             return self.last_name.upper()
 

@@ -11,7 +11,7 @@ from ...models import User
 def view_validated_users():
     page = request.args.get("page", 1, type=int)
     pagination = (User.query.order_by(User.username)
-                  .filter(User.deleted_at == None)
+                  .filter(User.deleted_at.is_(None))
                   .filter(User.confirmed)
                   .paginate(page=page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False))
 
