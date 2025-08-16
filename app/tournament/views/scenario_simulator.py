@@ -19,8 +19,6 @@ def scenario_simulator(tournament_id):
     if tournament.are_draws_private():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = _("scenario_simulator {name}").format(name=tournament.name)
-
     form = FillTournamentDrawForm()
 
     if request.method == "GET":
@@ -51,7 +49,7 @@ def scenario_simulator(tournament_id):
 
         return render_template(
             "tournament/scenario_simulator.html",
-            title=title,
+            title=tournament.name,
             tournament=tournament,
             form=form,
             scenario=scenario,
@@ -63,7 +61,7 @@ def scenario_simulator(tournament_id):
     else:
         return render_template(
             "tournament/scenario_simulator.html",
-            title=title,
+            title=tournament.name,
             tournament=tournament,
             form=form,
             scenario=scenario,

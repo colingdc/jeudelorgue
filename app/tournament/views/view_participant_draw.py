@@ -1,5 +1,4 @@
 from flask import render_template
-from flask_babel import _
 from flask_login import login_required, current_user
 
 from .. import bp
@@ -18,11 +17,9 @@ def view_participant_draw(tournament_id, participant_id):
         if participant.user_id != current_user.id:
             return routing.redirect_to_view_tournament(tournament_id)
 
-    title = _("participant_draw {tournament_name} {participant_name}").format(tournament_name=tournament.name, participant_name=participant.name)
-
     return render_template(
         "tournament/view_participant_draw.html",
-        title=title,
+        title=tournament.name,
         tournament=tournament,
         participant=participant,
         surface=tournament.surface.class_name

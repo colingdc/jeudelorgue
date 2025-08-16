@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-16 20:43+0200\n"
+"POT-Creation-Date: 2025-08-16 21:09+0200\n"
 "PO-Revision-Date: 2025-08-16 16:49+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -330,8 +330,8 @@ msgstr "Créer un tournoi"
 
 #: app/tournament/views/create_tournament_draw.py:30
 #: app/tournament/views/edit_tournament_draw.py:28
-#: app/tournament/views/tournament_player_stats.py:23
-#: app/tournament/views/tournament_player_stats.py:31
+#: app/tournament/views/tournament_player_stats.py:21
+#: app/tournament/views/tournament_player_stats.py:29
 msgid "choose_player"
 msgstr "Choisir un joueur..."
 
@@ -343,17 +343,20 @@ msgstr "Le tableau du tournoi {name} a été créé"
 msgid "tournament_deleted {name}"
 msgstr "Le tournoi {name} a été supprimé"
 
-#: app/tournament/views/edit_my_draw.py:43
-#: app/tournament/views/fill_my_draw.py:52
+#: app/tournament/views/edit_my_draw.py:42
+#: app/tournament/views/fill_my_draw.py:50
 msgid "draw_filled_completely"
 msgstr "Votre tableau est complet !"
 
-#: app/tournament/views/edit_my_draw.py:45
-#: app/tournament/views/fill_my_draw.py:54
+#: app/tournament/views/edit_my_draw.py:44
+#: app/tournament/views/fill_my_draw.py:52
 msgid "draw_not_filled_completely"
-msgstr "Attention, votre tableau est incomplet, n'oubliez pas de le compléter avant la fermeture des inscriptions"
+msgstr ""
+"Attention, votre tableau est incomplet, "
+"n'oubliez pas de le compléter avant la "
+"fermeture des inscriptions"
 
-#: app/tournament/views/edit_tournament.py:31
+#: app/tournament/views/edit_tournament.py:30
 msgid "tournament_updated {name}"
 msgstr "Le tournoi {name} a été mis à jour"
 
@@ -361,25 +364,15 @@ msgstr "Le tournoi {name} a été mis à jour"
 msgid "tournament_draw_updated {name}"
 msgstr "Le tableau du tournoi {name} a été modifié"
 
-#: app/tournament/views/edit_tournament_draw.py:55
-msgid "create_tournament_draw"
-msgstr "Surface"
-
-#: app/tournament/views/fill_my_draw.py:26
-msgid "fill_my_draw {name}"
-msgstr "Créer le tableau du tournoi"
-
 #: app/tournament/views/open_registrations.py:19
 msgid "registration_opened"
 msgstr "Les inscriptions au tournoi sont ouvertes"
 
-#: app/tournament/views/overall_forecasts_stats.py:18
-msgid "global_forecasts {name}"
-msgstr "{name} - Pronostics globaux"
-
 #: app/tournament/views/register.py:16
 msgid "registration_not_open"
-msgstr "Les inscriptions à ce tournoi ne sont pas ouvertes"
+msgstr ""
+"Les inscriptions à ce tournoi ne sont pas "
+"ouvertes"
 
 #: app/tournament/views/register.py:20
 msgid "already_registered"
@@ -387,31 +380,9 @@ msgstr "Vous êtes déjà inscrit à ce tournoi"
 
 #: app/tournament/views/register.py:29
 msgid "registered_to_tournament"
-msgstr "Vous êtes inscrit au tournoi, vous pouvez désormais remplir votre tableau."
-
-#: app/tournament/views/scenario_simulator.py:22
-msgid "scenario_simulator {name}"
-msgstr "{name} - Simulateur de scénarios"
-
-#: app/tournament/views/tournament_player_stats.py:20
-msgid "forecasts_by_player {name}"
-msgstr "{name} - Pronostics par joueur ATP"
-
-#: app/tournament/views/update_tournament_draw.py:71
-msgid "update_tournament_draw"
-msgstr "Mettre à jour le tableau du tournoi"
-
-#: app/tournament/views/view_participant_draw.py:21
-#: app/tournament/views/view_participant_draw_last16.py:25
-msgid ""
-"participant_draw {tournament_name} "
-"{participant_name}"
-msgstr "{tournament_name} - Tableau de {participant_name}"
-
-#: app/tournament/views/view_tournament_draw.py:16
-#: app/tournament/views/view_tournament_draw_last16.py:19
-msgid "tournament_draw"
-msgstr "Tableau du tournoi"
+msgstr ""
+"Vous êtes inscrit au tournoi, vous pouvez "
+"désormais remplir votre tableau."
 
 #: app/tournament_category/forms/create_category.py:11
 #: app/tournament_category/forms/edit_category.py:11
@@ -454,4 +425,3 @@ msgstr ""
 #: app/tournament_category/views/view_categories.py:18
 msgid "tournament_categories"
 msgstr "Catégories de tournois"
-

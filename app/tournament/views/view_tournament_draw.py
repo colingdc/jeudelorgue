@@ -1,5 +1,4 @@
 from flask import render_template
-from flask_babel import _
 from flask_login import login_required
 
 from .. import bp
@@ -13,7 +12,7 @@ def view_tournament_draw(tournament_id):
 
     return render_template(
         "tournament/view_tournament_draw.html",
-        title=_("tournament_draw"),
+        title=tournament.name,
         tournament=tournament,
         surface=tournament.surface.class_name
     ) 

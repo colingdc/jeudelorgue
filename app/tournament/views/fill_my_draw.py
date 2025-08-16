@@ -23,8 +23,6 @@ def fill_my_draw(tournament_id, participant_id):
     if not tournament.is_open_to_registration():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = _("fill_my_draw {name}").format(name=tournament.name)
-
     if participant.has_filled_draw():
         return routing.redirect_to_edit_my_draw(tournament_id, participant_id)
 
@@ -57,7 +55,7 @@ def fill_my_draw(tournament_id, participant_id):
     else:
         return render_template(
             "tournament/fill_my_draw.html",
-            title=title,
+            title=tournament.name,
             tournament=tournament,
             participant=participant,
             form=form,

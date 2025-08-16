@@ -23,7 +23,6 @@ def edit_my_draw(tournament_id, participant_id):
     if not tournament.is_open_to_registration():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = "{} - Modifier mon tableau".format(tournament.name)
     form = FillTournamentDrawForm()
 
     if form.validate_on_submit():
@@ -48,7 +47,7 @@ def edit_my_draw(tournament_id, participant_id):
     else:
         return render_template(
             "tournament/edit_my_draw.html",
-            title=title,
+            title=tournament.name,
             tournament=tournament,
             participant=participant,
             form=form,

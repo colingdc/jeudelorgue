@@ -17,8 +17,6 @@ def tournament_player_stats(tournament_id):
     if tournament.are_draws_private():
         return routing.redirect_to_view_tournament(tournament_id)
 
-    title = _("forecasts_by_player {name}").format(name=tournament.name)
-
     form = TournamentPlayerStatsForm()
     tournament_players = [(-1, _("choose_player"))] + [
         (p.id, p.get_full_name())
@@ -51,7 +49,7 @@ def tournament_player_stats(tournament_id):
 
     return render_template(
         "tournament/tournament_player_stats.html",
-        title=title,
+        title=tournament.name,
         tournament=tournament,
         form=form,
         form_alphabetic=form_alphabetic,

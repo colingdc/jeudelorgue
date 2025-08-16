@@ -13,7 +13,6 @@ from ...utils import display_info_toast
 @manager_required
 def edit_tournament(tournament_id):
     tournament = domain.get_tournament(tournament_id)
-    title = tournament.name
     form = EditTournamentForm(request.form)
 
     form.category.choices = domain.get_categories()
@@ -33,7 +32,7 @@ def edit_tournament(tournament_id):
     else:
         return render_template(
             "tournament/edit_tournament.html",
-            title=title,
+            title=tournament.name,
             form=form,
             tournament=tournament,
             surface=tournament.surface.class_name

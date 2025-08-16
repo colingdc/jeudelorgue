@@ -68,7 +68,7 @@ def update_tournament_draw(tournament_id):
     else:
         return render_template(
             "tournament/update_tournament_draw.html",
-            title=_("update_tournament_draw"),
+            title=tournament.name,
             tournament=tournament,
             form=form,
             surface=tournament.surface.class_name

@@ -41,7 +41,7 @@ def create_tournament_draw(tournament_id):
     else:
         return render_template(
             "tournament/create_tournament_draw.html",
-            title=title,
+            title=tournament.name,
             form=form,
             tournament=tournament,
             surface=tournament.surface.class_name

@@ -52,7 +52,7 @@ def edit_tournament_draw(tournament_id):
     else:
         return render_template(
             "tournament/edit_tournament_draw.html",
-            title=_("create_tournament_draw"),
+            title=tournament.name,
             form=form,
             tournament=tournament,
             surface=tournament.surface.class_name
