@@ -13,6 +13,7 @@ from flask_wtf.csrf import CSRFProtect
 
 from config import config
 from instance import INSTANCE
+from .cli import register_commands
 from .lang import WORDINGS
 from .utils import build_error_handler, display_info_toast
 
@@ -41,6 +42,8 @@ def create_app(config_name=None):
     login_manager.init_app(app)
     mail.init_app(app)
     babel_.init_app(app)
+
+    register_commands(app)
 
     def format_datetime(value):
         return babel.dates.format_datetime(value, "EEEE dd MMMM y 'à' HH:mm")
