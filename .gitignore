@@ -101,7 +101,6 @@ ENV/
 .mypy_cache/
 
 .idea/
-migrations/
 tmp/coverage/
 
 # instance and run files
